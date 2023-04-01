@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\GenteFit\\GenteFit\\GenteFit.csproj": {}
+    "C:\\GenteFit\\GenteFit-TestBBDD\\GenteFit\\GenteFit.csproj": {}
   },
   "projects": {
-    "C:\\GenteFit\\GenteFit\\GenteFit.csproj": {
+    "C:\\GenteFit\\GenteFit-TestBBDD\\GenteFit\\GenteFit.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\GenteFit\\GenteFit\\GenteFit.csproj",
+        "projectUniqueName": "C:\\GenteFit\\GenteFit-TestBBDD\\GenteFit\\GenteFit.csproj",
         "projectName": "GenteFit",
-        "projectPath": "C:\\GenteFit\\GenteFit\\GenteFit.csproj",
+        "projectPath": "C:\\GenteFit\\GenteFit-TestBBDD\\GenteFit\\GenteFit.csproj",
         "packagesPath": "C:\\Users\\D. Ryalbran\\.nuget\\packages\\",
-        "outputPath": "C:\\GenteFit\\GenteFit\\obj\\",
+        "outputPath": "C:\\GenteFit\\GenteFit-TestBBDD\\GenteFit\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

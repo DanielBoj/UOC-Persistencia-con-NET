@@ -62,7 +62,12 @@ namespace GenteFit.Controllers.ControllersMongoDB
                     Pass = collection["Pass"],
                     Nombre = collection["Nombre"],
                     Nif = collection["Nif"],
-                    Direccion = new Direccion(),
+                    Direccion = new Direccion(
+                        collection["Direccion.Domicilio"],
+                        collection["Direccion.Ciudad"],
+                        int.Parse(collection["Direccion.Cp"]),
+                        collection["Direccion.Pais"]
+                        ),
                     Telefono = collection["Telefono"],
                     Genero = (Genero)Enum.Parse(typeof(Genero), collection["Genero"]),
                     Iban = collection["Iban"],
@@ -106,7 +111,12 @@ namespace GenteFit.Controllers.ControllersMongoDB
                     Pass = collection["Pass"],
                     Nombre = collection["Nombre"],
                     Nif = collection["Nif"],
-                    Direccion = new Direccion(),
+                    Direccion = new Direccion(
+                        collection["Direccion.Domicilio"], 
+                        collection["Direccion.Ciudad"], 
+                        int.Parse(collection["Direccion.Cp"]), 
+                        collection["Direccion.Pais"]
+                        ),
                     Telefono = collection["Telefono"],
                     Genero = (Genero)Enum.Parse(typeof(Genero), collection["Genero"]),
                     Iban = collection["Iban"],

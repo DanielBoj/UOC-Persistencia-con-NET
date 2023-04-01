@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "pP/4xBdpFexm/57KjSHubpYBmRzKeE9MFHN6IOS20h88ZTeH+P4dudndAoUZvEqNIIsUhIpjxqZwerA4cKZFsA==",
+  "dgSpecHash": "CedFfJaBoE7RosaqVfCp4kgRh8PV+80nlRn9036s/J5+U++KnY2qm06aBYIfIEPE9hxjgO6OW8GRrIscD08yxg==",
   "success": true,
-  "projectFilePath": "C:\\GenteFit\\GenteFit\\GenteFit.csproj",
+  "projectFilePath": "C:\\GenteFit\\GenteFit-TestBBDD\\GenteFit\\GenteFit.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\D. Ryalbran\\.nuget\\packages\\awssdk.core\\3.7.100.14\\awssdk.core.3.7.100.14.nupkg.sha512",
     "C:\\Users\\D. Ryalbran\\.nuget\\packages\\awssdk.securitytoken\\3.7.100.14\\awssdk.securitytoken.3.7.100.14.nupkg.sha512",
