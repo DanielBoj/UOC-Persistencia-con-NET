@@ -61,10 +61,11 @@ namespace GenteFit.Controllers.ControllersMongoDB
                     Nombre = collection["Nombre"],
                     Descripcion = collection["Descripcion"],
                     Direccion = new Direccion(
-                        "Calle Jack el Guapo, 5",
-                        "Claptrap Town",
-                        int.Parse("99999"),
-                        "Borderlands"),
+                        collection["Direccion.Domicilio"],
+                        collection["Direccion.Ciudad"],
+                        int.Parse(collection["Direccion.Cp"]),
+                        collection["Direccion.Pais"]
+                        ),
                     Telefono = collection["Telefono"],
                     Email = collection["Email"],
                 };
@@ -110,10 +111,11 @@ namespace GenteFit.Controllers.ControllersMongoDB
                     Nombre = collection["Nombre"],
                     Descripcion = collection["Descripcion"],
                     Direccion = new Direccion(
-                        "Calle Jack el Guapo, 5",
-                        "Claptrap Town",
-                        int.Parse("99999"),
-                        "Borderlands"),
+                        collection["Direccion.Domicilio"],
+                        collection["Direccion.Ciudad"],
+                        int.Parse(collection["Direccion.Cp"]),
+                        collection["Direccion.Pais"]
+                        ),
                     Telefono = collection["Telefono"],
                     Email = collection["Email"],
                 };

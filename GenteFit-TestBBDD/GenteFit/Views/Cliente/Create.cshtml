@@ -55,6 +55,27 @@
                 <input asp-for="Iban" class="form-control" />
                 <span asp-validation-for="Iban" class="text-danger"></span>
             </div>
+            <h3>Dirección</h3>
+            <div class="form-group">
+                <label asp-for="Direccion.Domicilio" class="control-label"></label>
+                <input asp-for="Direccion.Domicilio" class="form-control" />
+                <span asp-validation-for="Direccion.Domicilio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Direccion.Poblacion" class="control-label"></label>
+                <input asp-for="Direccion.Poblacion" class="form-control" />
+                <span asp-validation-for="Direccion.Poblacion" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Direccion.Cp" class="control-label"></label>
+                <input asp-for="Direccion.Cp" class="form-control" />
+                <span asp-validation-for="Direccion.Cp" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Direccion.Pais" class="control-label"></label>
+                <input asp-for="Direccion.Pais" class="form-control" />
+                <span asp-validation-for="Direccion.Pais" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
