@@ -124,26 +124,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9yYXJpb1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/GenteFit/GenteFit-TestBBDD/GenteFit/Views/Partials/Direccion/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFydGlhbHNcRGlyZWNjaW9uXENyZWF0ZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/GenteFit/GenteFit-TestBBDD/GenteFit/Views/Partials/Direccion/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFydGlhbHNcRGlyZWNjaW9uXERlbGV0ZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/GenteFit/GenteFit-TestBBDD/GenteFit/Views/Partials/Direccion/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFydGlhbHNcRGlyZWNjaW9uXERldGFpbHMuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/GenteFit/GenteFit-TestBBDD/GenteFit/Views/Partials/Direccion/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFydGlhbHNcRGlyZWNjaW9uXEVkaXQuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/GenteFit/GenteFit-TestBBDD/GenteFit/Views/Partials/Direccion/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFydGlhbHNcRGlyZWNjaW9uXEluZGV4LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/GenteFit/GenteFit-TestBBDD/GenteFit/Views/Reserva/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVzZXJ2YVxDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 

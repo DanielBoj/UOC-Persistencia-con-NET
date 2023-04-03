@@ -2,7 +2,6 @@
 using GenteFit.Models.Prototypes;
 using GenteFit.Models.Repositories.Collections;
 using GenteFit.Models.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GenteFit.Controllers.ControllersMongoDB
@@ -62,7 +61,7 @@ namespace GenteFit.Controllers.ControllersMongoDB
                     Descripcion = collection["Descripcion"],
                     Direccion = new Direccion(
                         collection["Direccion.Domicilio"],
-                        collection["Direccion.Ciudad"],
+                        collection["Direccion.Poblacion"],
                         int.Parse(collection["Direccion.Cp"]),
                         collection["Direccion.Pais"]
                         ),
@@ -112,7 +111,7 @@ namespace GenteFit.Controllers.ControllersMongoDB
                     Descripcion = collection["Descripcion"],
                     Direccion = new Direccion(
                         collection["Direccion.Domicilio"],
-                        collection["Direccion.Ciudad"],
+                        collection["Direccion.Poblacion"],
                         int.Parse(collection["Direccion.Cp"]),
                         collection["Direccion.Pais"]
                         ),

@@ -1,8 +1,6 @@
-﻿using GenteFit.Models.Prototypes;
-using GenteFit.Models;
+﻿using GenteFit.Models;
 using GenteFit.Models.Repositories.Collections;
 using GenteFit.Models.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using GenteFit.Models.Usuarios;
 
@@ -12,6 +10,8 @@ namespace GenteFit.Controllers.ControllersMongoDB
     {
         // Instanciamos la interfaz del Modelo MongoDB
         private IEspera db = new EsperaCollection();
+        private ICliente cliente = new ClienteCollection();
+        private IHorario horario = new HorarioCollection();
 
         // GET: EsperaController
         public ActionResult Index()
@@ -46,7 +46,15 @@ namespace GenteFit.Controllers.ControllersMongoDB
         // GET: EsperaController/Create
         public ActionResult Create()
         {
-            return View();
+            try
+            {
+                var clientes = cliente.GetAllClientes();
+                var horarios = horario.GetAllHorarios();
+                ViewData["Clientes"] = clientes;
+                ViewData["Horarios"] = horarios;
+                return View();
+            }
+            catch { return View(); }
         }
 
         // POST: EsperaController/Create
@@ -59,8 +67,8 @@ namespace GenteFit.Controllers.ControllersMongoDB
                 // Creamos un objeto para almacenar todos los datos que capturamos del formulario, debemos parsear todos los campos que no sean strings
                 var espera = new Espera()
                 {
-                    Cliente = new Cliente(),
-                    Horario = new Horario()
+                    Cliente = cliente.GetClienteById(collection["Cliente"]),
+                    Horario = horario.GetHorarioById(collection["Horario"])
                 };
 
                 // Guardamos el documento en nuestra colección de MongoDB, esto crea automáticamente el documento, usando el método definido en nuestro Collection.
@@ -77,6 +85,10 @@ namespace GenteFit.Controllers.ControllersMongoDB
             {
                 // Obtenemos los datos desde MongoDB a través del ID del elemento.
                 var espera = db.GetEsperaById(id);
+                var clientes = cliente.GetAllClientes();
+                var horarios = horario.GetAllHorarios();
+                ViewData["Clientes"] = clientes;
+                ViewData["Horarios"] = horarios;
 
                 return View(espera);
             } catch { return View(); }
@@ -94,7 +106,8 @@ namespace GenteFit.Controllers.ControllersMongoDB
                 {
                     // Como se trata de una modificación, debemos usar el ID del objeto realizando la conversión al tipo de datos correcto de Mongo
                     Id = new MongoDB.Bson.ObjectId(id),
-                    // Todo -> Añadir los objetos a la lista.
+                    Cliente = cliente.GetClienteById(collection["Cliente"]),
+                    Horario = horario.GetHorarioById(collection["Horario"])
                 };
 
                 // Llamamos al método Update. El framework se encarga de buscar el objeto.

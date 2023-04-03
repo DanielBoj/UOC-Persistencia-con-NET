@@ -1,12 +1,7 @@
-﻿using GenteFit.Models.Prototypes;
-using GenteFit.Models;
-using GenteFit.Models.Repositories.Collections;
+﻿using GenteFit.Models.Repositories.Collections;
 using GenteFit.Models.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 using GenteFit.Models.Usuarios;
-using GenteFit.Models.Enums;
 
 namespace GenteFit.Controllers.ControllersMongoDB
 {

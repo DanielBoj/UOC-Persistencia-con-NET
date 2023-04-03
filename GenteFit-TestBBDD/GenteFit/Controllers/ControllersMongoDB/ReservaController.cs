@@ -1,10 +1,7 @@
 ﻿using GenteFit.Models;
-using GenteFit.Models.Collections;
-using GenteFit.Models.Enums;
 using GenteFit.Models.Repositories.Collections;
 using GenteFit.Models.Repositories.Interfaces;
 using GenteFit.Models.Usuarios;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GenteFit.Controllers.ControllersMongoDB
@@ -13,6 +10,8 @@ namespace GenteFit.Controllers.ControllersMongoDB
     {
         // Instanciamos la interfaz del Modelo MongoDB
         private IReserva db = new ReservaCollection();
+        private ICliente cliente = new ClienteCollection();
+        private IHorario horario = new HorarioCollection();
 
         // GET: ReservaController
         public ActionResult Index()
@@ -44,7 +43,14 @@ namespace GenteFit.Controllers.ControllersMongoDB
         // GET: ReservaController/Create
         public ActionResult Create()
         {
-            return View();
+            try
+            {
+                var clientes = cliente.GetAllClientes();
+                var horarios = horario.GetAllHorarios();
+                ViewData["Clientes"] = clientes;
+                ViewData["Horarios"] = horarios;
+                return View();
+            } catch { return View(); }
         }
 
         // POST: ReservaController/Create
@@ -57,8 +63,8 @@ namespace GenteFit.Controllers.ControllersMongoDB
                 // Creamos un objeto para almacenar todos los datos que capturamos del formulario, debemos parsear todos los campos que no sean strings
                 var reserva = new Reserva()
                 {
-                    Cliente = new Cliente(),
-                    Horario = new Horario()
+                    Cliente = cliente.GetClienteById(collection["Cliente"]),
+                    Horario = horario.GetHorarioById(collection["Horario"])
                 };
 
                 // Guardamos el documento en nuestra colección de MongoDB, esto crea automáticamente el documento, usando el método definido en nuestro Collection.
@@ -75,6 +81,10 @@ namespace GenteFit.Controllers.ControllersMongoDB
             {
                 // Obtenemos los datos desde MongoDB a través del ID del elemento.
                 var reserva = db.GetReservaById(id);
+                var clientes = cliente.GetAllClientes();
+                var horarios = horario.GetAllHorarios();
+                ViewData["Clientes"] = clientes;
+                ViewData["Horarios"] = horarios;
 
                 return View(reserva);
             }

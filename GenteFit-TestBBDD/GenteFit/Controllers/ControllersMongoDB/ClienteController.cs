@@ -2,13 +2,10 @@
 using GenteFit.Models;
 using GenteFit.Models.Repositories.Collections;
 using GenteFit.Models.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using GenteFit.Models.Usuarios;
 using GenteFit.Models.Enums;
 using GenteFit.Models.Collections;
-using System.Data;
-using Microsoft.CodeAnalysis.FlowAnalysis.DataFlow;
 
 namespace GenteFit.Controllers.ControllersMongoDB
 {

@@ -1,11 +1,10 @@
-﻿using GenteFit.Models.Prototypes;
-using GenteFit.Models;
+﻿using GenteFit.Models;
 using GenteFit.Models.Repositories.Collections;
 using GenteFit.Models.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using GenteFit.Models.Enums;
 using GenteFit.Models.Collections;
+using System.Dynamic;
 
 namespace GenteFit.Controllers.ControllersMongoDB
 {
@@ -13,6 +12,7 @@ namespace GenteFit.Controllers.ControllersMongoDB
     {
         // Instanciamos la interfaz del Modelo MongoDB
         private IHorario db = new HorarioCollection();
+        private IClase clase = new ClaseCollection();
 
         // GET: HorarioController
         public ActionResult Index()
@@ -41,7 +41,15 @@ namespace GenteFit.Controllers.ControllersMongoDB
         // GET: HorarioController/Create
         public ActionResult Create()
         {
-            return View();
+            try
+            {
+                var clases = clase.GetAllClases();
+
+                ViewData["Clases"] = clases;
+
+                return View();
+            } catch { return View();  }
+            
         }
 
         // POST: HorarioController/Create
@@ -54,9 +62,9 @@ namespace GenteFit.Controllers.ControllersMongoDB
                 // Creamos un objeto para almacenar todos los datos que capturamos del formulario, debemos parsear todos los campos que no sean strings
                 var horario = new Horario()
                 {
-                    Clase = new Clase(),
+                    Clase = clase.GetClaseById(collection["Clase"]),
                     Dia = (Dia) Enum.Parse(typeof(Dia), collection["Dia"]),
-                    Hora = TimeOnly.Parse(collection["Hora"]),
+                    Hora = collection["Hora"].ToString(),
                     Reservas = new Listas<Reservas>(),
                     Esperas = new Colas<Espera>()
                 };
@@ -93,9 +101,9 @@ namespace GenteFit.Controllers.ControllersMongoDB
                 {
                     // Como se trata de una modificación, debemos usar el ID del objeto realizando la conversión al tipo de datos correcto de Mongo
                     Id = new MongoDB.Bson.ObjectId(id),
-                    Clase = new Clase(),
+                    Clase = clase.GetClaseById(collection["Clase"]),
                     Dia = (Dia)Enum.Parse(typeof(Dia), collection["Dia"]),
-                    Hora = TimeOnly.Parse(collection["Hora"]),
+                    Hora = collection["Hora"].ToString(),
                     // TODO -> Añadir objetos a las listas
                 };
 

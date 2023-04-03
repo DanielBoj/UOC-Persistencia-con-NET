@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Edit";
+    IEnumerable<Clase> clases = ViewData["Clases"] as IEnumerable<Clase>;
 }
 
 <h1>Edit</h1>
@@ -16,6 +17,23 @@
                 <label asp-for="Dia" class="control-label"></label>
                 <input asp-for="Dia" class="form-control" />
                 <span asp-validation-for="Dia" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Hora" class="control-label"></label>
+                <input asp-for="Hora" class="form-control" />
+                <span asp-validation-for="Hora" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Clase" class="control-label"></label>
+                <select asp-for="Clase" class="form-control" />
+                @if (clases != null)
+                {
+                    @foreach (var item in clases)
+                    {
+                        <option value="@item.Id">@item.Nombre</option>
+                    }
+                }
+                <span asp-validation-for="Clase" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

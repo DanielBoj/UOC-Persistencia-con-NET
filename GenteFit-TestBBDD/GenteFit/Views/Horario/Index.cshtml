@@ -15,7 +15,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.Dia)
             </th>
-            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.Hora)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Clase.Nombre)
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -24,6 +29,12 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Dia)
             </td>
+                <th>
+                    @Html.DisplayFor(modelItem => item.Hora)
+                </th>
+                <th>
+                    @Html.DisplayFor(modelItem => item.Clase.Nombre)
+                </th>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
                 @Html.ActionLink("Details", "Details", new { id=item.Id }) |
