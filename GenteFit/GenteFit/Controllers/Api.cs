@@ -661,6 +661,100 @@ namespace GenteFit.Controllers
             }
         }
 
+        // Obtenemor una lista con todos los horarios filtrados por clase
+        // GET: api/horario/filter:clase
+        [HttpGet("[controller]/filter:{clase}")]
+        public async Task<IActionResult> ListHorariosByClase([FromRoute] string clase)
+        {
+            // Creamos el controlador de MongoDB
+            HorarioController dbHorario = new();
+
+            // Comprobamos que los datos sean correctos
+            if (clase is null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                // Obtenemos la lista de horarios
+                List<Horario> horarios = await dbHorario.GetAllHorarios();
+
+                // Filtramos la lista de horarios para quedarnos con los que tengan la clase que buscamos.
+                horarios = horarios.Where(hor => hor.Clase.Nombre.ToLower().Equals(clase.ToLower())).ToList();
+                
+                // Devolvemos la lista de horarios.
+                return horarios.Count > 0? Ok(horarios) : NotFound("No existen horarios para la clase " + clase);
+            } catch (Exception err)
+            {
+                return StatusCode(404, err.Message);
+            }
+        }
+
+        // Filtramos los horarios por cliente
+        // GET: api/horario/idCliente
+        [HttpGet("[controller]/horario/{idCliente}")]
+        public async Task<IActionResult> FilterHorariosByCliente([FromRoute] string idCliente)
+        {
+            // Creamos el controlador de MongoDB
+            HorarioController db = new();
+
+            // Comprobamos que los datos sean correctos
+            if (idCliente is null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                // Obtenemos la lista de horarios
+                List<Horario> horarios = await db.GetAllHorarios();
+
+                // Filtramos la lista de horarios para quedarnos con los que tengan el cliente que buscamos.
+                horarios = horarios.Where(hor => hor.Reservas.Any(res => res.Cliente.Id.Equals(idCliente))).ToList();
+
+                // Devolvemos la lista de horarios.
+                return horarios.Count > 0? Ok(horarios) : NotFound("No existen horarios para el cliente " + idCliente);
+            } catch (Exception err)
+            {
+                return StatusCode(404, err.Message);
+            }
+        }
+
+        // Filtramos los horarios por cliente y clase
+        // GET: api/horario/idCliente?clase:clase
+        [HttpGet("[controller]/horario/{idCliente}?clase:{clase}")]
+        public async Task<IActionResult> ListHorariosByClienteyClase([FromRoute] string idCliente,
+            [FromRoute] string clase)
+        {
+            // Creamos el controlador de MongoDB
+            HorarioController db = new();
+
+            // Comprobamos que los datos sean correctos
+            if (idCliente is null || clase is null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                // Obtenemos la lista de horarios
+                List<Horario> horarios = await db.GetAllHorarios();
+                
+                // Filtramos los horarios por cliente
+                horarios = horarios.Where(hor => hor.Reservas.Any(res => res.Cliente.Id.Equals(idCliente))).ToList();
+
+                // Filtramos la lista de horarios para quedarnos con los que tengan la clase que buscamos.
+                horarios = horarios.Where(hor => hor.Clase.Nombre.ToLower().Equals(clase.ToLower())).ToList();
+
+                // Devolvemos la lista de horarios.
+                return horarios.Count > 0? Ok(horarios) : NotFound("No existen horarios para el cliente " + idCliente + " y la clase " + clase);
+            } catch (Exception err)
+            {
+                return StatusCode(404, err.Message);
+            }
+        }
+
         // Obtenemos la información de un horario
         // GET: api/horario/id
         [HttpGet("[controller]/horario/{id}")]
