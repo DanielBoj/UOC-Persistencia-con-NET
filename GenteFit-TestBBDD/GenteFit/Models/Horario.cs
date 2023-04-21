@@ -2,6 +2,9 @@
 using MongoDB.Bson;
 using GenteFit.Models.Enums;
 using GenteFit.Models.Collections;
+using Microsoft.AspNetCore.Mvc;
+using GenteFit.Models.Repositories.Interfaces;
+using GenteFit.Models.Repositories.Collections;
 
 namespace GenteFit.Models
 {
@@ -9,22 +12,27 @@ namespace GenteFit.Models
     {
         // Necesitamos usar un tipo de objeto propio de Mongo para que genere automáticamente los ID únicos de los documentos
         [BsonId]
-        public ObjectId Id { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public ObjectId? Id { get; set; }
         public Dia Dia { get; set; }
-        public TimeOnly Hora { get; set; }
-        public Clase Clase { get; set; }
-        public Listas<Reservas> Reservas { get; set; }
-        public Colas<Espera> Esperas { get; set; }
+        public string Hora { get; set; } = null!;
+        public Clase Clase { get; set; } = null!;
+        public List<Reserva> Reservas { get; set; } = null!;
+        public List<Espera> Esperas { get; set; } = null!;
 
-        public Horario() { }
+        public Horario() {
+            Clase = new();
+            Reservas = new();
+            Esperas = new();
+        }
 
-        public Horario(Dia dia, TimeOnly hora, Clase clase)
+        public Horario(Dia dia, string hora, Clase clase)
         {
             Dia = dia;
             Hora = hora;
             Clase = clase;
-            Reservas = new Listas<Reservas>();
-            Esperas = new Colas<Espera>();
+            Reservas = new();
+            Esperas = new();
         }
     }
 }

@@ -9,17 +9,26 @@ namespace GenteFit.Models
     public class DataController : Controller
     {
         public Api Controlador;
-        public Centro Centro { get; set; }
+        /*public Centro Centro { get; set; }
         public Listas<User> Usuarios { get; set; }
         public Listas<Cliente> Clientes { get; set; }
         public Listas<Clase> Clases { get; set; }
         public Listas<Horario> Horarios { get; set; }
         public Listas<Reservas> Reservas { get; set; }
-        public Listas<Colas<Espera>> Esperas { get; set; } 
+        public Listas<Colas<Espera>> Esperas { get; set; }*/
+        
+        public DataController () { 
+            /*Usuarios = new Listas<User>();
+            Clientes = new Listas<Cliente>();
+            Clases = new Listas<Clase>();
+            Horarios = new Listas<Horario>();
+            Reservas = new Listas<Reservas>();
+            Esperas = new Listas<Colas<Espera>>();*/
+        }
 
-        public DataController (Api controlador, Centro centro) {
+        public DataController (Api controlador) {
             Controlador = controlador;
-            Centro = centro;
+            /*Centro = centro;
 
             // Inicializamos las listas
             Usuarios = new Listas<User>();
@@ -27,9 +36,11 @@ namespace GenteFit.Models
             Clases = new Listas<Clase>();
             Horarios = new Listas<Horario>();
             Reservas = new Listas<Reservas>();
-            Esperas = new Listas<Colas<Espera>>();
+            Esperas = new Listas<Colas<Espera>>();*/
             
         }
+
+        /* USUARIO */
 
         
 

@@ -1,4 +1,8 @@
-﻿namespace GenteFit
+﻿using GenteFit.Models.Repositories;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Swagger;
+
+namespace GenteFit
 {
     public static class Startup
     {
@@ -23,9 +27,31 @@
         // Métodos de configuración de los servicios
         public static void ConfigureServices(WebApplicationBuilder builder)
         {
+            builder.Services.AddMvc();
+            // Añadimos swagger
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { 
+                    Title = "GenteFit", 
+                    Version = "v1",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Grupo Hyperion",
+                        Email = "",
+                        Url = new Uri("https://github.com/DanielBoj/UOC-Persistencia-con-NET")
+                    },
+                    Description = "APP para la gestión de centros de fitness"
+                });
+            });
+
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddEndpointsApiExplorer();
+
+            // Inyección de los valores de configuración: Las clase DataConnectionSettings irá a buscar los valores
+            // al archivo de configuración.
+            builder.Services.Configure<DataConnectionSettings>(builder.Configuration.GetSection("GenteFitDataBase"));
+            builder.Services.AddSingleton<DataConnection>();
         }
 
         // Configuramos los Middlewares
@@ -50,7 +76,16 @@
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            // Mapeamos los endpoint para swagger y añadimos swagger  a la app.
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("v1/swagger.json", "GenteFit V1");
+            });
+
+            // Hasta que no tengamos un certificado SSL no podemos usar el protocolo HTTPS
+            // app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();

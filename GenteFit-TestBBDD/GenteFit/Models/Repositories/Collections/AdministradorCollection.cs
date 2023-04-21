@@ -1,5 +1,6 @@
 ﻿using GenteFit.Models.Repositories.Interfaces;
 using GenteFit.Models.Usuarios;
+using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -20,17 +21,15 @@ namespace GenteFit.Models.Repositories.Collections
             Collection = _repository.db.GetCollection<Administrador>("Administrador");
         }
 
-        public List<Administrador> GetAllAdministradores()
+        public async Task<List<Administrador>> GetAllAdministradores()
         {
             try
             {
                 // Obtenemos los datos desde la BBDD mediante una peteción, query, a la colección.
                 // Importamos los datos como un Documento Bson y los convertimos en una lista. Hemos de usar un método asíncrono para esperar a la respuesta del servidor.
-                var query = Collection
-                    .Find(new BsonDocument()).ToListAsync();
-
-                // Devolvemos el res de la query
-                return query.Result;
+                // Devolvemos directamente el resultado de la query.
+                return await Collection
+                    .FindAsync(new BsonDocument()).Result.ToListAsync();
             }
             catch (Exception ex)
             {
@@ -41,21 +40,21 @@ namespace GenteFit.Models.Repositories.Collections
             return new List<Administrador>();
         }
 
-        public Administrador GetAdministradorById(string id)
+        public async Task<Administrador> GetAdministradorById(string id)
         {
+            // Nos aseguramos de recibir un ID válido.
             if (id == null) return new Administrador();
 
             try
             {
-                var cliente = Collection.Find(
+                return await Collection.FindAsync(
                     // Obtenemos los datos desde la BBDD mediante una peteción, query, a la colección y buscando por el ID -> _id en Mongo.
                     // Realizamos un destructuring y asignamos el documento de Mongo al resultado de la query.
                     // Buscamos un documento en Mongo en el que su ID sea igual al ID que pasamos por parámetro y convertimos al tipo de dato ObjectId de Mongo.
                     // Si no realizamos la conversión, Mongo no puede hacer el matching.
+                    // Usamos FirstAsync para recibir un único elemento, el primero que cumpla la condición de búsqueda.
                     new BsonDocument { { "_id", new ObjectId(id) } })
-                        .FirstAsync().Result;
-
-                return cliente;
+                        .Result.FirstAsync();
             }
             catch (Exception ex)
             {
@@ -65,14 +64,14 @@ namespace GenteFit.Models.Repositories.Collections
             }
         }
 
-        public bool InsertAdministrador(Administrador administrador)
+        public async Task<bool> InsertAdministrador(Administrador administrador)
         {
             //if (centro == null) throw new ArgumentNullException(nameof(centro));
             if (administrador == null) return false;
 
             try
             {
-                Collection.InsertOneAsync(administrador);
+                await Collection.InsertOneAsync(administrador);
 
                 return true;
             }
@@ -84,7 +83,7 @@ namespace GenteFit.Models.Repositories.Collections
             }
         }
 
-        public bool UpdateAdministrador(Administrador administrador)
+        public async Task<bool> UpdateAdministrador(Administrador administrador)
         {
             if (administrador == null) return false;
 
@@ -101,7 +100,7 @@ namespace GenteFit.Models.Repositories.Collections
                     .Eq(src => src.Id, administrador.Id);
 
                 // Ahora ya podemos llamar a la acción de Mongo aplicando el filtro que pasamos como parámetro para que Mongo realice la búsqueda
-                Collection.ReplaceOneAsync(filter, administrador);
+                await Collection.ReplaceOneAsync(filter, administrador);
 
                 return true;
             }
@@ -113,7 +112,7 @@ namespace GenteFit.Models.Repositories.Collections
             }
         }
 
-        public bool DeleteAdministrador(string id)
+        public async Task<bool> DeleteAdministrador(string id)
         {
             if (id == null) return false;
 
@@ -125,7 +124,7 @@ namespace GenteFit.Models.Repositories.Collections
                     .Eq(src => src.Id, new ObjectId(id));
 
                 // Una vez creado el método de filtrado, podemos llamar a la acción de MongoDB y pasarle el filtro.
-                Collection.DeleteOneAsync(filter);
+                await Collection.DeleteOneAsync(filter);
 
                 return true;
             }
@@ -133,6 +132,20 @@ namespace GenteFit.Models.Repositories.Collections
             {
                 Console.WriteLine(ex.Message.ToString());
 
+                return false;
+            }
+        }
+
+        // Comprobamos si existen documentos en la colección.
+        public async Task<bool> IsEmpty()
+        {
+            try
+            {
+                return await Collection.CountDocumentsAsync(new BsonDocument()) == 0;
+            }
+            catch (Exception err)
+            {
+                Console.WriteLine(err.Message.ToString());
                 return false;
             }
         }

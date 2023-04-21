@@ -1,138 +1,146 @@
-﻿using GenteFit.Models.Prototypes;
-using GenteFit.Models;
+﻿using GenteFit.Models;
 using GenteFit.Models.Repositories.Collections;
 using GenteFit.Models.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using GenteFit.Models.Enums;
 using GenteFit.Models.Collections;
+using System.Dynamic;
 
 namespace GenteFit.Controllers.ControllersMongoDB
 {
+    //[Route("api/[controller]")]
+    //[ApiController]
+    /* Controlador DTO para la clase Horario y el DAO HorarioCollection. 
+      Simplificamos al máximo la clase ya que la lógica irá en la API central. */
     public class HorarioController : Controller
     {
         // Instanciamos la interfaz del Modelo MongoDB
         private IHorario db = new HorarioCollection();
+        //private IClase clase = new ClaseCollection();
 
-        // GET: HorarioController
-        public ActionResult Index()
-        {
-            // Obtenemos los datos desde MongoDB
-            var horarios = db.GetAllHorarios();
+        // GET
+        //[HttpGet]
+        public async Task<List<Horario>> GetAllHorarios() => await db.GetAllHorarios();
+        /*{
+            try
+            {
+                // Devolvemos una lista de elementos obtenidos desde la BD.
+                List<Horario> horarios = await db.GetAllHorarios();
 
-            return View(horarios);
-        }
+                return Ok(horarios);
+            }
+            catch (Exception err)
+            {
+                return StatusCode(404, err.Message);
+            }
+        }*/
 
         // GET: HorarioController/Details/5
-        public ActionResult Details(string id)
-        {
+        //[HttpGet("{id}"), Route("api/[controller]detail/{id}")]
+        public async Task<Horario> Details(string id) => await db.GetHorarioById(id);
+        /*{
+            if (id == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (db.GetHorarioById(id) == null)
+            {
+                return NotFound();
+            }
+
             try
             {
                 // Obtenemos los datos desde MongoDB a través del ID del elemento.
-                var horario = db.GetHorarioById(id);
+                Horario horario = await db.GetHorarioById(id);
 
-                return View(horario);
-            } catch
-            {
-                return View();
+                return Ok(horario);
             }
-        }
-
-        // GET: HorarioController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
+            catch (Exception err)
+            {
+                return StatusCode(404, err.Message);
+            }
+        }*/
 
         // POST: HorarioController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
+        //[HttpPost]
+        public async Task<bool> Create(Horario horario) => await db.InsertHorario(horario);
+        /*{
+            if (horario == null)
+            {
+                return BadRequest(ModelState);
+            }
+
             try
             {
-                // Creamos un objeto para almacenar todos los datos que capturamos del formulario, debemos parsear todos los campos que no sean strings
-                var horario = new Horario()
-                {
-                    Clase = new Clase(),
-                    Dia = (Dia) Enum.Parse(typeof(Dia), collection["Dia"]),
-                    Hora = TimeOnly.Parse(collection["Hora"]),
-                    Reservas = new Listas<Reservas>(),
-                    Esperas = new Colas<Espera>()
-                };
-
                 // Guardamos el documento en nuestra colección de MongoDB, esto crea automáticamente el documento, usando el método definido en nuestro Collection.
-                db.InsertHorario(horario);
-                return RedirectToAction(nameof(Index));
-            }
-            catch { return View(); }
-        }
+                await db.InsertHorario(horario);
 
-        // GET: HorarioController/Edit/5
-        public ActionResult Edit(string id)
-        {
-            try
+                return Created("Id", horario.Id);
+            }
+            catch (Exception err)
             {
-                // Obtenemos los datos desde MongoDB a través del ID del elemento.
-                var horario = db.GetHorarioById(id);
-
-                return View(horario);
+                return StatusCode(400, err.Message);
             }
-            catch { return View(); }
-        }
+        }*/
 
         // POST: HorarioController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(string id, IFormCollection collection)
-        {
+        //[HttpPut("{id}")]
+        public async Task<bool> Edit(Horario horario) => await db.UpdateHorario(horario);
+       /* {
+            if (id == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (horario == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (db.GetHorarioById(id) == null)
+            {
+                return NotFound();
+            }
+
             try
             {
-                // Creamos un objeto para almacenar todos los datos que capturamos del formulario, debemos parsear todos los campos que no sean strings
-                var horario = new Horario()
-                {
-                    // Como se trata de una modificación, debemos usar el ID del objeto realizando la conversión al tipo de datos correcto de Mongo
-                    Id = new MongoDB.Bson.ObjectId(id),
-                    Clase = new Clase(),
-                    Dia = (Dia)Enum.Parse(typeof(Dia), collection["Dia"]),
-                    Hora = TimeOnly.Parse(collection["Hora"]),
-                    // TODO -> Añadir objetos a las listas
-                };
+                // Nos aseguramos de que el ID del objeto sea el correcto.
+                horario.Id = new MongoDB.Bson.ObjectId(id);
 
                 // Llamamos al método Update. El framework se encarga de buscar el objeto.
-                db.UpdateHorario(horario);
+                await db.UpdateHorario(horario);
 
-                return RedirectToAction(nameof(Index));
+                return Created("Id", id);
             }
-            catch { return View(); }
-        }
-
-        // GET: HorarioController/Delete/5
-        public ActionResult Delete(string id)
-        {
-            try
+            catch (Exception err)
             {
-                // Obtenemos los datos desde MongoDB a través del ID del elemento.
-                var horario = db.GetHorarioById(id);
-
-                return View(horario);
+                return StatusCode(400, err.Message);
             }
-            catch { return View(); }
-        }
+        }*/
 
         // POST: HorarioController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(string id, IFormCollection collection)
-        {
+        //[HttpDelete("{id}")]
+        public async Task<bool> Delete(string id) => await db.DeleteHorario(id);
+        /*{
+            if (id == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (db.GetHorarioById(id) == null)
+            {
+                return NotFound();
+            }
+
             try
             {
                 // LLamamos al método para borrar el elemento en MongoDB
-                db.DeleteHorario(id);
+                await db.DeleteHorario(id);
 
-                return RedirectToAction(nameof(Index));
+                return StatusCode(200);
             }
-            catch { return View(); }
-        }
+            catch (Exception err) { return StatusCode(400, err.Message); }
+        }*/
     }
 }

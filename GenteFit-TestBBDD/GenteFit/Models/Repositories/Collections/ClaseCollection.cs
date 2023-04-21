@@ -1,4 +1,5 @@
 ﻿using GenteFit.Models.Repositories.Interfaces;
+using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -19,17 +20,14 @@ namespace GenteFit.Models.Repositories.Collections
             Collection = _repository.db.GetCollection<Clase>("Clase");
         }
 
-        public List<Clase> GetAllClases()
+        public async Task<List<Clase>> GetAllClases()
         {
             try
             {
                 // Obtenemos los datos desde la BBDD mediante una peteción, query, a la colección.
                 // Importamos los datos como un Documento Bson y los convertimos en una lista. Hemos de usar un método asíncrono para esperar a la respuesta del servidor.
-                var query = Collection
-                    .Find(new BsonDocument()).ToListAsync();
-
-                // Devolvemos el res de la query
-                return query.Result;
+                return await Collection
+                    .FindAsync(new BsonDocument()).Result.ToListAsync();
             }
             catch (Exception ex)
             {
@@ -40,21 +38,19 @@ namespace GenteFit.Models.Repositories.Collections
             return new List<Clase>();
         }
 
-        public Clase GetClaseById(string id)
+        public async Task<Clase> GetClaseById(string id)
         {
             if (id == null) return new Clase();
 
             try
             {
-                var clase = Collection.Find(
+                return await Collection.FindAsync(
                     // Obtenemos los datos desde la BBDD mediante una peteción, query, a la colección y buscando por el ID -> _id en Mongo.
                     // Realizamos un destructuring y asignamos el documento de Mongo al resultado de la query.
                     // Buscamos un documento en Mongo en el que su ID sea igual al ID que pasamos por parámetro y convertimos al tipo de dato ObjectId de Mongo.
                     // Si no realizamos la conversión, Mongo no puede hacer el matching.
                     new BsonDocument { { "_id", new ObjectId(id) } })
-                        .FirstAsync().Result;
-
-                return clase;
+                        .Result.FirstAsync();
             }
             catch (Exception ex)
             {
@@ -64,14 +60,14 @@ namespace GenteFit.Models.Repositories.Collections
             }
         }
 
-        public bool InsertClase(Clase clase)
+        public async Task<bool> InsertClase(Clase clase)
         {
             //if (centro == null) throw new ArgumentNullException(nameof(centro));
             if (clase == null) return false;
 
             try
             {
-                Collection.InsertOneAsync(clase);
+                await Collection.InsertOneAsync(clase);
 
                 return true;
             }
@@ -83,7 +79,7 @@ namespace GenteFit.Models.Repositories.Collections
             }
         }
 
-        public bool UpdateClase(Clase clase)
+        public async Task<bool> UpdateClase(Clase clase)
         {
             if (clase == null) return false;
 
@@ -100,7 +96,7 @@ namespace GenteFit.Models.Repositories.Collections
                     .Eq(src => src.Id, clase.Id);
 
                 // Ahora ya podemos llamar a la acción de Mongo aplicando el filtro que pasamos como parámetro para que Mongo realice la búsqueda
-                Collection.ReplaceOneAsync(filter, clase);
+                await Collection.ReplaceOneAsync(filter, clase);
 
                 return true;
             }
@@ -112,7 +108,7 @@ namespace GenteFit.Models.Repositories.Collections
             }
         }
 
-        public bool DeleteClase(string id)
+        public async Task<bool> DeleteClase(string id)
         {
             if (id == null) return false;
 
@@ -124,7 +120,7 @@ namespace GenteFit.Models.Repositories.Collections
                     .Eq(src => src.Id, new ObjectId(id));
 
                 // Una vez creado el método de filtrado, podemos llamar a la acción de MongoDB y pasarle el filtro.
-                Collection.DeleteOneAsync(filter);
+                await Collection.DeleteOneAsync(filter);
 
                 return true;
             }

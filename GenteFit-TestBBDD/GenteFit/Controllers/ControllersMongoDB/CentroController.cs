@@ -1,168 +1,138 @@
 ﻿using GenteFit.Models;
-using GenteFit.Models.Prototypes;
 using GenteFit.Models.Repositories.Collections;
 using GenteFit.Models.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+//using Microsoft.Build.Framework;
+using MongoDB.Bson;
+using System.Drawing.Printing;
 
 namespace GenteFit.Controllers.ControllersMongoDB
 {
+    //[Route("api/[controller]")]
+    //[ApiController]
+    /* Controlador DTO para la clase Centro y el DAO CentroCollection. 
+      Simplificamos al máximo la clase ya que la lógica irá en la API central. */
     public class CentroController : Controller
     {
         // Instanciamos la interfaz del Modelo MongoDB
         private ICentro db = new CentroCollection();
 
-        // GET: CentroController
-        public ActionResult Index()
-        {
-            try
+        //GET
+        //[HttpGet]
+        public async Task<List<Centro>> GetAllCentros() => await db.GetAllCentros();
+        /*{
+            *//*try
             {
-                // Obtenemos los datos desde MongoDB
-                var centros = db.GetAllCentros();
-
-                return View(centros);
-            } catch
+                return await db.GetAllCentros();
+                return Ok(centros);
+            } catch (Exception err)
             {
-                return View();
-            }
-        }
+                return err.Message;
+            }*//*
+        }*/
 
-        // GET: CentroController/Details/5 -> Devuelve una vista centrada en único documento de la colección
-        public ActionResult Details(string id)
-        {
+        public async Task<Centro> Details(string id) => await db.GetCentroById(id);
+        /*{
             try
             {
                 // Obtenemos los datos desde MongoDB a través del ID del elemento.
-                var centro = db.GetCentroById(id);
+                Centro centro = await db.GetCentroById(id);
 
-                return View(centro);
-            } catch
+                if (centro == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(centro);
+            } catch (Exception err)
             {
-                return View();
+                return StatusCode(404, err.Message);
             }
-        }
-
-        // GET: CentroController/Create -> Devuelve la vista con el formulario, la aplicación navega a nuestra vista
-        public ActionResult Create()
-        {
-            return View();
-        }
+        }*/
 
         // POST: CentroController/Create -> Insertamos el documento en MongoDB
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Centro centro)
         {
+            if (centro == null)
+            {
+                return BadRequest();
+            }
+
             try
             {
-                // Creamos un objeto para almacenar todos los datos que capturamos del formulario, debemos parsear todos los campos que no sean strings
-                var centro = new Centro()
-                {
-                    Nombre = collection["Nombre"],
-                    Descripcion = collection["Descripcion"],
-                    Direccion = new Direccion(
-                        collection["Direccion.Domicilio"],
-                        collection["Direccion.Ciudad"],
-                        int.Parse(collection["Direccion.Cp"]),
-                        collection["Direccion.Pais"]
-                        ),
-                    Telefono = collection["Telefono"],
-                    Email = collection["Email"],
-                };
-
                 // Guardamos el documento en nuestra colección de MongoDB, esto crea automáticamente el documento, usando el método definido en nuestro Collection.
-                db.InsertCentro(centro);
-                return RedirectToAction(nameof(Index));
+                await db.InsertCentro(centro);
+                return Created("Id", centro.Id);
             }
-            catch
+            catch (Exception err)
             {
-                return View();
-            }
-        }
-
-        // GET: CentroController/Edit/5 -> Devuelve la vista
-        public ActionResult Edit(string id)
-        {
-            try
-            {
-                // Obtenemos los datos desde MongoDB a través del ID del elemento.
-                var centro = db.GetCentroById(id);
-
-                return View(centro);
-            }
-            catch
-            {
-                return View();
+                return StatusCode(400, err.Message);
             }
         }
 
         // POST: CentroController/Edit/5 -> Implementa la acción para editar un documento de la colección
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(string id, IFormCollection collection)
-        {
-            try
+        //[HttpPut("{id}")]
+        public async Task<bool> Edit(Centro centro) => await db.UpdateCentro(centro);
+        /*{
+            if (centro == null)
             {
-                // Creamos un objeto para almacenar todos los datos que capturamos del formulario, debemos parsear todos los campos que no sean strings
-                var centro = new Centro()
-                {
-                    // Como se trata de una modificación, debemos usar el ID del objeto realizando la conversión al tipo de datos correcto de Mongo
-                    Id = new MongoDB.Bson.ObjectId(id),
-                    Nombre = collection["Nombre"],
-                    Descripcion = collection["Descripcion"],
-                    Direccion = new Direccion(
-                        collection["Direccion.Domicilio"],
-                        collection["Direccion.Ciudad"],
-                        int.Parse(collection["Direccion.Cp"]),
-                        collection["Direccion.Pais"]
-                        ),
-                    Telefono = collection["Telefono"],
-                    Email = collection["Email"],
-                };
+                return BadRequest(ModelState);
+            }
+
+            if (id == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (db.GetCentroById(id) == null)
+            {
+                return NotFound();
+            }
+
+            try {
+
+                // Preparamos el objeto:
+                // Nos aseguramos de que el ID del objeto que estamos editando es el mismo que el que hemos pasado por parámetro
+                centro.Id = new MongoDB.Bson.ObjectId(id);
 
                 // Llamamos al método Update. El framework se encarga de buscar el objeto.
-                db.UpdateCentro(centro);
+                await db.UpdateCentro(centro);
 
-                return RedirectToAction(nameof(Index));
+                return Created("Id", id);
             }
-            catch
+            catch (Exception err)
             {
-                return View();
+                return StatusCode(400, err.Message);
             }
-        }
-
-        // GET: CentroController/Delete/5 -> Devuelve la vista
-        public ActionResult Delete(string id)
-        {
-            try 
-            { 
-            // Recuperamos los valores del documento de la colección a través de su ID a través de los parámetros de la URL
-            var centro = db.GetCentroById(id);
-
-            return View(centro);
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        }*/
 
         // POST: CentroController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(string id, IFormCollection collection)
-        {
+        //[HttpDelete("{id}")]
+        public async Task<bool> Delete(string id) => await db.DeleteCentro(id);
+        /*{
+            if (id == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (db.GetCentroById(id) == null)
+            {
+                return NotFound();
+            }
+
             try
             {
-                // Llamamo al método para borrar el elemento en MongoDB
-                db.DeleteCentro(id);
+                // Llamamos al método para borrar el elemento en MongoDB
+                await db.DeleteCentro(id);
 
-                return RedirectToAction(nameof(Index));
+                return StatusCode(200);
             }
-            catch
+            catch (Exception err)
             {
-                return View();
+                return StatusCode(400, err.StackTrace);
             }
-        }
+        }*/
     }
 }

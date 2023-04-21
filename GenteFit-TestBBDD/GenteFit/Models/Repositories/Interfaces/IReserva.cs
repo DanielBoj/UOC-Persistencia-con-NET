@@ -1,11 +1,14 @@
-﻿namespace GenteFit.Models.Repositories.Interfaces
+﻿using GenteFit.Models;
+
+// Las interfaces definen las firmas de los métodos que implementarán los objetos DAO.
+namespace GenteFit.Models.Repositories.Interfaces
 {
     public interface IReserva
     {
-        bool InsertReserva(Reserva reserva);
-        bool UpdateReserva(Reserva reserva);
-        bool DeleteReserva(string id);
-        List<Reserva> GetAllReservas();
-        Reserva GetReservaById(string id);
+        Task<bool> InsertReserva(Reserva reserva);
+        Task<bool> UpdateReserva(Reserva reserva);
+        Task<bool> DeleteReserva(string id);
+        Task<List<Reserva>> GetAllReservas();
+        Task<Reserva> GetReservaById(string id);
     }
 }

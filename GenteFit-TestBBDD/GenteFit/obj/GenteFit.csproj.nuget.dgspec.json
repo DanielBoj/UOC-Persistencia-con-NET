@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\GenteFit\\GenteFit-TestBBDD\\GenteFit\\GenteFit.csproj": {}
+    "E:\\AngularPrj\\GenteFit\\GenteFit.csproj": {}
   },
   "projects": {
-    "C:\\GenteFit\\GenteFit-TestBBDD\\GenteFit\\GenteFit.csproj": {
+    "E:\\AngularPrj\\GenteFit\\GenteFit.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\GenteFit\\GenteFit-TestBBDD\\GenteFit\\GenteFit.csproj",
+        "projectUniqueName": "E:\\AngularPrj\\GenteFit\\GenteFit.csproj",
         "projectName": "GenteFit",
-        "projectPath": "C:\\GenteFit\\GenteFit-TestBBDD\\GenteFit\\GenteFit.csproj",
+        "projectPath": "E:\\AngularPrj\\GenteFit\\GenteFit.csproj",
         "packagesPath": "C:\\Users\\D. Ryalbran\\.nuget\\packages\\",
-        "outputPath": "C:\\GenteFit\\GenteFit-TestBBDD\\GenteFit\\obj\\",
+        "outputPath": "E:\\AngularPrj\\GenteFit\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -21,15 +21,15 @@
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net6.0"
+          "net7.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net6.0": {
-            "targetAlias": "net6.0",
+          "net7.0": {
+            "targetAlias": "net7.0",
             "projectReferences": {}
           }
         },
@@ -40,20 +40,24 @@
         }
       },
       "frameworks": {
-        "net6.0": {
-          "targetAlias": "net6.0",
+        "net7.0": {
+          "targetAlias": "net7.0",
           "dependencies": {
-            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+            "Microsoft.AspNetCore.SpaProxy": {
               "target": "Package",
-              "version": "[6.0.13, )"
+              "version": "[7.0.5, )"
             },
             "MongoDB.Driver": {
               "target": "Package",
               "version": "[2.19.1, )"
             },
-            "Validation": {
+            "Swashbuckle.AspNetCore": {
               "target": "Package",
-              "version": "[2.5.51, )"
+              "version": "[6.5.0, )"
+            },
+            "Swashbuckle.AspNetCore.Swagger": {
+              "target": "Package",
+              "version": "[6.5.0, )"
             }
           },
           "imports": [

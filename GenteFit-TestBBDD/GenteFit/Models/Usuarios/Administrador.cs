@@ -4,16 +4,16 @@ namespace GenteFit.Models.Usuarios
 {
     public class Administrador : User
     {
-        public bool isAdmin { get; set; }
+        public bool IsAdmin { get; set; } 
 
         public Administrador() : base()
         {
-            isAdmin = true;
+            IsAdmin = true;
         }
 
         public Administrador(String email, String pass) : base(email, pass)
         {
-            isAdmin = true;
+            IsAdmin = true;
         }
     }
 }

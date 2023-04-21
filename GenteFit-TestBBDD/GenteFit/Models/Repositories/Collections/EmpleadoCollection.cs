@@ -1,5 +1,6 @@
 ﻿using GenteFit.Models.Repositories.Interfaces;
 using GenteFit.Models.Usuarios;
+using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -20,17 +21,14 @@ namespace GenteFit.Models.Repositories.Collections
             Collection = _repository.db.GetCollection<Empleado>("Empleado");
         }
 
-        public List<Empleado> GetAllEmpleados()
+        public async Task<List<Empleado>> GetAllEmpleados()
         {
             try
             {
                 // Obtenemos los datos desde la BBDD mediante una peteción, query, a la colección.
                 // Importamos los datos como un Documento Bson y los convertimos en una lista. Hemos de usar un método asíncrono para esperar a la respuesta del servidor.
-                var query = Collection
-                    .Find(new BsonDocument()).ToListAsync();
-
-                // Devolvemos el res de la query
-                return query.Result;
+                return await Collection
+                    .FindAsync(new BsonDocument()).Result.ToListAsync();
             }
             catch (Exception ex)
             {
@@ -41,21 +39,19 @@ namespace GenteFit.Models.Repositories.Collections
             return new List<Empleado>();
         }
 
-        public Empleado GetEmpleadoById(string id)
+        public async Task<Empleado> GetEmpleadoById(string id)
         {
             if (id == null) return new Empleado();
 
             try
             {
-                var empleado = Collection.Find(
+                return await Collection.FindAsync(
                     // Obtenemos los datos desde la BBDD mediante una peteción, query, a la colección y buscando por el ID -> _id en Mongo.
                     // Realizamos un destructuring y asignamos el documento de Mongo al resultado de la query.
                     // Buscamos un documento en Mongo en el que su ID sea igual al ID que pasamos por parámetro y convertimos al tipo de dato ObjectId de Mongo.
                     // Si no realizamos la conversión, Mongo no puede hacer el matching.
                     new BsonDocument { { "_id", new ObjectId(id) } })
-                        .FirstAsync().Result;
-
-                return empleado;
+                        .Result.FirstAsync();
             }
             catch (Exception ex)
             {
@@ -65,14 +61,14 @@ namespace GenteFit.Models.Repositories.Collections
             }
         }
 
-        public bool InsertEmpleado(Empleado empleado)
+        public async Task<bool> InsertEmpleado(Empleado empleado)
         {
             //if (centro == null) throw new ArgumentNullException(nameof(centro));
             if (empleado == null) return false;
 
             try
             {
-                Collection.InsertOneAsync(empleado);
+                await Collection.InsertOneAsync(empleado);
 
                 return true;
             }
@@ -84,7 +80,7 @@ namespace GenteFit.Models.Repositories.Collections
             }
         }
 
-        public bool UpdateEmpleado(Empleado empleado)
+        public async Task<bool> UpdateEmpleado(Empleado empleado)
         {
             if (empleado == null) return false;
 
@@ -101,7 +97,7 @@ namespace GenteFit.Models.Repositories.Collections
                     .Eq(src => src.Id, empleado.Id);
 
                 // Ahora ya podemos llamar a la acción de Mongo aplicando el filtro que pasamos como parámetro para que Mongo realice la búsqueda
-                Collection.ReplaceOneAsync(filter, empleado);
+                await Collection.ReplaceOneAsync(filter, empleado);
 
                 return true;
             }
@@ -113,7 +109,7 @@ namespace GenteFit.Models.Repositories.Collections
             }
         }
 
-        public bool DeleteEmpleado(string id)
+        public async Task<bool> DeleteEmpleado(string id)
         {
             if (id == null) return false;
 
@@ -125,7 +121,7 @@ namespace GenteFit.Models.Repositories.Collections
                     .Eq(src => src.Id, new ObjectId(id));
 
                 // Una vez creado el método de filtrado, podemos llamar a la acción de MongoDB y pasarle el filtro.
-                Collection.DeleteOneAsync(filter);
+                await Collection.DeleteOneAsync(filter);
 
                 return true;
             }
@@ -136,5 +132,20 @@ namespace GenteFit.Models.Repositories.Collections
                 return false;
             }
         }
+
+        // Comprobamos si existen documentos en la colección.
+        public async Task<bool> IsEmpty()
+        {
+            try
+            {
+                return await Collection.CountDocumentsAsync(new BsonDocument()) == 0;
+            }
+            catch (Exception err)
+            {
+                Console.WriteLine(err.Message.ToString());
+                return false;
+            }
+        }
     }
 }
+    
