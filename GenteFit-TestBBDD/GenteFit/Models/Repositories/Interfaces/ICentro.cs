@@ -1,14 +1,15 @@
 ﻿using GenteFit.Models;
 using GenteFit.Models.Collections;
 
+// Las interfaces definen las firmas de los métodos que implementarán los objetos DAO.
 namespace GenteFit.Models.Repositories.Interfaces
 {
     public interface ICentro
     {
-        bool InsertCentro(Centro centro);
-        bool UpdateCentro(Centro centro);
-        bool DeleteCentro(string id);
-        List<Centro> GetAllCentros();
-        Centro GetCentroById(string id);
+        Task<bool> InsertCentro(Centro centro);
+        Task<bool> UpdateCentro(Centro centro);
+        Task<bool> DeleteCentro(string id);
+        Task<List<Centro>> GetAllCentros();
+        Task<Centro> GetCentroById(string id);
     }
 }

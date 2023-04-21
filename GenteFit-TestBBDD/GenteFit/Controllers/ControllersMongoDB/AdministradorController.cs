@@ -1,149 +1,135 @@
-﻿using GenteFit.Models.Repositories.Collections;
+﻿using GenteFit.Models;
+using GenteFit.Models.Repositories.Collections;
 using GenteFit.Models.Repositories.Interfaces;
 using GenteFit.Models.Usuarios;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace GenteFit.Controllers.ControllersMongoDB
 {
+    //[Route("api/[controller]")]
+    //[ApiController]
+    /* Controlador DTO para la clase Administrador y el DAO AdministradorCollection. 
+      Simplificamos al máximo la clase ya que la lógica irá en la API central. */
     public class AdministradorController : Controller
     {
         // Instanciamos la interfaz del Modelo MongoDB
         private IAdministrador db = new AdministradorCollection();
 
         // GET: AdministradorController
-        public ActionResult Index()
-        {
+        //[HttpGet]
+        public async Task<List<Administrador>> GetAllAdministradores() => await db.GetAllAdministradores();
+        /*{
             try
             {
-                // Obtenemos los datos desde MongoDB
-                var administradores = db.GetAllAdministradores();
+                // Capturamos los elementos obtenidos de la DB.
+                List<Administrador> administradores = await db.GetAllAdministradores();
 
-                return View(administradores);
-            } catch
+                return Ok(administradores);
+            } catch (Exception err)
             {
-                return View();
+                return StatusCode(404, err.Message);
             }
-            
-        }
+        }*/
 
         // GET: AdministradorController/Details/5
-        public ActionResult Details(string id)
-        {
+        //[HttpGet("{id}"), Route("api/[controller]detail/{id}")]
+        public async Task<Administrador> Details(string id) => await db.GetAdministradorById(id);
+        /*{
             try
             {
                 // Obtenemos los datos desde MongoDB a través del ID del elemento.
-                var administrador = db.GetAdministradorById(id);
+                Administrador administrador = await db.GetAdministradorById(id);
 
-                return View(administrador);
-            } catch
+                return Ok(administrador);
+            } catch (Exception err)
             {
-                return View();
+                return StatusCode(404, err.Message);
             }
-        }
-
-        // GET: AdministradorController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
+        }*/
 
         // POST: AdministradorController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                // Creamos un objeto para almacenar todos los datos que capturamos del formulario, debemos parsear todos los campos que no sean strings
-                var administrador = new Administrador()
+        //[HttpPost]
+        public async Task<bool> Create(Administrador administrador) => await db.InsertAdministrador(administrador);
+        /*{
+            if (administrador == null)
                 {
-                    Email = collection["Email"],
-                    Pass = collection["Pass"],
-                };
+                    return BadRequest();
+                }
 
-                // Guardamos el documento en nuestra colección de MongoDB, esto crea automáticamente el documento, usando el método definido en nuestro Collection.
-                db.InsertAdministrador(administrador);
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: AdministradorController/Edit/5
-        public ActionResult Edit(string id)
-        {
             try
             {
-                // Obtenemos los datos desde MongoDB a través del ID del elemento.
-                var administrador = db.GetAdministradorById(id);
-
-                return View(administrador);
+                // Guardamos el documento en nuestra colección de MongoDB, esto crea automáticamente el documento, usando el método definido en nuestro Collection.
+                await db.InsertAdministrador(administrador);
+                return Created("Id", administrador.Id);
             }
-            catch
+            catch (Exception err)
             {
-                return View();
+                return StatusCode(400, err.Message); 
             }
-        }
+        }*/
 
         // POST: AdministradorController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(string id, IFormCollection collection)
-        {
+        //[HttpPut("{id}")]
+        public async Task<bool> Edit(Administrador administrador) => await db.UpdateAdministrador(administrador);
+        /*{
+            if (administrador == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (id == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (db.GetAdministradorById(id) == null)
+            {
+                return NotFound();
+            }
+
             try
             {
-                // Creamos un objeto para almacenar todos los datos que capturamos del formulario, debemos parsear todos los campos que no sean strings
-                var administrador = new Administrador()
-                {
-                    Id = new MongoDB.Bson.ObjectId(id),
-                    Email = collection["Email"],
-                    Pass = collection["Pass"],
-                };
+                // Nos aseguramos de que el ID del objeto que estamos editando es el mismo que el que hemos pasado por parámetro
+                administrador.Id = new MongoDB.Bson.ObjectId(id);
 
-                db.UpdateAdministrador(administrador);
+                await db.UpdateAdministrador(administrador);
 
-                return RedirectToAction(nameof(Index));
+                return Created("Id", id);
             }
-            catch
+            catch (Exception err)
             {
-                return View();
+                return StatusCode(400, err.Message);
             }
-        }
-
-        // GET: AdministradorController/Delete/5
-        public ActionResult Delete(string id)
-        {
-            try
-            {
-                // Obtenemos los datos desde MongoDB a través del ID del elemento.
-                var administrador = db.GetAdministradorById(id);
-
-                return View(administrador);
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        }*/
 
         // POST: AdministradorController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(string id, IFormCollection collection)
-        {
+        //[HttpDelete("{id}")]
+        public async Task<bool> Delete(string id) => await db.DeleteAdministrador(id);
+        /*{
+            if (id == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (db.GetAdministradorById(id) == null)
+            {
+                return NotFound();
+            }
             try
             {
-                // Llamamo al método para borrar el elemento en MongoDB
-                db.DeleteAdministrador(id);
+                // Llamamos al método para borrar el elemento en MongoDB
+                await db.DeleteAdministrador(id);
 
-                return RedirectToAction(nameof(Index));
+                return StatusCode(200);
             }
-            catch
+            catch (Exception err)
             {
-                return View();
+                return StatusCode(400, err.Message);
             }
-        }
+        }*/
+
+        // Comprobamos si existen documentos
+        public async Task<bool> IsEmpty() => await db.IsEmpty();
     }
 }

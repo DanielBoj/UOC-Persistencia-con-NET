@@ -5,128 +5,144 @@ using GenteFit.Models.Usuarios;
 
 namespace GenteFit.Controllers.ControllersMongoDB
 {
+    //[Route("api/[controller]")]
+    //[ApiController]
+    /* Controlador DTO para la clase Empleado y el DAO EmpleadoCollection. 
+      Simplificamos al máximo la clase ya que la lógica irá en la API central. */
     public class EmpleadoController : Controller
     {
         // Instanciamos la interfaz del Modelo MongoDB
         private IEmpleado db = new EmpleadoCollection();
 
-        // GET: EmpleadoController
-        public ActionResult Index()
-        {
+        //GET
+        //[HttpGet]
+        public async Task<List<Empleado>> GetAllEmpleados() => await db.GetAllEmpleados();
+        /*{
             try
             {
-                // Obtenemos los datos desde MongoDB
-                var empleados = db.GetAllEmpleados();
+                // Capturamos los elementos obtenidos de la DB.
+                List<Empleado> empleados = await db.GetAllEmpleados();
 
-                return View(empleados);
-            } catch
-            {
-                return View();
+                return Ok(empleados);
             }
-        }
+            catch (Exception err)
+            {
+                return StatusCode(404, err.Message);
+            }
+        }*/
 
         // GET: EmpleadoController/Details/5
-        public ActionResult Details(string id)
-        {
+        //[HttpGet("{id}"), Route("api/[controller]detail/{id}")]
+        public async Task<Empleado> Details(string id) => await db.GetEmpleadoById(id);
+        /*{
+            if (id == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (db.GetEmpleadoById(id) == null)
+            {
+                return NotFound();
+            }
+
             try
             {
                 // Obtenemos los datos desde MongoDB a través del ID del elemento.
-                var empleado = db.GetEmpleadoById(id);
+                Empleado empleado = await db.GetEmpleadoById(id);
 
-                return View(empleado);
-            } catch { return View(); }
+                return Ok(empleado);
+            } catch (Exception err)
+            {
+                return StatusCode(404, err.Message);
+            }
         }
-
-        // GET: EmpleadoController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
+*/
         // POST: EmpleadoController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
+        //[HttpPost]
+        public async Task<bool> Create(Empleado empleado) => await db.InsertEmpleado(empleado);
+        /*{
+            if (empleado == null)
+            {
+                return BadRequest(ModelState);
+            }
+
             try
             {
-                // Creamos un objeto para almacenar todos los datos que capturamos del formulario, debemos parsear todos los campos que no sean strings
-                var empleado = new Empleado()
-                {
-                    Email = collection["Email"],
-                    Pass = collection["Passs"]
-                };
-
                 // Guardamos el documento en nuestra colección de MongoDB, esto crea automáticamente el documento, usando el método definido en nuestro Collection.
-                db.InsertEmpleado(empleado);
-                return RedirectToAction(nameof(Index));
-            }
-            catch { return View(); }
-        }
+                await db.InsertEmpleado(empleado);
 
-        // GET: EmpleadoController/Edit/5
-        public ActionResult Edit(string id)
-        {
-            try
+                return Created("Id", empleado.Id);
+            }
+            catch (Exception err)
             {
-                // Obtenemos los datos desde MongoDB a través del ID del elemento.
-                var empleado = db.GetEmpleadoById(id);
-
-                return View(empleado);
+                return StatusCode(400, err.Message);
             }
-            catch { return View(); }
-        }
+        }*/
 
         // POST: EmpleadoController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(string id, IFormCollection collection)
-        {
-            try
+        //[HttpPut("{id}")]
+        public async Task<bool> Edit(Empleado empleado) => await db.UpdateEmpleado(empleado);
+        /*{
+            if (id == null)
             {
-                // Creamos un objeto para almacenar todos los datos que capturamos del formulario, debemos parsear todos los campos que no sean strings
-                var empleado = new Empleado()
-                {
-                    // Como se trata de una modificación, debemos usar el ID del objeto realizando la conversión al tipo de datos correcto de Mongo
-                    Id = new MongoDB.Bson.ObjectId(id),
-                    Email = collection["Email"],
-                    Pass = collection["Pass"],
-                };
+                return BadRequest(ModelState);
+            }
+
+            if (empleado == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (db.GetEmpleadoById(id) == null)
+            {
+                return NotFound();
+            }
+
+            try
+
+            {
+                // Nos aseguramos de que el ID del objeto sea el correcto.
+                empleado.Id = new MongoDB.Bson.ObjectId(id);
 
                 // Llamamos al método Update. El framework se encarga de buscar el objeto.
-                db.UpdateEmpleado(empleado);
+                await db.UpdateEmpleado(empleado);
 
-                return RedirectToAction(nameof(Index));
+                return Created("Id", id);
             }
-            catch { return View(); }
-        }
-
-        // GET: EmpleadoController/Delete/5
-        public ActionResult Delete(string id)
-        {
-            try
+            catch (Exception err)
             {
-                // Obtenemos los datos desde MongoDB a través del ID del elemento.
-                var empleado = db.GetEmpleadoById(id);
-
-                return View(empleado);
+                return StatusCode(400, err.Message);
             }
-            catch { return View(); }
-        }
+        }*/
 
         // POST: EmpleadoController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(string id, IFormCollection collection)
-        {
+        //[HttpDelete("{id}")]
+        public async Task<bool> Delete(string id) => await db.DeleteEmpleado(id);
+        /*{
+            if (id == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (db.GetEmpleadoById(id) == null)
+            {
+                return NotFound();
+            }
+
             try
             {
                 // LLamamos al método para borrar el elemento en MongoDB
-                db.DeleteEmpleado(id);
+                await db.DeleteEmpleado(id);
 
-                return RedirectToAction(nameof(Index));
+                return StatusCode(200);
             }
-            catch { return View(); }
-        }
+            catch (Exception err)
+            {
+                return StatusCode(400, err.Message);
+            }
+        }*/
+
+        // Comprobamos si existen documentos en la colección.
+        public async Task<bool> IsEmpty() => await db.IsEmpty();
     }
 }

@@ -1,8 +1,11 @@
-﻿namespace GenteFit.Models.Repositories.Interfaces
+﻿using GenteFit.Models;
+
+// Las interfaces definen las firmas de los métodos que implementarán los objetos DAO.
+namespace GenteFit.Models.Repositories.Interfaces
 {
 	public interface IClasePartial
 	{
-		List<Clase> GetAllClases();
-		Clase GetClaseById(string id);
+		Task<List<Clase>> GetAllClases();
+		Task<Clase> GetClaseById(string id);
 	}
 }

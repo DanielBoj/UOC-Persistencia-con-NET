@@ -8,11 +8,15 @@ namespace GenteFit.Models
     {
         // Necesitamos usar un tipo de objeto propio de Mongo para que genere automáticamente los ID únicos de los documentos
         [BsonId]
-        public ObjectId Id { get; set; }
-        public Horario Horario;
-        public Cliente Cliente;
+        [BsonRepresentation(BsonType.ObjectId)]
+        public ObjectId? Id { get; set; }
+        public Horario Horario { get; set; } = null!;
+        public Cliente Cliente { get; set; } = null!;
 
-        public Reserva() { }
+        public Reserva() {
+            Horario = new();
+            Cliente = new();
+        }
 
         public Reserva(Horario horario, Cliente cliente)
         {

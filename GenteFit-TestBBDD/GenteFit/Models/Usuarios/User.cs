@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography.X509Certificates;
 
 namespace GenteFit.Models.Usuarios
 {
@@ -8,11 +9,12 @@ namespace GenteFit.Models.Usuarios
     {
         // Necesitamos usar un tipo de objeto propio de Mongo para que genere automáticamente los ID únicos de los documentos
         [BsonId]
-        public ObjectId Id { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public ObjectId? Id { get; set; }
         [Required(ErrorMessage = "Debe completar este campo.")]
-        public string Email { get; set; }
+        public string Email { get; set; } = null!;
         [Required(ErrorMessage = "Debe completar este campo.")]
-        public string Pass { get; set; }
+        public string Pass { get; set; } = null!;
 
         public User() { }
 

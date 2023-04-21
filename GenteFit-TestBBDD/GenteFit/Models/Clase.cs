@@ -7,18 +7,19 @@ namespace GenteFit.Models
     {
         // Necesitamos usar un tipo de objeto propio de Mongo para que genere automáticamente los ID únicos de los documentos
         [BsonId]
-        public ObjectId Id { get; set; }
-        public string Nombre { get; set; }
-        public string Descripcion { get; set; }
-        public string Profesor { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public ObjectId? Id { get; set; }
+        [BsonElement("Nombre")]
+        public string Nombre { get; set; } = null!;
+        public string Descripcion { get; set; } = null!;
+        public string Profesor { get; set; } = null!;
         public int Duracion { get; set; }
         public int Plazas { get; set; }
 
-        private static int TotalClases = 0;
+        private static int TotalClases { get; set; } = 0;
 
         public Clase()
         {
-            TotalClases++;
         }
 
         public Clase(string nombre, string descripcion, string profesor, int duracion, int plazas)
@@ -28,8 +29,12 @@ namespace GenteFit.Models
             Profesor = profesor;
             Duracion = duracion;
             Plazas = plazas;
-            
-            TotalClases++;
         }
+
+        // Generamos 2 métodos estáticos para incrementar y decrementar el número de clases.
+
+        public static void AdvanceTotalClases() { TotalClases++;  }
+
+        public static void DecreaseTotalClases() { TotalClases--; }
     }
 }

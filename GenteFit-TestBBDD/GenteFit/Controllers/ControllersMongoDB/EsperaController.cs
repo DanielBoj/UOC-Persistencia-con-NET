@@ -6,144 +6,139 @@ using GenteFit.Models.Usuarios;
 
 namespace GenteFit.Controllers.ControllersMongoDB
 {
+    //[Route("api/[controller]")]
+    //[ApiController]
+    /* Controlador DTO para la clase Espera y el DAO EsperaCollection. 
+      Simplificamos al máximo la clase ya que la lógica irá en la API central. */
     public class EsperaController : Controller
     {
         // Instanciamos la interfaz del Modelo MongoDB
         private IEspera db = new EsperaCollection();
-        private ICliente cliente = new ClienteCollection();
-        private IHorario horario = new HorarioCollection();
+        //private ICliente cliente = new ClienteCollection();
+        //private IHorario horario = new HorarioCollection();
 
-        // GET: EsperaController
-        public ActionResult Index()
-        {
+        // GET
+        //[HttpGet]
+        public async Task<List<Espera>> GetAllEsperas() => await db.GetAllEsperas();
+        /*{
             try
             {
-                // Obtenemos los datos desde MongoDB
-                var esperas = db.GetAllEsperas();
+                // Capturamos los elementos obtenidos de la DB.
+                List<Espera> esperas = await db.GetAllEsperas();
 
-                return View(esperas);
-            } catch
+                return Ok(esperas);
+            } catch (Exception err)
             {
-                return View();
+                return StatusCode(404, err.Message);
             }
-        }
+        }*/
 
         // GET: EsperaController/Details/5
-        public ActionResult Details(string id)
-        {
+        //[HttpGet("{id}"), Route("api/[controller]detail/{id}")]
+        public async Task<Espera> Details(string id) => await db.GetEsperaById(id);
+        /*{
             try
             {
                 // Obtenemos los datos desde MongoDB a través del ID del elemento.
-                var espera = db.GetEsperaById(id);
+                Espera espera = await db.GetEsperaById(id);
 
-                return View(espera);
-            } catch
+                return Ok(espera);
+            } catch (Exception err)
             {
-                return View();
+                return StatusCode(404, err.Message);
             }
-        }
-
-        // GET: EsperaController/Create
-        public ActionResult Create()
-        {
-            try
-            {
-                var clientes = cliente.GetAllClientes();
-                var horarios = horario.GetAllHorarios();
-                ViewData["Clientes"] = clientes;
-                ViewData["Horarios"] = horarios;
-                return View();
-            }
-            catch { return View(); }
-        }
+        }*/
 
         // POST: EsperaController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
+        //[HttpPost]
+        public async Task<bool> Create(Espera espera) => await db.InsertEspera(espera);
+        /*{
+            if (espera == null)
+            {
+                return BadRequest(ModelState);
+            }
+
             try
             {
                 // Creamos un objeto para almacenar todos los datos que capturamos del formulario, debemos parsear todos los campos que no sean strings
-                var espera = new Espera()
+                *//*var espera = new Espera()
                 {
-                    Cliente = cliente.GetClienteById(collection["Cliente"]),
-                    Horario = horario.GetHorarioById(collection["Horario"])
-                };
+                    Id = new MongoDB.Bson.ObjectId(collection["Cliente.id"]),
+                    //Cliente = cliente.GetClienteById(collection["Cliente"]),
+                    //Horario = horario.GetHorarioById(collection["Horario"])
+                };*//*
 
                 // Guardamos el documento en nuestra colección de MongoDB, esto crea automáticamente el documento, usando el método definido en nuestro Collection.
-                db.InsertEspera(espera);
-                return RedirectToAction(nameof(Index));
+                await db.InsertEspera(espera);
+
+                return Created("Id", espera.Id);
             }
-            catch { return View(); }
-        }
-
-        // GET: EsperaController/Edit/5
-        public ActionResult Edit(string id)
-        {
-            try
+            catch (Exception err)
             {
-                // Obtenemos los datos desde MongoDB a través del ID del elemento.
-                var espera = db.GetEsperaById(id);
-                var clientes = cliente.GetAllClientes();
-                var horarios = horario.GetAllHorarios();
-                ViewData["Clientes"] = clientes;
-                ViewData["Horarios"] = horarios;
-
-                return View(espera);
-            } catch { return View(); }
-        }
+                return StatusCode(400, err.Message);
+            }
+        }*/
 
         // POST: EsperaController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(string id, IFormCollection collection)
-        {
+        //[HttpPut("{id}")]
+        public async Task<bool> Edit(Espera espera) => await db.UpdateEspera(espera);
+        /*{
+            if (id == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (espera == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (db.GetEsperaById(id) == null)
+            {
+                return NotFound();
+            }
+
             try
             {
-                // Creamos un objeto para almacenar todos los datos que capturamos del formulario, debemos parsear todos los campos que no sean strings
-                var espera = new Espera()
-                {
-                    // Como se trata de una modificación, debemos usar el ID del objeto realizando la conversión al tipo de datos correcto de Mongo
-                    Id = new MongoDB.Bson.ObjectId(id),
-                    Cliente = cliente.GetClienteById(collection["Cliente"]),
-                    Horario = horario.GetHorarioById(collection["Horario"])
-                };
+                // Nos aseguramos de que el ID del objeto sea el correcto.
+                espera.Id = new MongoDB.Bson.ObjectId(id);
 
                 // Llamamos al método Update. El framework se encarga de buscar el objeto.
-                db.UpdateEspera(espera);
+                await db.UpdateEspera(espera);
 
-                return RedirectToAction(nameof(Index));
+                return Created("Id", id);
             }
-            catch { return View(); }
-        }
-
-        // GET: EsperaController/Delete/5
-        public ActionResult Delete(string id)
-        {
-            try
+            catch (Exception err)
             {
-                // Obtenemos los datos desde MongoDB a través del ID del elemento.
-                var espera = db.GetEsperaById(id);
-
-                return View(espera);
+                return StatusCode(400, err.Message);
             }
-            catch { return View(); }
-        }
+        }*/
 
         // POST: EsperaController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(string id, IFormCollection collection)
-        {
+        //[HttpDelete("{id}")]
+        public async Task<bool> Delete(string id) => await db.DeleteEspera(id);
+        /*{
+            if (id == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (db.GetEsperaById(id) == null)
+            {
+                return NotFound();
+            }
+
             try
             {
                 // LLamamos al método para borrar el elemento en MongoDB
-                db.DeleteEspera(id);
+                await db.DeleteEspera(id);
 
-                return RedirectToAction(nameof(Index));
+                return StatusCode(200);
             }
-            catch { return View(); }
-        }
+            catch (Exception err)
+            {
+                return StatusCode(400, err.Message);
+            }
+        }*/
     }
 }

@@ -2,7 +2,6 @@
 {
     public class Production
     {
-
         public string? mongo_db_user;
         public string? mongo_db_pass;
         public string? mongo_db_name;

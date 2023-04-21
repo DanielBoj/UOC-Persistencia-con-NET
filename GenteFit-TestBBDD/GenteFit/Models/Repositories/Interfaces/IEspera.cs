@@ -1,11 +1,14 @@
-﻿namespace GenteFit.Models.Repositories.Interfaces
+﻿using GenteFit.Models;
+
+// Las interfaces definen las firmas de los métodos que implementarán los objetos DAO.
+namespace GenteFit.Models.Repositories.Interfaces
 {
     public interface IEspera
     {
-        bool InsertEspera(Espera espera);
-        bool UpdateEspera(Espera espera);
-        bool DeleteEspera(string id);
-        List<Espera> GetAllEsperas();
-        Espera GetEsperaById(string id);
+        Task<bool> InsertEspera(Espera espera);
+        Task<bool> UpdateEspera(Espera espera);
+        Task<bool> DeleteEspera(string id);
+        Task<List<Espera>> GetAllEsperas();
+        Task<Espera> GetEsperaById(string id);
     }
 }

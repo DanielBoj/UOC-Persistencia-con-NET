@@ -9,151 +9,141 @@ using GenteFit.Models.Collections;
 
 namespace GenteFit.Controllers.ControllersMongoDB
 {
+    //[Route("api/[controller]")]
+    //[ApiController]
+    /* Controlador DTO para la clase Cliente y el DAO ClienteCollection. 
+      Simplificamos al máximo la clase ya que la lógica irá en la API central. */
     public class ClienteController : Controller
     {
         // Instanciamos la interfaz del Modelo MongoDB
         private ICliente db = new ClienteCollection();
 
-        // GET: ClienteController
-        public ActionResult Index()
-        {
+        // GET
+        //[HttpGet]
+        public async Task<List<Cliente>> GetAllClientes() => await db.GetAllClientes();
+        /*{
             try
             {
-                // Obtenemos los datos desde MongoDB
-                var clientes = db.GetAllClientes();
+                // Capturamos los elementos obtenidos de la DB.
+                List<Cliente> clientes = await db.GetAllClientes();
 
-                return View(clientes);
-            } catch (Exception ex) { Console.Write(ex.Message.ToString());  return View();  }
-            
-        }
+                return Ok(clientes);
+            } catch (Exception err)
+            {
+                return StatusCode(404, err.Message);
+            }
+        }*/
 
         // GET: ClienteController/Details/5
-        public ActionResult Details(string id)
-        {
+        //[HttpGet("{id}"), Route("api/[controller]detail/{id}")]
+        public async Task<Cliente> Details(string id) => await db.GetClienteById(id);
+       /* {
+            if (id == null)
+            {
+                    return BadRequest(ModelState);
+            }
+
+            if (db.GetClienteById(id) == null)
+            {
+                return NotFound();
+            }
+
             try
             {
                 // Obtenemos los datos desde MongoDB a través del ID del elemento.
-                var cliente = db.GetClienteById(id);
+                Cliente cliente = await db.GetClienteById(id);
 
-                return View(cliente);
-            } catch { return View(); }
+                return Ok(cliente);
+            } catch (Exception err)
+            {
+                return StatusCode(404, err.Message);
+            }
         }
-
-        // GET: ClienteController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
+*/
         // POST: ClienteController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
+        //[HttpPost]
+        public async Task<bool> Create(Cliente cliente) => await db.InsertCliente(cliente);
+        /*{
+            if (cliente == null)
+            {
+                return BadRequest(ModelState);
+            }
+
             try
             {
-                // Creamos un objeto para almacenar todos los datos que capturamos del formulario, debemos parsear todos los campos que no sean strings
-                var cliente = new Cliente()
-                {
-                    Email = collection["Email"],
-                    Pass = collection["Pass"],
-                    Nombre = collection["Nombre"],
-                    Nif = collection["Nif"],
-                    Direccion = new Direccion(
-                        collection["Direccion.Domicilio"],
-                        collection["Direccion.Ciudad"],
-                        int.Parse(collection["Direccion.Cp"]),
-                        collection["Direccion.Pais"]
-                        ),
-                    Telefono = collection["Telefono"],
-                    Genero = (Genero)Enum.Parse(typeof(Genero), collection["Genero"]),
-                    Iban = collection["Iban"],
-                    Reservas = new Listas<Reserva>(),
-                    Esperas = new Colas<Espera>()
-                };
 
                 // Guardamos el documento en nuestra colección de MongoDB, esto crea automáticamente el documento, usando el método definido en nuestro Collection.
-                db.InsertCliente(cliente);
-                return RedirectToAction(nameof(Index));
-            }
-            catch { return View(); }
-        }
+                await db.InsertCliente(cliente);
 
-        // GET: ClienteController/Edit/5
-        public ActionResult Edit(string id)
-        {
-            try
+                return Created("Id", cliente.Id);
+            }
+            catch (Exception err)
             {
-                // Obtenemos los datos desde MongoDB a través del ID del elemento.
-                var cliente = db.GetClienteById(id);
-
-                return View(cliente);
+                return StatusCode(400, err.Message);
             }
-            catch { return View(); }
-        }
+        }*/
 
         // POST: ClienteController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(string id, IFormCollection collection)
-        {
+        //[HttpPut("{id}")]
+        public async Task<bool> Edit(Cliente cliente) => await db.UpdateCliente(cliente);
+        /*{
+            if (id == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (cliente == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (db.GetClienteById(id) == null)
+            {
+                return NotFound();
+            }
+
             try
             {
-                // Creamos un objeto para almacenar todos los datos que capturamos del formulario, debemos parsear todos los campos que no sean strings
-                var cliente = new Cliente()
-                {
-                    // Como se trata de una modificación, debemos usar el ID del objeto realizando la conversión al tipo de datos correcto de Mongo
-                    Id = new MongoDB.Bson.ObjectId(id),
-                    Email = collection["Email"],
-                    Pass = collection["Pass"],
-                    Nombre = collection["Nombre"],
-                    Nif = collection["Nif"],
-                    Direccion = new Direccion(
-                        collection["Direccion.Domicilio"], 
-                        collection["Direccion.Ciudad"], 
-                        int.Parse(collection["Direccion.Cp"]), 
-                        collection["Direccion.Pais"]
-                        ),
-                    Telefono = collection["Telefono"],
-                    Genero = (Genero)Enum.Parse(typeof(Genero), collection["Genero"]),
-                    Iban = collection["Iban"],
-                    // Todo -> Modificar las reservas y esperas
-                };
 
                 // Llamamos al método Update. El framework se encarga de buscar el objeto.
-                db.UpdateCliente(cliente);
+                await db.UpdateCliente(cliente);
 
-                return RedirectToAction(nameof(Index));
+                return Created("Id", id);
             }
-            catch { return View(); }
-        }
-
-        // GET: ClienteController/Delete/5
-        public ActionResult Delete(string id)
-        {
-            try
+            catch (Exception err)
             {
-                // Obtenemos los datos desde MongoDB a través del ID del elemento.
-                var cliente = db.GetClienteById(id);
-
-                return View(cliente);
+                return StatusCode(400, err.Message);
             }
-            catch { return View(); }
-        }
+        }*/
 
         // POST: ClienteController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(string id, IFormCollection collection)
-        {
+        //[HttpDelete("{id}")]
+        public async Task<bool> Delete(string id) => await db.DeleteCliente(id);
+        /*{
+            if (id == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (db.GetClienteById(id) == null)
+            {
+                return NotFound();
+            }
+
             try
             {
                 // LLamamos al método para borrar el elemento en MongoDB
-                db.DeleteCliente(id);
+                await db.DeleteCliente(id);
 
-                return RedirectToAction(nameof(Index));
+                return StatusCode(200);
             }
-            catch { return View(); }
-        }
+            catch (Exception err)
+            {
+                return StatusCode(400, err.Message);
+            }
+        }*/
+
+        // Comprobamos si existen documentos en la colección.
+        public async Task<bool> IsEmpty() => await db.IsEmpty();
     }
 }

@@ -6,149 +6,140 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GenteFit.Controllers.ControllersMongoDB
 {
+    //[Route("api/[controller]")]
+    //[ApiController]
+    /* Controlador DTO para la clase Reserva y el DAO ReservaCollection. 
+      Simplificamos al máximo la clase ya que la lógica irá en la API central. */
     public class ReservaController : Controller
     {
         // Instanciamos la interfaz del Modelo MongoDB
         private IReserva db = new ReservaCollection();
-        private ICliente cliente = new ClienteCollection();
-        private IHorario horario = new HorarioCollection();
+        //private ICliente cliente = new ClienteCollection();
+        //private IHorario horario = new HorarioCollection();
 
-        // GET: ReservaController
-        public ActionResult Index()
-        {
+        // GET
+        //[HttpGet]
+        public async Task<List<Reserva>> GetAllReservas() => await db.GetAllReservas();
+        /*{
             try
             {
-                // Obtenemos los datos desde MongoDB
-                var reservas = db.GetAllReservas();
+                // Capturamos los elementos obtenidos de la DB.
+                List<Reserva> reservas = await db.GetAllReservas();
 
-                return View(reservas);
-            } catch { return View(); }
-        }
+                return Ok(reservas);
+            } catch (Exception err)
+            {
+                return StatusCode(404, err.Message);
+            }
+        }*/
 
         // GET: ReservaController/Details/5
-        public ActionResult Details(string id)
-        {
+        //[HttpGet("{id}"), Route("api/[controller]detail/{id}")]
+        public async Task<Reserva> Details(string id) => await db.GetReservaById(id);
+       /* {
+            if (id == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (db.GetReservaById(id) == null)
+            {
+                return NotFound();
+            }
+
             try
             {
                 // Obtenemos los datos desde MongoDB a través del ID del elemento.
-                var reserva = db.GetReservaById(id);
+                Reserva reserva = await db.GetReservaById(id);
 
-                return View(reserva);
-            } catch
+                return Ok(reserva);
+            } catch (Exception err)
             {
-                return View();
+                return StatusCode(404, err.Message);
             }
-        }
-
-        // GET: ReservaController/Create
-        public ActionResult Create()
-        {
-            try
-            {
-                var clientes = cliente.GetAllClientes();
-                var horarios = horario.GetAllHorarios();
-                ViewData["Clientes"] = clientes;
-                ViewData["Horarios"] = horarios;
-                return View();
-            } catch { return View(); }
-        }
+        }*/
 
         // POST: ReservaController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
+        //[HttpPost]
+        public async Task<bool> Create(Reserva reserva) => await db.InsertReserva(reserva);
+        /*{
+            if (reserva == null)
             {
-                // Creamos un objeto para almacenar todos los datos que capturamos del formulario, debemos parsear todos los campos que no sean strings
-                var reserva = new Reserva()
-                {
-                    Cliente = cliente.GetClienteById(collection["Cliente"]),
-                    Horario = horario.GetHorarioById(collection["Horario"])
-                };
+                return BadRequest(ModelState);
+            }
 
+            try
+            { 
                 // Guardamos el documento en nuestra colección de MongoDB, esto crea automáticamente el documento, usando el método definido en nuestro Collection.
-                db.InsertReserva(reserva);
-                return RedirectToAction(nameof(Index));
+                await db.InsertReserva(reserva);
+                return Created("Id", reserva.Id);
             }
-            catch { return View(); }
-        }
-
-        // GET: ReservaController/Edit/5
-        public ActionResult Edit(string id)
-        {
-            try
+            catch (Exception err)
             {
-                // Obtenemos los datos desde MongoDB a través del ID del elemento.
-                var reserva = db.GetReservaById(id);
-                var clientes = cliente.GetAllClientes();
-                var horarios = horario.GetAllHorarios();
-                ViewData["Clientes"] = clientes;
-                ViewData["Horarios"] = horarios;
-
-                return View(reserva);
+                return StatusCode(400, err.Message);
             }
-            catch
-            {
-                return View();
-            }
-        }
+        }*/
 
         // POST: ReservaController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(string id, IFormCollection collection)
-        {
-            try
-            {
-                // Creamos un objeto para almacenar todos los datos que capturamos del formulario, debemos parsear todos los campos que no sean strings
-                var reserva = new Reserva()
-                {
-                    // Como se trata de una modificación, debemos usar el ID del objeto realizando la conversión al tipo de datos correcto de Mongo
-                    Id = new MongoDB.Bson.ObjectId(id),
-                    // TODO -> Añadir objetos a las listas
-                };
+        //[HttpPut("{id}")]
+        public async Task<bool> Edit(Reserva reserva) => await db.UpdateReserva(reserva);
+        /* {
+             if (id == null)
+             {
+                 return BadRequest(ModelState);
+             }
 
-                // Llamamos al método Update. El framework se encarga de buscar el objeto.
-                db.UpdateReserva(reserva);
+             if (reserva == null)
+             {
+                 return BadRequest(ModelState);
+             }
 
-                return RedirectToAction(nameof(Index));
-            }
-            catch { return View(); }
-        }
+             if (db.GetReservaById(id) == null)
+             {
+                 return NotFound();
+             }
 
-        // GET: ReservaController/Delete/5
-        public ActionResult Delete(string id)
-        {
-            try
-            {
-                // Obtenemos los datos desde MongoDB a través del ID del elemento.
-                var reserva = db.GetReservaById(id);
+             try
+             {
+                 // Nos aseguramos de que el ID del objeto sea el correcto.
+                 reserva.Id = new MongoDB.Bson.ObjectId(id);
 
-                return View(reserva);
-            }
-            catch
-            {
-                return View();
-            }
-        }
+                 // Llamamos al método Update. El framework se encarga de buscar el objeto.
+                 await db.UpdateReserva(reserva);
+
+                 return Created("Id", id);
+             }
+             catch (Exception err)
+             {
+                 return StatusCode(400, err.Message);
+             }
+         }*/
 
         // POST: ReservaController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(string id, IFormCollection collection)
-        {
+        //[HttpDelete("{id}")]
+        public async Task<bool> Delete(string id) => await db.DeleteReserva(id);
+        /*{
+            if (id == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (db.GetReservaById(id) == null)
+            {
+                return NotFound();
+            }
+
             try
             {
                 // LLamamos al método para borrar el elemento en MongoDB
-                db.DeleteReserva(id);
+                await db.DeleteReserva(id);
 
-                return RedirectToAction(nameof(Index));
+                return StatusCode(200);
             }
-            catch
+            catch (Exception err)
             {
-                return View();
+                return StatusCode(400, err.Message);
             }
-        }
+        }*/
     }
 }
