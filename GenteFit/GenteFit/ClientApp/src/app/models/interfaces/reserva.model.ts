@@ -7,5 +7,5 @@ import { Cliente } from './cliente.model';
 export interface Reserva {
   id?: string,
   horario: Horario,
-cliente: Cliente
+  cliente: Cliente
 }

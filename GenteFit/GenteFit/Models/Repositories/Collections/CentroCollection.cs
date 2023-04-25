@@ -1,8 +1,7 @@
 ﻿using MongoDB.Driver;
 using GenteFit.Models.Repositories.Interfaces;
 using MongoDB.Bson;
-using Microsoft.Extensions.Options;
-//using Microsoft.CodeAnalysis.Options;
+
 
 namespace GenteFit.Models.Repositories.Collections
 {

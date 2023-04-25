@@ -723,7 +723,7 @@ namespace GenteFit.Controllers
 
         // Filtramos los horarios por cliente y clase
         // GET: api/horario/idCliente?clase:clase
-        [HttpGet("[controller]/horario/{idCliente}?clase:{clase}")]
+        [HttpGet("[controller]/horario/{idCliente}clase:{clase}")]
         public async Task<IActionResult> ListHorariosByClienteyClase([FromRoute] string idCliente,
             [FromRoute] string clase)
         {

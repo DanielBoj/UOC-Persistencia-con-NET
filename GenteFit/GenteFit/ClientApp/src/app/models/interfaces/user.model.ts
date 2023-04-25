@@ -3,5 +3,6 @@
 export interface User {
   id?: string,
   email: string,
-  pass: string
+  pass: string,
+  tipo: string
 }

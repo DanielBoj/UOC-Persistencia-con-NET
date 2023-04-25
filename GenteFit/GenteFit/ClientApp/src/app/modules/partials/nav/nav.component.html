@@ -1,0 +1,12 @@
+<section class="menu">
+  <mat-menu #appMenu="matMenu">
+    <button mat-menu-item>Centro</button>
+    <button mat-menu-item>Cuenta</button>
+    <button mat-menu-item>Clases</button>
+    <button mat-menu-item>Horarios</button>
+  </mat-menu>
+
+  <button mat-icon-button [matMenuTriggerFor]="appMenu">
+    <mat-icon>menu</mat-icon>
+  </button>
+</section>
