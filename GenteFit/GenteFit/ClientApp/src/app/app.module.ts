@@ -16,6 +16,7 @@ import { ClasesComponent } from './modules/clases/clases.component';
 import { HorariosComponent } from './modules/horarios/horarios.component';
 import { NavComponent } from './modules/partials/nav/nav.component';
 import { FooterComponent } from './modules/partials/footer/footer.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { FooterComponent } from './modules/partials/footer/footer.component';
     ReactiveFormsModule,
     MaterialModule,
     NgbModule,
+    MatToolbarModule,
   ],
   bootstrap: [AppComponent]
 })

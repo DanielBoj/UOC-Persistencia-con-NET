@@ -1,1 +1,30 @@
-<p>clases works!</p>
+<mat-toolbar>
+  <button mat-button [matMenuTriggerFor]="clasesMenu">
+    Clases
+  </button>
+  <mat-menu #clasesMenu="matMenu">
+    <button mat-menu-item *ngFor="let clase of clasesDisponibles" (click)="onClaseSelected(clase)">
+      {{ clase.nombre }}
+    </button>
+  </mat-menu>
+</mat-toolbar>
+<mat-card class="detail-box">
+  <mat-card-header>
+    <mat-card-title>
+      <h1>{{ title }}</h1>
+    </mat-card-title>
+    <mat-card-subtitle>
+      <h2>{{ subtitle }}</h2>
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content *ngFor="let element of claseData">
+    <h3>{{ element.name }}</h3>
+    <p>{{ element.value }}</p>
+  </mat-card-content>
+  <mat-card-actions *ngIf="tipoUsuario == 'admin'">
+    <button mat-fab [hidden]="showEdit" (click)="showEdit = !showEdit">
+      Editar
+    </button>
+    <!-- <button mat-button (click)="goBack()">Volver</button> -->
+  </mat-card-actions>
+</mat-card>
