@@ -23,6 +23,11 @@ export class ClasesComponent implements OnInit, AfterViewInit {
   clases$: Observable<Clase[]> = new Observable<Clase[]>();
   clase$: Observable<Clase> = new Observable<Clase>();
 
+  // Observable
+  dataObservable = new Observable(observer => {
+    observer.next(this.getClases());
+  });
+
   claseId: string | undefined;
 
   // Título y subtítulo de la card
@@ -91,7 +96,7 @@ export class ClasesComponent implements OnInit, AfterViewInit {
     this.apiClases.deleteClase(id);
 
     // Recargamos las clases
-    this.getClases();
+    //this.getClases();
   }
 
 

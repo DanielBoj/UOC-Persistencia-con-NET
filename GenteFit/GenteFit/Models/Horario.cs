@@ -17,13 +17,13 @@ namespace GenteFit.Models
         public Dia Dia { get; set; }
         public string Hora { get; set; } = null!;
         public Clase Clase { get; set; } = null!;
-        public List<Reserva> Reservas { get; set; } = null!;
-        public List<Espera> Esperas { get; set; } = null!;
+        // public List<Reserva> Reservas { get; set; } = null!;
+        // public List<Espera> Esperas { get; set; } = null!;
 
         public Horario() {
             Clase = new();
-            Reservas = new();
-            Esperas = new();
+            // Reservas = new();
+            // Esperas = new();
         }
 
         public Horario(Dia dia, string hora, Clase clase)
@@ -31,8 +31,8 @@ namespace GenteFit.Models
             Dia = dia;
             Hora = hora;
             Clase = clase;
-            Reservas = new();
-            Esperas = new();
+            // Reservas = new();
+            // Esperas = new();
         }
     }
 }

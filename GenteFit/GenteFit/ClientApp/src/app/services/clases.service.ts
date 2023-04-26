@@ -85,15 +85,17 @@ export class ClasesService {
   deleteClase = (id: string): Observable<any> => {
     // Generamos la URL para la petición
     const url = `${this.url}/${id}`;
-    console.log(id);
+    console.log(url.toString());
 
-    // Realizamos la petición
-    // Obtenemos los datos de la api, nos devuelve un array de usuarios
-    return this.http.delete(url).pipe(catchError(error => {
+    try {
+      // Realizamos la petición
+      // Obtenemos los datos de la api, nos devuelve un array de usuarios
+      let res: any;
+      this.http.delete<any>(url).subscribe(data => res = data);
+      return of(true);
+    } catch (error) {
       console.log(error);
-
-      // En caso de error devolvemos un array vacío
-      return of([]);
-    }));
+      return of(false);
+    }
   }
 }

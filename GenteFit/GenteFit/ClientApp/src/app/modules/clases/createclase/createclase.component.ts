@@ -24,6 +24,7 @@ export class CreateclaseComponent {
 
   createClase = async () => {
     const toSave: Clase = this.claseModel;
+    toSave.id = "";
 
     try {
       this.api.createClase(toSave);
