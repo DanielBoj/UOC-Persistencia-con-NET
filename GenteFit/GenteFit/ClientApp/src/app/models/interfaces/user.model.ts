@@ -6,3 +6,13 @@ export interface User {
   pass: string,
   tipo: string
 }
+
+export interface UserResponse {
+  id?: string,
+  tipo: string,
+}
+
+export interface UserBody {
+  email: string,
+  password: string,
+}

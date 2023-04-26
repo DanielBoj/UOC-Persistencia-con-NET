@@ -6,6 +6,9 @@ import { CentroComponent } from './modules/centro/centro.component';
 import { ClientesComponent } from './modules/clientes/clientes.component';
 import { ClasesComponent } from './modules/clases/clases.component';
 import { HorariosComponent } from './modules/horarios/horarios.component';
+import { EditclasesComponent } from './modules/clases/editclases/editclases.component';
+import { DetalleclaseComponent } from './modules/clases/detalleclase/detalleclase.component';
+import { CreateclaseComponent } from './modules/clases/createclase/createclase.component';
 
 const routes: Routes = [
   {
@@ -25,6 +28,15 @@ const routes: Routes = [
   },
   {
     path: 'clases', component: ClasesComponent, title: 'Clases', pathMatch: 'full'
+  },
+  {
+    path: 'clases/:id', component: DetalleclaseComponent, title: 'Detalle Clase', pathMatch: 'full'
+  },
+  {
+    path: 'clases/edit/:id', component: EditclasesComponent, title: 'Editar Clases', pathMatch: 'full'
+  },
+  {
+    path: 'clasescreate', component: CreateclaseComponent, title: 'Crear Clases', pathMatch: 'full'
   },
   {
     path: 'horarios', component: HorariosComponent, title: 'Horario', pathMatch: 'full'

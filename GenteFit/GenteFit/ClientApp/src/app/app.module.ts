@@ -16,6 +16,9 @@ import { ClasesComponent } from './modules/clases/clases.component';
 import { HorariosComponent } from './modules/horarios/horarios.component';
 import { NavComponent } from './modules/partials/nav/nav.component';
 import { FooterComponent } from './modules/partials/footer/footer.component';
+import { EditclasesComponent } from './modules/clases/editclases/editclases.component';
+import { DetalleclaseComponent } from './modules/clases/detalleclase/detalleclase.component';
+import { CreateclaseComponent } from './modules/clases/createclase/createclase.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +31,9 @@ import { FooterComponent } from './modules/partials/footer/footer.component';
     HorariosComponent,
     NavComponent,
     FooterComponent,
+    EditclasesComponent,
+    DetalleclaseComponent,
+    CreateclaseComponent,
   ],
   imports: [
     BrowserModule/*.withServerTransition({ appId: 'ng-cli-universal' })*/,

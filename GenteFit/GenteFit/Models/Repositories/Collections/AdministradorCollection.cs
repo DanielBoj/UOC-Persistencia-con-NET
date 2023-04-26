@@ -121,7 +121,7 @@ namespace GenteFit.Models.Repositories.Collections
                 // Igual que en el caso de la modificación de un documento, debemos comenzar creando un filtro para poder buscar el documento en la colección de MongoDB.
                 var filter = Builders<Administrador>
                     .Filter
-                    .Eq(src => src.Id, new ObjectId(id));
+                    .Eq(src => src.Id, new (id));
 
                 // Una vez creado el método de filtrado, podemos llamar a la acción de MongoDB y pasarle el filtro.
                 await Collection.DeleteOneAsync(filter);

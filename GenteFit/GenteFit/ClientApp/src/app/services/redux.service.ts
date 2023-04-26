@@ -15,8 +15,14 @@ export class ReduxService {
   setIdUsuario = (id: string): void => localStorage.setItem('idUsuario', id);
 
   // Enviamos el tipo de usuuario a cualquier otro componente
-  getTipoUsuario = (): string | null => localStorage.getItem('tipoUsuario');
+  getTipoUsuario = (): string => localStorage.getItem('tipoUsuario') || '';
 
   // Enviamos el id de usuario a cualquier otro componente
-  getIdUsuario = (): string | null => localStorage.getItem('idUsuario');
+  getIdUsuario = (): string => localStorage.getItem('idUsuario') || '';
+
+  // Guardamos las clases en el store
+  setClases = (clases: any): void => localStorage.setItem('clases', JSON.stringify(clases));
+
+  // Obtenemos las clases del store
+  getClases = (): any => JSON.parse(localStorage.getItem('clases') || '[]');
 }

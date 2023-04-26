@@ -29,6 +29,7 @@
     "@popperjs/core": "^2.11.6",
     "bootstrap": "^5.2.3",
     "bootstrap-icons": "^1.10.4",
+    "bson-objectid": "^2.0.4",
     "jquery": "^3.6.3",
     "oidc-client": "^1.11.5",
     "popper.js": "^1.16.0",

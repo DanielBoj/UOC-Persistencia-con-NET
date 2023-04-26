@@ -1,3 +1,4 @@
+{{ users$ | async | json }}
 <mat-card class="form-box">
   <mat-card-header>
     <mat-card-title
@@ -22,6 +23,7 @@
               [(ngModel)]="log.email"
               required
               ng-valid
+              autocomplete="off"
             />
             <mat-icon matSuffix>email</mat-icon>
             <mat-hint>Introduce tu email</mat-hint>
@@ -42,6 +44,7 @@
               name="password"
               required
               ng-valid
+              autocomplete="off"
             />
             <mat-icon matSuffix>vpn_keyicon</mat-icon>
             <mat-hint>Introduce tu clave</mat-hint>

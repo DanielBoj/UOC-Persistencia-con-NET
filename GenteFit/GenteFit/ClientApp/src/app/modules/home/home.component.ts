@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
-import { User } from '../../models/interfaces/user.model';
+import { User, UserResponse } from '../../models/interfaces/user.model';
 import { ReduxService } from '../../services/redux.service';
 import { Login } from 'src/app/models/interfaces/login.model';
+import { Observable, map, of } from 'rxjs';
+import { UserService } from 'src/app/services/user.service';
+
 
 @Component({
   selector: 'app-home',
@@ -22,46 +25,53 @@ export class HomeComponent implements OnInit {
     pass: ''
   };
 
-  // Contenedor del usuario
-  user: User | undefined;
+  // Contenedor del usuario solicitado a la API
+  user$: Observable<User> = new Observable<User>();
+  users$: Observable<User[]> = new Observable<User[]>();
 
   // Validación de email
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
   passFormControl = new FormControl('', [Validators.required, Validators.minLength(6)]);
 
-  constructor(private router: Router,
-    private redux: ReduxService) { }
+  id?: string;
 
-  ngOnInit(): void { }
+  constructor(private router: Router,
+    private redux: ReduxService,
+    private api: UserService) { }
+
+  ngOnInit(): void {
+    this.users$ = this.getUsers();
+  }
 
   getErrorMessage = (): string => this.emailFormControl.hasError('required') ? 'Debes ingresar un valor' : this.emailFormControl.hasError('email') ? 'No es un email válido' : this.passFormControl.hasError('required') ? 'Debes ingresar un valor' : this.passFormControl.hasError('minLenght') ? 'No es un password válido' : '';
 
   // Conseguimos el usuario
-  getUsuario = (): User | undefined => {
-    // Llamada a la API
+  getUsers = (): Observable<User[]> => this.api.getUsers().pipe(map(users => users));
 
-    // Devolvemos un usuario de prueba
-    return {
-      id: '1',
-      email: 'johndoe@algo.com',
-      pass: '123456',
-      tipo: 'admin'
-    }
-  }
+
+  // Conseguimos el usuario
 
   checkUser = (): void => {
-    // Conseguimos el usuario
-    if (this.user = this.getUsuario()) {
+    // Comprobamos que exista un usuario con el email y la contraseña introducidos
+    this.user$ = this.users$.pipe(map(users => users.find(user => user.email === this.log.email && user.pass === this.log.pass))) as Observable<User>;
 
-      // Guardamos el tipo de usuario
-      this.redux.setTipoUsuario(this.user.tipo);
-      // Guardamos el id de usuario
-      if (this.user.id) this.redux.setIdUsuario(this.user.id);
+    if (this.user$ == null) {
+      alert('Usuario no encontrado');
+      return;
+    };
 
-      // Redireccionamos al usuario a la página de inicio
-      this.redireccionar();
-    }
+    // Casteamos de Observable a User
+    let userFound: User;
+    this.user$.subscribe(user => {
+      if (user) {
+        this.redux.setIdUsuario(user.id || '');
+        this.redux.setTipoUsuario(user.tipo);
+      }
+    });
+
+    this.id = this.redux.getIdUsuario() || '';
   }
+
 
   // Redireccionamos al usuario
   redireccionar = (): void => {

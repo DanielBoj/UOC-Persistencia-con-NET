@@ -21,7 +21,7 @@ using MongoDB.Driver;
  indicamos que recibiremos la id del objeto por parámetro en la URL. */
 namespace GenteFit.Controllers
 {
-    [Route("[controller]")]
+    [Route("api")]
     [ApiController]
     public class Api : ControllerBase
     {
@@ -29,7 +29,7 @@ namespace GenteFit.Controllers
         /* Loggin */
         // GET api
         // Necesitamos una lista con todos los usuarios para poder logearnos
-        [HttpGet("[controller]/users")]
+        [HttpGet("users")]
         public async Task<IActionResult> ListAllUsuarios()
         {
             // Declaramos una lista para almacenar los usuarios
@@ -43,22 +43,39 @@ namespace GenteFit.Controllers
             try
             {
                 // Primero comprobamos si existen elementos y luego los añadimos a la lista.
-                if (!await dbCliente.IsEmpty()) 
+                if (!await dbCliente.IsEmpty())
                 {
                     usuarios.AddRange(await dbCliente.GetAllClientes());
+                    // Seteamos el tipo de usuario
+                    usuarios.ForEach(usr => usr.Tipo = "cliente");
                 }
                 if (!await dbEmpleado.IsEmpty())
                 {
-                    usuarios.AddRange(await dbEmpleado.GetAllEmpleados());
+                    // Cargamos una lista temporal con los empleados
+                    List<Empleado> empleados = (await dbEmpleado.GetAllEmpleados());
+
+                    // Seteamos el tipo de usuario
+                    empleados.ForEach(usr => usr.Tipo = "empleado");
+
+                    // Añadimos los empleados a la lista de usuarios
+                    usuarios.AddRange(empleados);
+
                 }
 
                 if (!await dbAdmin.IsEmpty())
                 {
-                    usuarios.AddRange(await dbAdmin.GetAllAdministradores());
+                    // Cargamos una lista temporal con los administradores
+                    List<Administrador> admins = (await dbAdmin.GetAllAdministradores());
+                    
+                    // Seteamos el tipo de usuario
+                    admins.ForEach(usr => usr.Tipo = "admin");
+
+                    // Añadimos los administradores a la lista de usuarios
+                    usuarios.AddRange(admins);
                 }
 
                 // Devolvemos la lista de usuarios
-                return usuarios.Count > 0? Ok(usuarios) : NotFound("No se han encontrado usuarios");
+                return usuarios.Count > 0 ? Ok(usuarios) : NotFound("No se han encontrado usuarios");
             } catch (Exception err)
             {
                 return StatusCode(404, err.Message);
@@ -67,14 +84,26 @@ namespace GenteFit.Controllers
 
         // Comprobamos si el usuario existe y si la contraseña es correcta
         // POST api/login
-        [HttpPost("[controller]/login")]
+        [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] User user)
         {
+            
+            // Creamos los controladores de MongoDB
+            /*ClienteController dbCliente = new();
+            EmpleadoController dbEmpleado = new();
+            AdministradorController dbAdmin = new();
+
+            // Buscamos el usuario en la BD
+            try
+            {
+                User foundUsuario = await dbCliente.;
+            }*/
+
             // Comprobamos que el usuario no sea nulo
-            if (user is null)
+            /*if (user is null)
             {
                 return BadRequest(ModelState);
-            }
+            }*/
             try
             {
                 // Obtenemos la lista de usuarios -- Tenemos que realizar la conversión de tipos
@@ -84,7 +113,7 @@ namespace GenteFit.Controllers
                 {
                     return NotFound("List error");
                 }
-
+               
                 // Comprobamos si el usuario existe en la BD y si las credenciales son correctas.
                 User? usuario = usuarios.Find(usr => usr.Email == user.Email &&
                         usr.Pass == user.Pass);
@@ -94,14 +123,18 @@ namespace GenteFit.Controllers
                 if (usuario is Administrador)
                 {
                     return Ok(new { id = usuario.Id, tipo = "admin" });
-                } else if (usuario is Empleado)
+                }
+                else if (usuario is Empleado)
                 {
                     return Ok(new { id = usuario.Id, tipo = "empleado" });
-                } else if (usuario is Cliente)
+                }
+                else if (usuario is Cliente)
                 {
                     return Ok(new { id = usuario.Id, tipo = "cliente" });
-                } else return NotFound("El email o el pass son incorrectos");
-            } catch (Exception err)
+                }
+                else return NotFound("El email o el pass son incorrectos");
+            }
+            catch (Exception err)
             {
                 return StatusCode(400, err.Message);
             }
@@ -110,7 +143,7 @@ namespace GenteFit.Controllers
         /* Centros */
         // Mostramos la información del centro
         // GET: api/Centro
-        [HttpGet("[controller]/centro")]
+        [HttpGet("centro")]
         public async Task<IActionResult> ListCentros()
         {
             try
@@ -130,7 +163,7 @@ namespace GenteFit.Controllers
 
         // Obtenemos un centro por su ID
         // GET: api/Centro/id
-        [HttpGet("[controller]/centro/{id}")]
+        [HttpGet("centro/{id}")]
         public async Task<IActionResult> GetCentroById([FromRoute] string id)
         {
             // Creamos el controlador de MongoDB.
@@ -157,7 +190,7 @@ namespace GenteFit.Controllers
 
         // Modificamos la información del centro
         // PUT: api/Centro
-        [HttpPut("[controller]/centro/{id}")]
+        [HttpPut("centro/{id}")]
         public async Task<IActionResult> UpdateCentro([FromRoute]string id, [FromBody] Centro centro)
         {
             // Instanciamos el controlador de MongoDB
@@ -194,7 +227,7 @@ namespace GenteFit.Controllers
         /* Empleados */
         // Mostamos la lista de empleados
         // GET: api/empleado
-        [HttpGet("[controller]/empleado")]
+        [HttpGet("empleado")]
         public async Task<IActionResult> ListEmpleados()
         {
             // Creamos el controlador de MongoDB
@@ -215,7 +248,7 @@ namespace GenteFit.Controllers
 
         // Mostramos la información de un empleado
         // GET: api/empleado/id
-        [HttpGet("[controller]/empleado/{id}")]
+        [HttpGet("empleado/{id}")]
         public async Task<IActionResult> GetEmpleadoById([FromRoute] string id)
         {
             // Creamos el controlador de MongoDB
@@ -243,7 +276,7 @@ namespace GenteFit.Controllers
         /* Administrador */
         // Obtenemos una lista de administradores
         // GET: api/administrador
-        [HttpGet("[controller]/administrador")]
+        [HttpGet("administrador")]
         public async Task<IActionResult> ListAllAdministradores()
         {
             // Creamos el controlador de MongoDB
@@ -262,7 +295,7 @@ namespace GenteFit.Controllers
 
         // Obtenemos la información de un administrador
         // GET: api/administrador/id
-        [HttpGet("[controller]/administrador/{id}")]
+        [HttpGet("administrador/{id}")]
         public async Task<IActionResult> GetAdministradorById([FromRoute] string id)
         {
             // Creamos el controlador de MongoDB
@@ -290,7 +323,7 @@ namespace GenteFit.Controllers
         /* Clientes */
         // Obtenemos una lista de clientes
         // GET: api/cliente
-        [HttpGet("[controller]/cliente")]
+        [HttpGet("cliente")]
         public async Task<IActionResult> ListAllClientes()
         {
             // Creamos el controlador de MongoDB
@@ -310,7 +343,7 @@ namespace GenteFit.Controllers
 
         // Obtenemos la información de un cliente
         // GET: api/cliente/id
-        [HttpGet("[controller]/cliente/{id}")]
+        [HttpGet("cliente/{id}")]
         public async Task<IActionResult> GetClienteById([FromRoute] string id)
         {
             // Creamos el controlador de MongoDB
@@ -337,7 +370,7 @@ namespace GenteFit.Controllers
 
         // Creamos un nuevo cliente
         // POST: api/cliente
-        [HttpPost("[controller]/cliente")]
+        [HttpPost("cliente")]
         public async Task<IActionResult> CreateCliente([FromBody] Cliente cliente)
         {
             // Creamos el controlador de MongoDB
@@ -372,7 +405,7 @@ namespace GenteFit.Controllers
 
         // Modificamos la información de un cliente
         // PUT: api/cliente/id
-        [HttpPut("[controller]/cliente/{id}")]
+        [HttpPut("cliente/{id}")]
         public async Task<IActionResult> UpdateCliente([FromRoute] string id, [FromBody] Cliente cliente)
         {
             // Creamos los controladores de MongoDB
@@ -434,7 +467,7 @@ namespace GenteFit.Controllers
 
         // Eliminamos un cliente
         // DELETE: api/cliente/id
-        [HttpDelete("[controller]/cliente/{id}")]
+        [HttpDelete("cliente/{id}")]
         public async Task<IActionResult> DeleteCliente([FromRoute] string id)
         {
             // Creamos el controlador de MongoDB
@@ -476,7 +509,7 @@ namespace GenteFit.Controllers
         /* Clases */
         // Obtenemos una lista de clases
         // GET: api/clase
-        [HttpGet("[controller]/clase")]
+        [HttpGet("clase")]
         public async Task<IActionResult> ListAllClases()
         {
             // Creamos el controlador de MongoDB
@@ -498,7 +531,7 @@ namespace GenteFit.Controllers
 
         // Obtenemos la información de una clase
         // GET: api/clase/id
-        [HttpGet("[controller]/clase/{id}")]
+        [HttpGet("clase/{id}")]
         public async Task<IActionResult> GetClaseById([FromRoute] string id)
         {
             // Creamos el controlador de MongoDB
@@ -524,11 +557,20 @@ namespace GenteFit.Controllers
 
         // Creamos una nueva clase
         // POST: api/clase
-        [HttpPost("[controller]/clase")]
+        [HttpPost("clase")]
         public async Task<IActionResult> CreateClase([FromBody] Clase clase)
         {
             // Creamos el controlador de MongoDB
             ClaseController db = new();
+
+            Clase toCreate = new Clase
+            {
+                Nombre = clase.Nombre,
+                Descripcion = clase.Descripcion,
+                Profesor = clase.Profesor,
+                Duracion = clase.Duracion,
+                Plazas = clase.Plazas
+            };
 
             // Comprobamos que los datos sean correctos
             if (clase is null)
@@ -555,7 +597,7 @@ namespace GenteFit.Controllers
 
         // Modificamos la información de una clase
         // PUT: api/clase/id
-        [HttpPut("[controller]/clase/{id}")]
+        [HttpPut("clase/{id}")]
         public async Task<IActionResult> UpdateClase([FromRoute] string id, [FromBody] Clase clase)
         {
             // Creamos el controlador de MongoDB
@@ -605,7 +647,7 @@ namespace GenteFit.Controllers
 
         // Eliminamos una clase
         // DELETE: api/clase/id
-        [HttpDelete("[controller]/clase/{id}")]
+        [HttpDelete("clase/{id}")]
         public async Task<IActionResult> DeleteClase([FromRoute] string id)
         {
             // Creamos el controlador de MongoDB
@@ -642,7 +684,7 @@ namespace GenteFit.Controllers
         /* Horarios */
         // Obtenemos una lista de horarios
         // GET: api/horario
-        [HttpGet("[controller]/horario")]
+        [HttpGet("horario")]
         public async Task<IActionResult> ListAllHorarios()
         {
             // Creamos el controlador de MongoDB
@@ -663,7 +705,7 @@ namespace GenteFit.Controllers
 
         // Obtenemor una lista con todos los horarios filtrados por clase
         // GET: api/horario/filter:clase
-        [HttpGet("[controller]/filter:{clase}")]
+        [HttpGet("filter:{clase}")]
         public async Task<IActionResult> ListHorariosByClase([FromRoute] string clase)
         {
             // Creamos el controlador de MongoDB
@@ -693,7 +735,7 @@ namespace GenteFit.Controllers
 
         // Filtramos los horarios por cliente
         // GET: api/horario/idCliente
-        [HttpGet("[controller]/horario/{idCliente}")]
+        [HttpGet("horario/{idCliente}")]
         public async Task<IActionResult> FilterHorariosByCliente([FromRoute] string idCliente)
         {
             // Creamos el controlador de MongoDB
@@ -723,7 +765,7 @@ namespace GenteFit.Controllers
 
         // Filtramos los horarios por cliente y clase
         // GET: api/horario/idCliente?clase:clase
-        [HttpGet("[controller]/horario/{idCliente}clase:{clase}")]
+        [HttpGet("horario/{idCliente}clase:{clase}")]
         public async Task<IActionResult> ListHorariosByClienteyClase([FromRoute] string idCliente,
             [FromRoute] string clase)
         {
@@ -757,7 +799,7 @@ namespace GenteFit.Controllers
 
         // Obtenemos la información de un horario
         // GET: api/horario/id
-        [HttpGet("[controller]/horario/{id}")]
+        [HttpGet("horario/{id}")]
         public async Task<IActionResult> GetHorarioById([FromRoute] string id)
         {
             // Creamos el controlador de MongoDB
@@ -783,7 +825,7 @@ namespace GenteFit.Controllers
 
         // Creamos un nuevo horario
         // POST: api/horario
-        [HttpPost("[controller]/horario/{id}")]
+        [HttpPost("horario/{id}")]
         public async Task<IActionResult> CreateHorario([FromRoute] string id, [FromBody] Horario horario)
         {
             // Creamos el controlador de MongoDB
@@ -825,7 +867,7 @@ namespace GenteFit.Controllers
 
         // Modificamos la información de un horario
         // PUT: api/horario/id
-        [HttpPut("[controller]/horario/{id}")]
+        [HttpPut("horario/{id}")]
         public async Task<IActionResult> UpdateHorario([FromRoute] string id, [FromBody] Horario horario)
         {
             // Creamos el controlador de MongoDB
@@ -892,7 +934,7 @@ namespace GenteFit.Controllers
 
         // Eliminamos un horario
         // DELETE: api/horario/id
-        [HttpDelete("[controller]/horario/{id}")]
+        [HttpDelete("horario/{id}")]
         public async Task<IActionResult> DeleteHorario([FromRoute] string id)
         {
             // Creamos el controlador principal y los auxiliares de MongoDB.
@@ -914,7 +956,7 @@ namespace GenteFit.Controllers
 
                 // Obtenemos la lista de reservas y de esperas para el horario y eliminamos todos los
                 // elementos de la BD.
-                if (horario.Id is not null)
+                if (horario.Id != null)
                 {
                     if (horario.Reservas.Count > 0)
                     {
@@ -964,7 +1006,7 @@ namespace GenteFit.Controllers
         /* Reservas */
         // Obtenemos una lista de reservas
         // GET: api/reserva
-        [HttpGet("[controller]/reserva")]
+        [HttpGet("reserva")]
         public async Task<IActionResult> ListAllReservas()
         {
             // Creamos el controlador de MongoDB
@@ -985,7 +1027,7 @@ namespace GenteFit.Controllers
 
         // Obtenemos la información de una reserva
         // GET: api/reserva/id
-        [HttpGet("[controller]/reserva/{id}")]
+        [HttpGet("reserva/{id}")]
         public async Task<IActionResult> GetReservaById([FromRoute] string id)
         {
             // Creamos el controlador de MongoDB
@@ -1011,7 +1053,7 @@ namespace GenteFit.Controllers
 
         // Creamos una nueva reserva: Por parámetros de URL hemos de recibir el ID del usuario y el ID del horario. 
         // POST: api/reserva
-        [HttpPost("[controller]/reserva/{id}")]
+        [HttpPost("reserva/{id}")]
         public async Task<IActionResult> CrearReserva([FromRoute] string id, 
             [FromRoute] string horarioId,
             [FromBody] Reserva reserva)
@@ -1091,7 +1133,7 @@ namespace GenteFit.Controllers
         // Eliminamos una reserva: Tendremos que eliminar la reserva de la lista de reservas del cliente y del horario.
         // Además, activará el trigger para modificar el estado de la espera asociada.
         // DELETE: api/reserva/id
-        [HttpDelete("[controller]/reserva/{id}")]
+        [HttpDelete("reserva/{id}")]
         public async Task<IActionResult> DeleteReserva([FromRoute] string id)
         {
             // Creamos el controlador de MongoDB y los controladores auxiliares
@@ -1152,7 +1194,7 @@ namespace GenteFit.Controllers
         /* Esperas */
         // Obtenemos una lista de esperas
         // GET: api/espera
-        [HttpGet("[controller]/espera")]
+        [HttpGet("espera")]
         public async Task<IActionResult> ListAllEsperas()
         {
             // Creamos el controlador de MongoDB
@@ -1173,7 +1215,7 @@ namespace GenteFit.Controllers
 
         // Obtenemos la información de una espera
         // GET: api/espera/id
-        [HttpGet("[controller]/espera/{id}")]
+        [HttpGet("espera/{id}")]
         public async Task<IActionResult> GetEsperaById([FromRoute] string id)
         {
             // Creamos el controlador de MongoDB
@@ -1200,7 +1242,7 @@ namespace GenteFit.Controllers
         // Creamos una nueva espera: Por argumento vamos a recibir el ID del cliente y el ID del horario.
         // Como cuerpo recibiremos la espera.
         // POST: api/espera
-        [HttpPost("[controller]/espera/{id}")]
+        [HttpPost("espera/{id}")]
         public async Task<IActionResult> CreateEspera([FromRoute] string id,
             [FromRoute] string idHorario,
             [FromBody] Espera espera)
@@ -1248,7 +1290,7 @@ namespace GenteFit.Controllers
 
         // Eliminamos una espera
         // DELETE: api/espera/id
-        [HttpDelete("[controller]/espera/{id}")]
+        [HttpDelete("espera/{id}")]
         public async Task<IActionResult> DeleteEspera([FromRoute] string id)
         {
             // Creamos el controlador de MongoDB.

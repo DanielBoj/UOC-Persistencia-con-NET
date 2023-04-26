@@ -14,6 +14,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 
 const matModules = [
@@ -32,6 +33,7 @@ const matModules = [
   MatProgressSpinnerModule,
   MatSelectModule,
   MatTableModule,
+  MatPaginatorModule,
 ]
 
 
