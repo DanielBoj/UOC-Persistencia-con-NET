@@ -66,12 +66,12 @@ export class CentroComponent implements OnInit {
   getCentro(): Centro {
     return {
       id: '1',
-      nombre: 'Centro de prueba',
-      descripcion: 'Este es un centro de prueba',
+      nombre: 'Centro prueba',
+      descripcion: 'prueba',
       direccion: {
-        domicilio: 'Calle falsa 123',
-        poblacion: 'Madrid',
-        cp: 28001,
+        domicilio: 'Calvari',
+        poblacion: 'Barcelona',
+        cp: 08640,
         pais: 'España'
       },
       telefono: '123456789',
