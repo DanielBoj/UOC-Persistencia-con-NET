@@ -1,0 +1,8 @@
+{
+"SpaProxyServer": {
+"ServerUrl": "https://localhost:44442",
+"LaunchCommand": "npm start",
+"WorkingDirectory": "C:\\Users\\marcp\\Documents\\GitHub\\UOC-Persistencia-con-NET\\GenteFit-TestBBDD\\GenteFit\\ClientApp\\",
+"MaxTimeoutInSeconds": "120"
+}
+}
