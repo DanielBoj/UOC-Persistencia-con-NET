@@ -1,1 +1,148 @@
-<p>horarios works!</p>
+<mat-card class="detail-box">
+  <mat-card-header>
+    <mat-card-title>
+      <h1>{{ title }}</h1>
+    </mat-card-title>
+    <mat-card-subtitle>
+      <h2>{{ subtitle }}</h2>
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-toolbar>
+      <button mat-button [matMenuTriggerFor]="horariosMenu">Horarios <mat-icon>arrow_drop_down</mat-icon></button>
+      <mat-menu #horariosMenu="matMenu">
+        <button mat-menu-item *ngFor="let horario of horarios" (click)="onHorarioSelected(horario)">
+          {{ horario.dia }} - {{ horario.hora }} - {{ horario.clase.nombre }}
+        </button>
+      </mat-menu>
+    </mat-toolbar>
+    <div *ngFor="let data of horarioData">
+      <strong>{{ data.name }}:</strong> {{ data.value }}
+    </div>
+    <div *ngIf="tipoUsuario == 'admin'">
+      <button mat-fab [hidden]="showEdit" (click)="showEdit = !showEdit">Editar</button>
+      <div *ngIf="showEdited">
+        <p>Horario editado correctamente.</p>
+      </div>
+    </div>
+
+    <ng-container *ngIf="showEdit">
+      <mat-card class="form-box">
+        <mat-card-header>
+          <mat-card-title>
+            <h1>Editar Horario</h1>
+          </mat-card-title>
+          <mat-card-subtitle>
+            <h2>Introduce los nuevos datos</h2>
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <ng-form #centroForm="ngForm">
+            <div>
+              <mat-form-field class="full-width">
+                <mat-label>Día</mat-label>
+                <input class="form-control"
+                       type="number"
+                       matInput
+                       placeholder="Dia"
+                       name="dia"
+                       [(ngModel)]="horarioModel.dia"
+                       required
+                       ng-valid />
+                <mat-hint>Introduce el día</mat-hint>
+              </mat-form-field>
+            </div>
+          </ng-form>
+          <div>
+            <mat-form-field class="full-width">
+              <mat-label>Hora</mat-label>
+              <input class="form-control"
+                     type="time"
+                     matInput
+                     placeholder="Hora"
+                     name="hora"
+                     [(ngModel)]="horarioModel.hora"
+                     required
+                     ng-valid />
+              <mat-hint>Introduce la hora</mat-hint>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field class="full-width">
+              <mat-label>Nombre</mat-label>
+              <input class="form-control"
+                     type="text"
+                     matInput
+                     placeholder="Nombre"
+                     name="nombre"
+                     [(ngModel)]="horarioModel.clase.nombre"
+                     required
+                     ng-valid />
+              <mat-hint>Introduce el nombre</mat-hint>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field class="full-width">
+              <mat-label>Descripción</mat-label>
+              <input class="form-control"
+                     type="text"
+                     matInput
+                     placeholder="Descripcion"
+                     name="descripcion"
+                     [(ngModel)]="horarioModel.clase.descripcion"
+                     required
+                     ng-valid />
+              <mat-hint>Introduce la descripcion</mat-hint>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field class="full-width">
+              <mat-label>Profesor</mat-label>
+              <input class="form-control"
+                     type="text"
+                     matInput
+                     placeholder="Profesor"
+                     name="profesor"
+                     [(ngModel)]="horarioModel.clase.profesor"
+                     required
+                     ng-valid />
+              <mat-hint>Introduce el profesor</mat-hint>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field class="full-width">
+              <mat-label>Duración</mat-label>
+              <input class="form-control"
+                     type="number"
+                     matInput
+                     placeholder="Duracion"
+                     name="duracion"
+                     [(ngModel)]="horarioModel.clase.duracion"
+                     required
+                     ng-valid />
+              <mat-hint>Introduce el duración</mat-hint>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field class="full-width">
+              <mat-label>Plazas</mat-label>
+              <input class="form-control"
+                     type="number"
+                     matInput
+                     placeholder="Plazas"
+                     name="plazas"
+                     [(ngModel)]="horarioModel.clase.plazas"
+                     required
+                     ng-valid />
+              <mat-hint>Introduce las Plazas</mat-hint>
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-fab (click)="editHorario()">Aceptar</button>
+          <button mat-fab (click)="showEdit = !showEdit; resetHorario()">
+            Cancelar
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </ng-container>

@@ -1,6 +1,11 @@
-<mat-toolbar>
+
+<mat-card class="detail-box">
+  <mat-card-header>
+    <mat-card-title>
+      <h1>{{ title }}:</h1>
+      <mat-toolbar>
   <button mat-button [matMenuTriggerFor]="clasesMenu">
-    Clases
+    Clases <mat-icon>arrow_drop_down</mat-icon>
   </button>
   <mat-menu #clasesMenu="matMenu">
     <button mat-menu-item *ngFor="let clase of clasesDisponibles" (click)="onClaseSelected(clase)">
@@ -8,11 +13,8 @@
     </button>
   </mat-menu>
 </mat-toolbar>
-<mat-card class="detail-box">
-  <mat-card-header>
-    <mat-card-title>
-      <h1>{{ title }}</h1>
     </mat-card-title>
+    
     <mat-card-subtitle>
       <h2>{{ subtitle }}</h2>
     </mat-card-subtitle>

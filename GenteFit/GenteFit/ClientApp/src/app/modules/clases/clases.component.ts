@@ -12,8 +12,8 @@ export class ClasesComponent implements OnInit {
   idUsuario: string | null = '';
 
   // Información para la card
-  title: string = "GentFit";
-  subtitle: string = "Bienvenido a GentFit";
+  title: string = "Nuestras Clases";
+  subtitle: string = "Eliga la suya";
 
   // Contenedor para la información del centro
   clase: Clase | any;;
@@ -43,7 +43,7 @@ export class ClasesComponent implements OnInit {
     this.getLocalStore();
 
     // Obtenemos la información del cliente
-    this.clase = this.getClase();
+   /* this.clase = this.getClase();*/
 
     // Montamos el modelo para la formulario
     this.claseData = this.getClaseData();
@@ -60,7 +60,7 @@ export class ClasesComponent implements OnInit {
   }
 
   //Obtiene la información de la clase
-  getClase = (): Clase => {
+  /*getClase = (): Clase => {
     return {
       nombre: 'Zumba',
       descripcion: 'Baile perfecto para los abejorros',
@@ -68,7 +68,7 @@ export class ClasesComponent implements OnInit {
       duracion: 3,
       plazas: 2 
     }
-  }
+  }*/
 
   getClaseData = (): any[] => {
     return [
@@ -81,9 +81,9 @@ export class ClasesComponent implements OnInit {
   }
 
   clasesDisponibles: Clase[] = [
-    { nombre: 'Zumba', descripcion: '...', profesor: '...', duracion: 1, plazas: 20 },
-    { nombre: 'Yoga', descripcion: '...', profesor: '...', duracion: 1, plazas: 15 },
-    { nombre: 'Pilates', descripcion: '...', profesor: '...', duracion: 1, plazas: 10 },
+    { nombre: 'Zumba', descripcion: 'Baile perfecto para los abejorros', profesor: 'ms Bee', duracion: 1, plazas: 20 },
+    { nombre: 'Yoga', descripcion: 'Vuelvete mas elastico que el yogurt', profesor: 'danone', duracion: 1, plazas: 15 },
+    { nombre: 'Pilates', descripcion: 'Soporta el mundo a tus espaldas', profesor: 'Atlas', duracion: 1, plazas: 10 },
     // ...
   ];
   onClaseSelected(clase: Clase): void {

@@ -17,6 +17,8 @@ import { HorariosComponent } from './modules/horarios/horarios.component';
 import { NavComponent } from './modules/partials/nav/nav.component';
 import { FooterComponent } from './modules/partials/footer/footer.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
+ 
+
 
 @NgModule({
   declarations: [
@@ -28,7 +30,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     ClasesComponent,
     HorariosComponent,
     NavComponent,
-    FooterComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule/*.withServerTransition({ appId: 'ng-cli-universal' })*/,
@@ -39,7 +41,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     ReactiveFormsModule,
     MaterialModule,
     NgbModule,
-    MatToolbarModule,
+    MatToolbarModule
   ],
   bootstrap: [AppComponent]
 })
