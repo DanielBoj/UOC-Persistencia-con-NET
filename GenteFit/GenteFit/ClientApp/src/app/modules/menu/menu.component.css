@@ -1,4 +1,17 @@
 .fab-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
   width: 6rem;
   height: 6rem;
+  background-image: url('../../../assets/img/Pesa2.gif');
+  background-size: contain;
+  background-position: center center;
+  background-color: #30475E;
+}
+
+.boton-texto {
+  text-align: initial;
+  color: ghostwhite;
 }
