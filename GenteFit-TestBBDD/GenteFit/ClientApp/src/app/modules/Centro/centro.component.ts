@@ -8,25 +8,25 @@ import { Centro } from 'src/app/models/interfaces/centro.model';
 })
 export class CentroComponent implements OnInit {
 
-  // Estado obtenido del servicio redux
+  // Variables para el tipo y el ID del usuario
   tipoUsuario: string | null = '';
   idUsuario: string | null = '';
 
-  // Información para la card
+  // Variables para el título y el subtítulo
   title: string = "GentFit";
   subtitle: string = "Bienvenido a GentFit";
 
-  // Contenedor para la información del centro
-  centro: Centro | any;;
+  // Variable para almacenar el objeto del centro
+  centro: Centro | any;
 
-  // Información para la card
+  // Array para almacenar los datos del centro que se mostrarán en la vista
   centroData: any[] = [];
 
-  // Flags para el display de elementos
+  // Variables para controlar la visualización del formulario de edición
   showEdit: boolean = false;
   showEdited: boolean = false;
 
-  // Modelo de formulario
+  // Modelo del objeto Centro, inicialmente vacío
   centroModel: Centro = {
     id: '',
     nombre: '',
@@ -44,27 +44,31 @@ export class CentroComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    // Obtenemos el estado
+
+    // Obtiene los datos del usuario de la localStorage
     this.getLocalStore();
 
-    // Obtenemos la información del centro
+    // Obtiene el objeto del centro
     this.centro = this.getCentro();
 
-    // Montamos el modelo para el formulario
+    // Asigna el objeto del centro al modelo
     this.centroModel = this.centro;
 
-    // Actualizamos los datos de la card
+    // Actualiza los datos que se mostrarán en la vista
     this.updateCard();
 
-    this.tipoUsuario = "admin"
+    // Asigna el tipo de usuario "admin"
+    this.tipoUsuario = "admin";
   }
 
-  getLocalStore = (): void => {
+  // Método para obtener los datos del usuario desde la localStorage
+  getLocalStore(): void {
     console.log(this.tipoUsuario);
     console.log(this.idUsuario);
   }
 
-  getCentro = (): Centro => {
+  // Método para obtener el objeto del centro
+  getCentro(): Centro {
     return {
       id: '1',
       nombre: 'Centro de prueba',
@@ -77,29 +81,28 @@ export class CentroComponent implements OnInit {
       },
       telefono: '123456789',
       email: 'info@gentefit.com'
-    }
+    };
   }
 
-  // Enviamos el formulario de edición
-  editCentro = (): void => {
-    // Actualizamos el centro
+  // Método para editar el objeto del centro
+  editCentro(): void {
+
+    // Asigna los nuevos valores al objeto del centro
     this.centro = this.centroModel;
 
-    // Enviar el centro a la API
-
-    // Actualizamos los datos de la card
+    // Actualiza los datos que se mostrarán en la vista
     this.updateCard();
 
-    // Reseteamos y ocultamos el formulario
+    // Reinicia el modelo del centro y oculta el formulario de edición
     this.resetCentro();
     this.showEdit = false;
 
-    // Mostramos el mensaje de edición
+    // Muestra un mensaje de confirmación de edición
     this.showEdited = true;
   }
 
-  // Actualizar los datos de la card
-  updateCard = (): void => {
+  // Método para actualizar los datos que se mostrarán en la vista
+  updateCard(): void {
     this.centroData = [
       { name: 'Nombre', value: this.centro.nombre },
       { name: 'Descripción', value: this.centro.descripcion },
@@ -112,17 +115,17 @@ export class CentroComponent implements OnInit {
     ];
   }
 
-  // Reseteamos el formulario
-  resetCentro = (): void => {
+  resetCentro(): void {
     this.centroModel = this.centro;
   }
 
-  // Validador del email
+  //Validar correo
+
   validateEmail = (): boolean => {
     const re = /\S+@\S+\.\S+/;
     return re.test(this.centroModel.email);
   }
 
-  // Constructor del mensaje de error
+
   getErrorMessage = (): string => this.validateEmail() ? '' : 'Email no válido';
 }
