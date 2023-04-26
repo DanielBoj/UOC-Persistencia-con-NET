@@ -13,21 +13,11 @@ export class CentroComponent implements OnInit {
   idUsuario: string | null = '';
 
   // Variables para el título y el subtítulo
-  title: string = "GentFit";
-  subtitle: string = "Bienvenido a GentFit";
+  title = "GentFit";
+  subtitle = "Bienvenido a GentFit";
 
-  // Variable para almacenar el objeto del centro
-  centro: Centro | any;
-
-  // Array para almacenar los datos del centro que se mostrarán en la vista
-  centroData: any[] = [];
-
-  // Variables para controlar la visualización del formulario de edición
-  showEdit: boolean = false;
-  showEdited: boolean = false;
-
-  // Modelo del objeto Centro, inicialmente vacío
-  centroModel: Centro = {
+  // Objeto del centro y modelo del objeto
+  centro: Centro = {
     id: '',
     nombre: '',
     descripcion: '',
@@ -40,6 +30,14 @@ export class CentroComponent implements OnInit {
     telefono: '',
     email: ''
   };
+  centroModel = { ...this.centro };
+
+  // Array para almacenar los datos del centro que se mostrarán en la vista
+  centroData: any[] = [];
+
+  // Variables para controlar la visualización del formulario de edición
+  showEdit = false;
+  showEdited = false;
 
   constructor() { }
 
@@ -50,9 +48,6 @@ export class CentroComponent implements OnInit {
 
     // Obtiene el objeto del centro
     this.centro = this.getCentro();
-
-    // Asigna el objeto del centro al modelo
-    this.centroModel = this.centro;
 
     // Actualiza los datos que se mostrarán en la vista
     this.updateCard();
