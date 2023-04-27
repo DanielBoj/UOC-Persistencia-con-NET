@@ -7,3 +7,8 @@ export const DiasMap = {
   5: 'Viernes',
   6: 'Sábado',
 }
+
+// Creamos la función para obtener el día de la semana a partir del enumerador
+export function getDia(dia: number): string {
+  return DiasMap[dia];
+}

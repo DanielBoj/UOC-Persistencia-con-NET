@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Centro } from 'src/app/models/interfaces/centro.model';
 import { CentroService } from 'src/app/services/centro.service';
 import { ReduxService } from 'src/app/services/redux.service';
@@ -20,7 +20,9 @@ export class CentroComponent implements OnInit {
   subtitle: string = "Bienvenido a GentFit";
 
   // Contenedor para la información del centro
-  centro$: Observable<Centro> = new Observable<Centro>();
+  centro$: Subscription = new Subscription();
+  centro: Centro = {} as Centro;
+  subscripts: Array<Subscription> = [];
 
   // Información para la card
   centroData: any[] = [];
@@ -45,20 +47,34 @@ export class CentroComponent implements OnInit {
   };
 
   constructor(private localStorage: ReduxService,
-    private api: CentroService) { }
+    private api: CentroService) {
+    // Obtenemos los datos del centro de la API
+    this.subscripts.push(
+      this.centro$ = this.api.getCentro().subscribe((centro) => {
+        // Comumimos la API => Obtenemos el centro
+        this.centro = centro;
+
+        // Actualizamos los datos de la card
+        this.updateCard(centro);
+
+        // Montamos el modelo para el formulario
+        this.updateForm(centro);
+      })
+    );
+  }
 
   ngOnInit(): void {
     // Obtenemos el estado
     this.getLocalStore();
 
     // Obtenemos la información del centro
-    this.getCentro();
+    //this.getCentro();
 
     // Actualizamos los datos de la card
-    this.updateCard();
+    //this.updateCard();
 
     // Montamos el modelo para el formulario
-    this.updateForm();
+    //this.updateForm();
 
     this.tipoUsuario = "admin"
   }
@@ -68,53 +84,51 @@ export class CentroComponent implements OnInit {
     this.idUsuario = this.localStorage.getIdUsuario();
   }
 
-  getCentro = () => this.api.getCentro().pipe(centro => this.centro$ = centro);
+  //getCentro = () => this.api.getCentro().pipe(centro => this.centro$ = centro);
 
   // Enviamos el formulario de edición
   editCentro = (): void => {
     // Actualizamos el centro
-    const updatedCentro: Centro = this.centroModel;
+    let updatedCentro: Centro = this.centroModel;
+    updatedCentro.id = '';
 
     // Enviar el centro a la API
 
     // Actualizamos los datos de la card
-    this.updateCard();
+    //this.updateCard(this.centro);
 
     // Reseteamos y ocultamos el formulario
     this.resetCentro();
     this.showEdit = false;
 
-    // Mostramos el mensaje de edición
-    this.showEdited = true;
+    // Mostramos el mensaje de éxito
   }
 
   // Actualizar los datos de la card
-  updateCard = (): void => {
+  updateCard = (centro: Centro): void => {
     // Actualizamos los datos de la card
-    this.centro$.subscribe(centro => {
-      this.centroData = [
-        { name: 'Nombre', value: centro.nombre },
-        { name: 'Descripción', value: centro.descripcion },
-        { name: 'Dirección', value: centro.direccion.domicilio },
-        { name: 'Población', value: centro.direccion.poblacion },
-        { name: 'Código postal', value: centro.direccion.cp },
-        { name: 'País', value: centro.direccion.pais },
-        { name: 'Teléfono', value: centro.telefono },
-        { name: 'Email', value: centro.email }
-      ];
-    });
+    this.centroData = [
+      { name: 'Nombre', value: centro.nombre },
+      { name: 'Descripción', value: centro.descripcion },
+      { name: 'Dirección', value: centro.direccion.domicilio },
+      { name: 'Población', value: centro.direccion.poblacion },
+      { name: 'Código postal', value: centro.direccion.cp },
+      { name: 'País', value: centro.direccion.pais },
+      { name: 'Teléfono', value: centro.telefono },
+      { name: 'Email', value: centro.email }
+    ];
   }
 
-  updateForm = (): void => {
+
+  updateForm = (centro: Centro): void => {
     // Actualizamos los datos del formulario
-    this.centro$.subscribe(centro => {
-      this.centroModel = centro;
-    });
+    this.centroModel = centro;
+
   }
 
   // Reseteamos el formulario
   resetCentro = (): void => {
-    this.updateForm();
+    this.updateForm(this.centro);
   }
 
   // Validador del email
@@ -126,3 +140,4 @@ export class CentroComponent implements OnInit {
   // Constructor del mensaje de error
   getErrorMessage = (): string => this.validateEmail() ? '' : 'Email no válido';
 }
+

@@ -5,13 +5,14 @@ import { Direccion } from './direccion.model';
 import { User } from './user.model';
 import { Reserva } from './reserva.model';
 import { Espera } from './espera.model';
+import { Genero } from '../genero';
 
 export interface Cliente extends User {
   nombre: string,
   nif: string,
   direccion: Direccion,
   telefono: string,
-  genero: number,
+  genero: Genero,
   iban: string,
   reservas?: Array<Reserva>,
   esperas?: Array<Espera>

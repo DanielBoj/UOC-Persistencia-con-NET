@@ -21,7 +21,6 @@ export class ClasesService {
     // Obtenemos los datos de la api, nos devuelve un array de usuarios
     return this.http.get(url).pipe(catchError(error => {
       console.log(error);
-
       // En caso de error devolvemos un array vacío
       return of([]);
     }));
@@ -37,7 +36,6 @@ export class ClasesService {
     // Obtenemos los datos de la api, nos devuelve un array de usuarios
     return this.http.get(url).pipe(catchError(error => {
       console.log(error);
-
       // En caso de error devolvemos un array vacío
       return of([]);
     }));

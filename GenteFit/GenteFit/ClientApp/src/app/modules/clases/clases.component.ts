@@ -1,5 +1,5 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Component, OnInit, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
+import { Observable, Subscription, map } from 'rxjs';
 import { Clase } from 'src/app/models/interfaces/clase.model';
 import { ClasesService } from 'src/app/services/clases.service';
 import { ReduxService } from 'src/app/services/redux.service';
@@ -13,21 +13,18 @@ import { Router } from '@angular/router';
   templateUrl: './clases.component.html',
   styleUrls: ['./clases.component.css']
 })
-export class ClasesComponent implements OnInit, AfterViewInit {
+export class ClasesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Estado obtenido del servicio redux
   tipoUsuario: string = '';
   idUsuario: string = '';
 
   // Contenedor para las clases y una clase en concreto
-  clases$: Observable<Clase[]> = new Observable<Clase[]>();
-  clase$: Observable<Clase> = new Observable<Clase>();
+  clases$: Subscription = new Subscription();
+  clases: Clase[] = [];
+  subscripts: Array<Subscription> = [];
 
-  // Observable
-  dataObservable = new Observable(observer => {
-    observer.next(this.getClases());
-  });
-
+  // Clase seleccionada
   claseId: string | undefined;
 
   // Título y subtítulo de la card
@@ -43,52 +40,44 @@ export class ClasesComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private redux: ReduxService,
-    private apiClases: ClasesService) { }
+    private apiClases: ClasesService) {
+    // Cargamos las clases como una subscripción a un observable para manejar la asincronía	
+    this.subscripts.push(
+      this.clases$ = this.apiClases.getClases().subscribe((clases) => {
+        // Consumimos la API => Obtenemos las clases
+        this.clases = clases;
+        // Guardamos las clases en el estado
+        this.redux.setClases(clases);
+        // Asignamos el datasource a la tabla
+        this.dataSource = new MatTableDataSource<Clase>(clases);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      })
+    );
+  }
 
   ngOnInit(): void {
 
     // Obtenemos el estado
     this.getLocalStore();
     this.tipoUsuario = 'admin';
-
-    // Cargamos las clases
-    this.getClases();
-
-    // Asignamos el datasource a la tabla
-    this.dataSource = new MatTableDataSource<Clase>(this.redux.getClases());
   }
 
+  // Asignamos el paginador y el ordenador para nuestra tabla dinámica
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+
+  // Nos desuscribimos de los observables al destruir el componente
+  ngOnDestroy(): void {
+    this.subscripts.forEach(sub => sub.unsubscribe());
   }
 
   // Obtenemos el estado
   getLocalStore = (): void => {
     this.tipoUsuario = this.redux.getTipoUsuario();
     this.idUsuario = this.redux.getIdUsuario();
-  }
-
-  // Obtenemos todas las clases
-  getClases = () => {
-    this.apiClases.getClases().pipe(data => this.clases$ = data);
-    // Creamos un contenedor temporal
-    // let clases: Clase[];
-
-    // this.clases$.subscribe(data => clases = data);
-
-    // Guardamos las clases en el store
-    this.clases$.subscribe(data => this.redux.setClases(data));
-  }
-
-  // Obtenemos una clase por id
-  getClase = (id: string) => {
-    this.apiClases.getClase(id).pipe(data => this.clase$ = data);
-    // Creamos un contenedor temporal
-    let clase: Clase;
-
-    // Guardamos las clase en el store
-    this.clase$.subscribe(data => this.redux.setClases(data));
   }
 
   // Borramos una clase
@@ -99,7 +88,6 @@ export class ClasesComponent implements OnInit, AfterViewInit {
     //this.getClases();
   }
 
-
   // Filtramos la tabla
   applyFilter = (event: Event) => {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -109,5 +97,4 @@ export class ClasesComponent implements OnInit, AfterViewInit {
       this.dataSource.paginator.firstPage();
     }
   }
-
 }

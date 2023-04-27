@@ -12,7 +12,12 @@
     <p>{{ element.value }}</p>
   </mat-card-content>
   <mat-card-actions *ngIf="tipoUsuario == 'admin'">
-    <button mat-fab [hidden]="showEdit" (click)="showEdit = !showEdit">
+    <button
+      mat-fab
+      class="mat-button"
+      [hidden]="showEdit"
+      (click)="showEdit = !showEdit"
+    >
       Editar
     </button>
     <!-- <button mat-button (click)="goBack()">Volver</button> -->
@@ -166,8 +171,12 @@
       </div>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-fab (click)="editCentro()">Aceptar</button>
-      <button mat-fab (click)="showEdit = !showEdit; resetCentro()">
+      <button mat-fab class="mat-button" (click)="editCentro()">Aceptar</button>
+      <button
+        mat-fab
+        class="mat-button"
+        (click)="showEdit = !showEdit; resetCentro()"
+      >
         Cancelar
       </button>
     </mat-card-actions>

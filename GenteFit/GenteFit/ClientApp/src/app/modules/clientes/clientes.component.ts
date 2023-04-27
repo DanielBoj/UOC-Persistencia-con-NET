@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Observable, filter, map } from 'rxjs';
+import { Observable, Subscription, filter, map } from 'rxjs';
 import { Cliente } from 'src/app/models/interfaces/cliente.model';
 import { ReduxService } from 'src/app/services/redux.service';
 import { UserService } from 'src/app/services/user.service';
@@ -12,11 +12,20 @@ import { UserService } from 'src/app/services/user.service';
   templateUrl: './clientes.component.html',
   styleUrls: ['./clientes.component.css']
 })
-export class ClientesComponent implements OnInit {
+export class ClientesComponent implements OnInit, OnDestroy {
 
   // Estado obtenido del servicio redux
   tipoUsuario: string = '';
   idUsuario: string = '';
+
+  // Contenedor para los datos del cliente => Para la vista del cliente
+  cliente$: Subscription = new Subscription();
+  cliente: Cliente = {} as Cliente;
+  // Contenedor para los datos de todos los clientes => Para la vista del administrador y del empleado
+  clientes$: Subscription = new Subscription();
+  clientes: Cliente[] = [];
+
+  subscripts: Array<Subscription> = [];
 
   // Información para la cabecera de la página
   title: string = "GentFit";
@@ -29,10 +38,10 @@ export class ClientesComponent implements OnInit {
   clienteData: any[] = [];
 
   // Contenedor para los datos del cliente
-  cliente$: Observable<Cliente> = new Observable<Cliente>();
+  //cliente$: Observable<Cliente> = new Observable<Cliente>();
 
   // Contenedor para todos los clientes, para la vista del administrador y del empleado
-  clientes$: Observable<Cliente[]> = new Observable<Cliente[]>();
+  //clientes$: Observable<Cliente[]> = new Observable<Cliente[]>();
 
   // Modelo para el formulario de edición y creación de clientes
   clienteModel: Cliente = {
@@ -55,25 +64,59 @@ export class ClientesComponent implements OnInit {
     tipo: 'cliente'
   };
 
-  // Modelo de la tabla de clientes
-  displayedColumns: string[] = ['email', 'nombre', 'nif', 'telefono', 'iban'];
+  // Manejamos los datos para generar la tabla
+  // Tabla dinámica
+  displayedColumns: string[] = ['email', 'nombre', 'nif', 'telefono', 'iban', 'editar', 'eliminar'];
+  dataSource: MatTableDataSource<Cliente> = new MatTableDataSource<Cliente>();
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
 
   // Flags para las acciones secundarias
   isClienteEdit: boolean = false;
 
 
   constructor(private localStorage: ReduxService,
-    private apiUsuarios: UserService) { }
+    private apiUsuarios: UserService) {
+    // Para poder cargar los datos, tenemos que obtener el estado
+    this.getLocalStore();
+
+    // Obtenemos la lista de clientes y los guardamos en el contenedor
+    this.subscripts.push(
+      this.clientes$ = this.apiUsuarios.getClientes().subscribe((clientes) => {
+        // Consumimos las API => Obtenemos los clientes
+        this.clientes = clientes;
+        // Guardamos los datos en el localStore
+        this.localStorage.setClientes(clientes);
+        // Asignamos el datasource a la tabla
+        this.dataSource = new MatTableDataSource<Cliente>(clientes);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      })
+    );
+
+    // Obtenemos el cliente y lo guardamos en el contenedor
+    this.subscripts.push(
+      this.cliente$ = this.apiUsuarios.getCliente(this.idUsuario).subscribe((cliente) => {
+        // Consumimos las API => Obtenemos el cliente
+        this.cliente = cliente;
+        // Guardamos los datos en el localStore
+        this.localStorage.setCliente(cliente);
+        // Actualizamos los datos de la card
+        this.updateCard(cliente);
+        // Actualizamos el modelo para el formulario
+        this.updateForm(cliente);
+      }
+      )
+    );
+
+    this.getLocalStore();
+  }
 
   ngOnInit(): void {
     // Obtenemos el estado
     this.getLocalStore();
-
-    // Listamos todos los clientes para el administrador y el empleado
-    this.clientes$ = this.getClientes();
-    this.idUsuario = '6429a7d7e05768574498e20e';
-    // Obtenemos el cliente para la vista de cliente
-    this.cliente$ = this.getCliente();
 
     // Obtenemos las clases a las que está apuntado el cliente
 
@@ -82,18 +125,27 @@ export class ClientesComponent implements OnInit {
     // Obtenemos la lista de espera del cliente
 
     // Cargamos los datos de la card
-    this.updateCard();
+    // this.updateCard();
 
     // Cargamos el modelo para el formulario
-    this.updateForm();
+    // this.updateForm();
+  }
 
+  ngOnDestroy(): void {
+    // Desuscribimos los observables
+    this.subscripts.forEach(sub => sub.unsubscribe());
+  }
 
+  // Asignamos el paginador y el ordenador para nuestra tabla dinámica
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   // Obtenemos el estado
   getLocalStore = (): void => {
-    this.tipoUsuario = this.localStorage.getTipoUsuario();
-    this.idUsuario = this.localStorage.getIdUsuario();
+    this.tipoUsuario = this.localStorage.getTipoUsuario().toString();
+    this.idUsuario = this.localStorage.getIdUsuario().toString();
   }
 
   // Todos los usuario
@@ -103,40 +155,49 @@ export class ClientesComponent implements OnInit {
   getCliente = (): Observable<Cliente> => this.apiUsuarios.getCliente(this.idUsuario).pipe(map(cliente => cliente));
 
   // Actualizar los datos de la card
-  updateCard = (): void => {
+  updateCard = (cliente: any): void => {
     // Actualizmos los datos de la card desde el observable
-    this.cliente$.subscribe(cliente => {
-      this.clienteData = [
-        { name: 'Email', value: cliente.email },
-        { name: 'Nombre', value: cliente.nombre },
-        { name: 'Dirección', value: cliente.direccion.domicilio },
-        { name: 'Población', value: cliente.direccion.poblacion },
-        { name: 'Código postal', value: cliente.direccion.cp },
-        { name: 'País', value: cliente.direccion.pais },
-        { name: 'Teléfono', value: cliente.telefono },
-        { name: 'Genero', value: cliente.email },
-        { name: 'IBAN', value: cliente.iban },
-      ];
-    });
+    this.clienteData = [
+      { name: 'Email', value: cliente.email },
+      { name: 'Nombre', value: cliente.nombre },
+      { name: 'Dirección', value: cliente.direccion.domicilio },
+      { name: 'Población', value: cliente.direccion.poblacion },
+      { name: 'Código postal', value: cliente.direccion.cp },
+      { name: 'País', value: cliente.direccion.pais },
+      { name: 'Teléfono', value: cliente.telefono },
+      { name: 'Genero', value: cliente.email },
+      { name: 'IBAN', value: cliente.iban },
+    ];
   }
 
   // Actualizar los datos del formulario
-  updateForm = (): void => {
+  updateForm = (cliente: any): void => {
     // Actualizamos el modelo del formulario
-    this.cliente$.subscribe(cliente => {
-      this.clienteModel = cliente;
-    });
+    this.clienteModel = cliente;
   }
 
   // Enviamos el formulario al servicio
   onSubmit = (): void => { }
 
   // Editar el cliente
+  editarCliente = (cliente: Cliente): void => {
+    // Actualizamos el modelo del formulario
+    this.clienteModel = cliente;
+    // Actualizamos el flag
+    this.isClienteEdit = true;
+  }
 
-  // Filtro para la tabla de clientes
+  // Eliminar el cliente
+  eliminarCliente = (cliente: Cliente): void => { }
+
+  // Filtramos los datos de la tabla
   applyFilter = (event: Event) => {
     const filterValue = (event.target as HTMLInputElement).value;
-    // Filtramos la lista de clientes
-    this.clientes$.pipe(map(clientes => clientes.filter(cliente => cliente.email.toLowerCase().includes(filterValue))));
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
+
 }

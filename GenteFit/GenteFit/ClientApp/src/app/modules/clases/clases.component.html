@@ -1,4 +1,3 @@
-{{ clases$ | async | json }}
 <header>
   <h1>{{ title }}</h1>
   <h2>{{ subtitle }}</h2>
@@ -90,7 +89,12 @@
   </div>
 </ng-container>
 <ng-container class="action-buttons">
-  <button mat-fab routerLinkActive="active" routerLink="/clasescreate">
+  <button
+    mat-fab
+    class="mat-button"
+    routerLinkActive="active"
+    routerLink="/clasescreate"
+  >
     Nueva
   </button>
 </ng-container>

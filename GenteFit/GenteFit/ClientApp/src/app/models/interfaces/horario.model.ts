@@ -4,10 +4,11 @@
 import { Clase } from './clase.model';
 import { Reserva } from './reserva.model';
 import { Espera } from './espera.model';
+import { Dias } from '../dias';
 
 export interface Horario {
   id?: string,
-  dia: number,
+  dia: Dias,
   hora: string,
   clase: Clase,
   reservas?: Array<Reserva>,
