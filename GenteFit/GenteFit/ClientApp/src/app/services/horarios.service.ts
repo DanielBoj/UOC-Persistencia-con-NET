@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, map, catchError } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { Observable, of, map, catchError, Subscription, throwError } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Horario } from '../models/interfaces/horario.model';
 import { Espera } from '../models/interfaces/espera.model';
 import { Reserva } from '../models/interfaces/reserva.model';
@@ -13,6 +13,9 @@ export class HorariosService {
   private urlHorario: string = 'http://localhost:5000/api/horario';
   private urlReserva: string = 'http://localhost:5000/api/reserva';
   private urlEspera: string = 'http://localhost:5000/api/espera';
+
+  res$: Subscription = new Subscription();
+  res: any;
 
   constructor(private http: HttpClient) { }
 
@@ -120,20 +123,13 @@ export class HorariosService {
   }
 
   // Creamos una reserva
-  createReserva = (reserva: Reserva): Observable<any> => {
+  createReserva = (idCliente: string, idHorario: string, reserva: Reserva): Observable<any> => {
     //Construimos la url
-    const url = `${this.urlReserva}/${reserva.cliente.id};${reserva.horario.id}`;
+    const url = `${this.urlReserva}/${idCliente};${idHorario}`;
 
-    // Realizamos la petición
-    try {
-      // Obtenemos los datos de la api
-      let res: any;
-      this.http.post(url, reserva).subscribe(data => res = data);
-      return res;
-    } catch (error) {
-      console.log(error);
-      return of();
-    }
+    return this.http.post(url, reserva).pipe(catchError((error: HttpErrorResponse) => {
+      return throwError(() => { return { ok: false, error: error.error }; });
+    }));
   }
 
   // TODO: Actualizamos una reserva
@@ -150,7 +146,6 @@ export class HorariosService {
       this.http.delete(url).subscribe(data => res = data);
       return res;
     } catch (error) {
-      console.log(error);
       return of(false);
     }
   }
@@ -163,8 +158,7 @@ export class HorariosService {
     // Realizamos la petición
     // Obtenemos los datos de la api.
     return this.http.get(url).pipe(catchError(error => {
-      console.log(error);
-      return of([]);
+      return error.message;
     }
     ));
   }
@@ -183,20 +177,14 @@ export class HorariosService {
   }
 
   // Creamos una espera
-  createEspera = (espera: Espera): Observable<any> => {
+  createEspera = (idCliente: string, idHorario: string, espera: Espera): Observable<any> => {
     // Construimos la url
-    const url = `${this.urlEspera}/${espera.cliente.id};${espera.horario.id}`;
-
-    // Realizamos la petición
-    try {
-      // Obtenemos los datos de la API
-      let res: any;
-      this.http.post(url, espera).subscribe(data => res = data);
-      return res;
-    } catch (error) {
-      console.log(error);
-      return of();
-    }
+    const url = `${this.urlEspera}/${idCliente};${idHorario}`;
+    console.log(url, espera);
+    // Obtenemos los datos de la api
+    return this.http.post(url, espera).pipe(catchError((error: HttpErrorResponse) => {
+      return throwError(() => { return { ok: false, error: error.error }; });
+    }));
   }
 
   // TODO: Actualizamos una espera
@@ -213,7 +201,6 @@ export class HorariosService {
       this.http.delete(url).subscribe(data => res = data);
       return res;
     } catch (error) {
-      console.log(error);
       return of(false);
     }
   }

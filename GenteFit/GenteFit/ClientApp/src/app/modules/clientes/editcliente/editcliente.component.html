@@ -1,0 +1,327 @@
+<header>
+  <h1>{{ title }}</h1>
+  <h2>{{ subtitle }}</h2>
+  <button mat-fab class="mat-button" color="primary" routerLink="/clientes">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+</header>
+
+<!-- Vista Admin -->
+<ng-container *ngIf="tipoUsuario === 'admin'">
+  <mat-card class="cliente-card">
+    <mat-card-header>
+      <mat-card-title>
+        <h2>{{ cuentaTitle }}</h2>
+      </mat-card-title>
+      <mat-card-subtitle>
+        <h2>{{ cuentaSubtitle }}</h2>
+      </mat-card-subtitle>
+    </mat-card-header>
+    <!-- Creamos un full formulario -->
+    <mat-card-content>
+      <ng-form #clienteForm="ngForm">
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>Email</mat-label>
+            <input
+              class="form-control"
+              type="email"
+              matInput
+              placeholder="Email"
+              name="email"
+              [(ngModel)]="clienteModel.email"
+              required
+              ng-valid
+              autocomplete="off"
+            />
+            <mat-hint>Introduce el email</mat-hint>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>Contraseña</mat-label>
+            <input
+              class="form-control"
+              type="password"
+              matInput
+              placeholder="Password"
+              name="password"
+              [(ngModel)]="clienteModel.pass"
+              required
+              ng-valid
+              autocomplete="off"
+            />
+            <mat-hint>Introduce la contraseña</mat-hint>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>Nombre</mat-label>
+            <input
+              class="form-control"
+              type="text"
+              matInput
+              placeholder="Nombre"
+              name="nombre"
+              [(ngModel)]="clienteModel.nombre"
+              required
+              ng-valid
+              autocomplete="off"
+            />
+            <mat-hint>Introduce el nombre</mat-hint>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>NIF</mat-label>
+            <input
+              class="form-control"
+              type="text"
+              matInput
+              placeholder="Nif"
+              name="nif"
+              [(ngModel)]="clienteModel.nif"
+              required
+              ng-valid
+              autocomplete="off"
+            />
+            <mat-hint>Introduce el NIF</mat-hint>
+          </mat-form-field>
+        </div>
+        <h3>Dirección</h3>
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>Domicilio</mat-label>
+            <input
+              class="form-control"
+              type="text"
+              matInput
+              placeholder="Domicilio"
+              name="domicilio"
+              [(ngModel)]="clienteModel.direccion.domicilio"
+              required
+              ng-valid
+              autocomplete="off"
+            />
+            <mat-hint>Introduce tu domicilio</mat-hint>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>Población</mat-label>
+            <input
+              class="form-control"
+              type="text"
+              matInput
+              placeholder="Población"
+              name="poblacion"
+              [(ngModel)]="clienteModel.direccion.poblacion"
+              required
+              ng-valid
+              autocomplete="off"
+            />
+            <mat-hint>Introduce tu población</mat-hint>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>Código Postal</mat-label>
+            <input
+              class="form-control"
+              type="text"
+              matInput
+              placeholder="Código Postal"
+              name="codigoPostal"
+              [(ngModel)]="clienteModel.direccion.cp"
+              required
+              ng-valid
+              autocomplete="off"
+            />
+            <mat-hint>Introduce tu código postal</mat-hint>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>País</mat-label>
+            <input
+              class="form-control"
+              type="text"
+              matInput
+              placeholder="Pais"
+              name="pais"
+              [(ngModel)]="clienteModel.direccion.pais"
+              required
+              ng-valid
+              autocomplete="off"
+            />
+            <mat-hint>Introduce tu país</mat-hint>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>Teléfono</mat-label>
+            <input
+              class="form-control"
+              type="text"
+              matInput
+              placeholder="Telefono"
+              name="telefono"
+              [(ngModel)]="clienteModel.telefono"
+              required
+              ng-valid
+              autocomplete="off"
+            />
+            <mat-hint>Introduce tu teléfono</mat-hint>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>IBAN</mat-label>
+            <input
+              class="form-control"
+              type="text"
+              matInput
+              placeholder="Iban"
+              name="iban"
+              [(ngModel)]="clienteModel.iban"
+              required
+              ng-valid
+              autocomplete="off"
+            />
+            <mat-hint>Introduce tu IBAN</mat-hint>
+          </mat-form-field>
+        </div>
+      </ng-form>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-fab class="mat-button" (click)="onCancel()">Cancelar</button>
+      <button mat-fab class="mat-button" (click)="onSubmit()">Guardar</button>
+    </mat-card-actions>
+  </mat-card>
+</ng-container>
+
+<!-- Vista cliente -->
+<ng-container *ngIf="tipoUsuario === 'cliente'">
+  <mat-card class="cliente-card">
+    <mat-card-header>
+      <mat-card-title>
+        <h2>{{ cuentaTitle }}</h2>
+      </mat-card-title>
+      <mat-card-subtitle>
+        <h2>{{ cuentaSubtitle }}</h2>
+      </mat-card-subtitle>
+    </mat-card-header>
+    <!-- Creamos un formulario parcial -->
+    <mat-card-content>
+      <ng-form #clienteForm="ngForm">
+        <h3>Dirección</h3>
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>Domicilio</mat-label>
+            <input
+              class="form-control"
+              type="text"
+              matInput
+              placeholder="Domicilio"
+              name="domicilio"
+              [(ngModel)]="clienteModel.direccion.domicilio"
+              required
+              ng-valid
+              autocomplete="off"
+            />
+            <mat-hint>Introduce tu domicilio</mat-hint>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>Población</mat-label>
+            <input
+              class="form-control"
+              type="text"
+              matInput
+              placeholder="Población"
+              name="poblacion"
+              [(ngModel)]="clienteModel.direccion.poblacion"
+              required
+              ng-valid
+              autocomplete="off"
+            />
+            <mat-hint>Introduce tu población</mat-hint>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>Código Postal</mat-label>
+            <input
+              class="form-control"
+              type="text"
+              matInput
+              placeholder="Código Postal"
+              name="codigoPostal"
+              [(ngModel)]="clienteModel.direccion.cp"
+              required
+              ng-valid
+              autocomplete="off"
+            />
+            <mat-hint>Introduce tu código postal</mat-hint>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>País</mat-label>
+            <input
+              class="form-control"
+              type="text"
+              matInput
+              placeholder="Pais"
+              name="pais"
+              [(ngModel)]="clienteModel.direccion.pais"
+              required
+              ng-valid
+              autocomplete="off"
+            />
+            <mat-hint>Introduce tu país</mat-hint>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>Teléfono</mat-label>
+            <input
+              class="form-control"
+              type="text"
+              matInput
+              placeholder="Telefono"
+              name="telefono"
+              [(ngModel)]="clienteModel.telefono"
+              required
+              ng-valid
+              autocomplete="off"
+            />
+            <mat-hint>Introduce tu teléfono</mat-hint>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>IBAN</mat-label>
+            <input
+              class="form-control"
+              type="text"
+              matInput
+              placeholder="Iban"
+              name="iban"
+              [(ngModel)]="clienteModel.iban"
+              required
+              ng-valid
+              autocomplete="off"
+            />
+            <mat-hint>Introduce tu IBAN</mat-hint>
+          </mat-form-field>
+        </div>
+      </ng-form>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-fab class="mat-button" (click)="onCancel()">Cancelar</button>
+      <button mat-fab class="mat-button" (click)="onSubmit()">Guardar</button>
+    </mat-card-actions>
+  </mat-card>
+</ng-container>

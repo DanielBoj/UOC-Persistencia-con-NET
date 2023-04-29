@@ -9,6 +9,13 @@ import { HorariosComponent } from './modules/horarios/horarios.component';
 import { EditclasesComponent } from './modules/clases/editclases/editclases.component';
 import { DetalleclaseComponent } from './modules/clases/detalleclase/detalleclase.component';
 import { CreateclaseComponent } from './modules/clases/createclase/createclase.component';
+import { CreatehorarioComponent } from './modules/horarios/createhorario/createhorario.component';
+import { CreatereservaComponent } from './modules/horarios/reservas/createreserva/createreserva.component';
+import { CreateesperaComponent } from './modules/horarios/esperas/createespera/createespera.component';
+import { EditclienteComponent } from './modules/clientes/editcliente/editcliente.component';
+import { DetailclienteComponent } from './modules/clientes/detailcliente/detailcliente.component';
+import { ReservasComponent } from './modules/horarios/reservas/reservas.component';
+import { EsperasComponent } from './modules/horarios/esperas/esperas.component';
 
 const routes: Routes = [
   {
@@ -24,13 +31,19 @@ const routes: Routes = [
     path: 'centro', component: CentroComponent, title: 'Centro', pathMatch: 'full'
   },
   {
-    path: 'clientes', component: ClientesComponent, title: 'Clientes', pathMatch: 'full'
+    path: 'clientes', component: ClientesComponent, title: 'Clientes', runGuardsAndResolvers: 'always', pathMatch: 'full',
   },
   {
-    path: 'clases', component: ClasesComponent, title: 'Clases', pathMatch: 'full'
+    path: 'clienteedit/:id', component: EditclienteComponent, title: 'Editar Cliente', pathMatch: 'full'
   },
   {
-    path: 'clases/:id', component: DetalleclaseComponent, title: 'Detalle Clase', pathMatch: 'full'
+    path: 'clientedetalle/:id', component: DetailclienteComponent, title: 'Detalle Cliente', pathMatch: 'full'
+  },
+  {
+    path: 'clases', component: ClasesComponent, title: 'Clases', pathMatch: 'full', runGuardsAndResolvers: 'always'
+  },
+  {
+    path: 'clasedetalle/:id', component: DetalleclaseComponent, title: 'Detalle Clase', pathMatch: 'full'
   },
   {
     path: 'clases/edit/:id', component: EditclasesComponent, title: 'Editar Clases', pathMatch: 'full'
@@ -39,7 +52,22 @@ const routes: Routes = [
     path: 'clasescreate', component: CreateclaseComponent, title: 'Crear Clases', pathMatch: 'full'
   },
   {
-    path: 'horarios', component: HorariosComponent, title: 'Horario', pathMatch: 'full'
+    path: 'horarios', component: HorariosComponent, title: 'Horario', pathMatch: 'full', runGuardsAndResolvers: 'always'
+  },
+  {
+    path: 'horarioscreate', component: CreatehorarioComponent, title: 'Nuevo Horario', pathMatch: 'prefix'
+  },
+  {
+    path: 'reservacreate', component: CreatereservaComponent
+  },
+  {
+    path: 'esperacreate', component: CreateesperaComponent
+  },
+  {
+    path: 'reservas', component: ReservasComponent, pathMatch: 'full'
+  },
+  {
+    path: 'esperas', component: EsperasComponent, pathMatch: 'full'
   },
   {
     path: '**', redirectTo: 'home', pathMatch: 'full'
@@ -49,7 +77,7 @@ const routes: Routes = [
 
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

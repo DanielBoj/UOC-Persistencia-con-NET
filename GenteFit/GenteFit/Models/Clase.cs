@@ -11,9 +11,13 @@ namespace GenteFit.Models
         public string Id { get; set; }
         [BsonElement("Nombre")]
         public string Nombre { get; set; } = null!;
+        [BsonElement("Descripcion")]
         public string Descripcion { get; set; } = null!;
+        [BsonElement("Profesor")]
         public string Profesor { get; set; } = null!;
+        [BsonElement("Duracion")]
         public int Duracion { get; set; }
+        [BsonElement("Plazas")]
         public int Plazas { get; set; }
 
         private static int TotalClases { get; set; } = 0;

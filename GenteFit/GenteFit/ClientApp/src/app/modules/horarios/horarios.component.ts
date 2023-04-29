@@ -1,11 +1,13 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Horario } from 'src/app/models/interfaces/horario.model';
+import { Cache } from 'src/app/models/interfaces/cache.model';
 import { HorariosService } from 'src/app/services/horarios.service';
-import { Observable, Subscription, from, of } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ReduxService } from 'src/app/services/redux.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Dias } from 'src/app/models/dias';
 
 @Component({
   selector: 'app-horarios',
@@ -15,8 +17,10 @@ import { MatTableDataSource } from '@angular/material/table';
 export class HorariosComponent implements OnInit, OnDestroy {
 
   // Estado obtenido del servicio redux
-  tipoUsuario: string = '';
-  idUsuario: string = '';
+  cache$: Subscription = new Subscription();
+  cache!: Cache;
+  tipoUsuario!: string;
+  idUsuario!: string;
 
   // Contenedor para manejar los horarios de forma asíncrona
   horarios$: Subscription = new Subscription();
@@ -27,10 +31,17 @@ export class HorariosComponent implements OnInit, OnDestroy {
   title: string = "Horarios";
   subtitle: string = "Clases todos los días, nos adaptamos a tu horario"
 
+  // Flag para mostrar el formulario de creación
+  showForm: boolean = false;
+
+  // Flags mensajería
+  isDeleted: boolean = false;
+  isDeletedError: boolean = false;
+
   // Manejamos los datos para generar la tabla
   // Tabla dinámica
-  displayedColumns: string[] = ['dia', 'hora', 'clase']
-  displayedAdminColumns: string[] = ['dia', 'hora', 'clase', 'editar', 'eliminar']
+  displayedColumns: string[] = ['dia', 'hora', 'clase.nombre', 'detalles']
+  displayedAdminColumns: string[] = ['dia', 'hora', 'clase.nombre', 'detalles', 'eliminar']
   dataSource: MatTableDataSource<Horario> = new MatTableDataSource<Horario>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -38,27 +49,40 @@ export class HorariosComponent implements OnInit, OnDestroy {
 
 
   constructor(private apiHorario: HorariosService,
-    private redux: ReduxService) {
+    private redux: ReduxService,) { }
+
+  ngOnInit(): void {
+    // Obtenemos el estado
+    this.subscripts.push(this.cache$ = this.redux.getCache().subscribe(
+      (cache) => {
+        // Cargamos los datos del estado
+        this.cache = cache;
+        this.tipoUsuario = cache.tipoUsuario;
+        this.idUsuario = cache.idUsuario;
+      }
+    ));
 
     // Obtenemos los horarios, los guardamos en el contenedor
     this.subscripts.push(
       this.horarios$ = this.apiHorario.getHorarios().subscribe((horarios) => {
         // Consumimos la API => Obtenemos los horarios
         this.horarios = horarios;
-        // Guardamos los horarios en el estado
-        this.redux.setHorarios(horarios);
+        // Asignamos los valores a los días de la semana meidante el enum Dias
+        this.horarios.forEach((horario) => {
+          horario.dia = Dias[horario.dia as keyof typeof Dias];
+        });
         // Asignamos el datasource a la tabla
         this.dataSource = new MatTableDataSource<Horario>(horarios);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
+
+        // Añadimos el filtrado por datos anidados
+        this.dataSource.filterPredicate = (data, filter) => {
+          const dataStr = JSON.stringify(data).toLowerCase();
+          return dataStr.indexOf(filter) != -1;
+        }
       })
     );
-  }
-
-  ngOnInit(): void {
-    // Obtenemos el estado
-    this.getLocalStore();
-    this.tipoUsuario = 'admin';
   }
 
   ngOnDestroy(): void {
@@ -72,14 +96,17 @@ export class HorariosComponent implements OnInit, OnDestroy {
     this.dataSource.sort = this.sort;
   }
 
-  // Obtenemos el estado
-  getLocalStore = (): void => {
-    this.tipoUsuario = this.redux.getTipoUsuario();
-    this.idUsuario = this.redux.getIdUsuario();
-  }
-
   // Borramos un horario
-  deleteHorario = (id: string) => { }
+  deleteHorario = (id: string) => {
+    console.log(id);
+    // Consumimos la API => Borramos el horario
+    try {
+      // Tras el borrado, eliminamos el horario del varaiable local para reflejarlo en la tabla
+      this.apiHorario.deleteHorario(id).subscribe((data) => this.isDeleted = true);
+    } catch (error) {
+      this.isDeletedError = true;
+    }
+  }
 
   // Filtramos los datos de la tabla
   applyFilter = (event: Event) => {

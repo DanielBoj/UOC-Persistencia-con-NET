@@ -55,7 +55,40 @@ export class UserService {
     return this.http.get<Cliente>(url).pipe(catchError(error => {
       console.log(error);
       // En caso de error devolvemos un array vacío
-      return of([]);
+      return of();
     }));
+  }
+
+  // Editamos un cliente
+  editCliente = (id: string, cliente: Cliente): Observable<any> => {
+    // Generamos la URL para la petición
+    const url = `${this.url}/cliente/${id}`;
+
+    // Realizamos la petición
+    let res: any;
+
+    try {
+      this.http.put(url, cliente).subscribe((data) => res = data);
+    } catch (error: any) {
+      res = error.message;
+    }
+
+    return res;
+  }
+
+  // Borramos un cliente
+  deleteCLiente = (id: string): Observable<any> => {
+    // Generamos la URL para la petición
+    const url = `${this.url}/cliente/${id}`;
+
+    // Realizamos la petición
+    let res: any;
+
+    try {
+      this.http.delete(url).subscribe((data) => res = data);
+      return res;
+    } catch (error) {
+      return of(false);
+    }
   }
 }

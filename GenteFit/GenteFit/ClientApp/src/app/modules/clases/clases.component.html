@@ -1,8 +1,12 @@
 <header>
   <h1>{{ title }}</h1>
   <h2>{{ subtitle }}</h2>
+  <button mat-fab class="mat-button" color="primary" routerLink="/menu">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
 </header>
 
+<!-- Vista para admins -->
 <ng-container class="clases-table" *ngIf="tipoUsuario === 'admin'">
   <mat-form-field>
     <mat-label>Filter</mat-label>
@@ -45,7 +49,7 @@
       <ng-container matColumnDef="detalles">
         <th mat-header-cell *matHeaderCellDef>Detalle</th>
         <td mat-cell *matCellDef="let row">
-          <button mat-icon-button [routerLink]="['clases', row.id]">
+          <button mat-icon-button [routerLink]="['clasedetalle', row.id]">
             <mat-icon>visibility</mat-icon>
           </button>
         </td>
@@ -88,6 +92,7 @@
     ></mat-paginator>
   </div>
 </ng-container>
+
 <ng-container class="action-buttons">
   <button
     mat-fab
@@ -99,6 +104,7 @@
   </button>
 </ng-container>
 
+<!-- Vista para clientes y empleados -->
 <ng-container class="clases-table" *ngIf="tipoUsuario !== 'admin'">
   <mat-form-field>
     <mat-label>Filter</mat-label>
@@ -141,7 +147,7 @@
       <ng-container matColumnDef="detalles">
         <th mat-header-cell *matHeaderCellDef>Detalle</th>
         <td mat-cell *matCellDef="let row">
-          <button mat-icon-button [routerLink]="['/clases', row.id]">
+          <button mat-icon-button [routerLink]="['/clasedetalle', row.id]">
             <mat-icon>visibility</mat-icon>
           </button>
         </td>

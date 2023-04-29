@@ -8,7 +8,7 @@ import { Dias } from '../dias';
 
 export interface Horario {
   id?: string,
-  dia: Dias,
+  dia: string | number,
   hora: string,
   clase: Clase,
   reservas?: Array<Reserva>,

@@ -26,4 +26,21 @@ export class CentroService {
       return of([]);
     }));
   }
+
+  // Actualizamos el centro
+  editCentro = (id: string, centro: Centro): Observable<any> => {
+    // Generamos la URL para la petición
+    const url = `${this.url}/${id}`;
+
+    // Realizamos la petición
+    let res: any;
+
+    try {
+      this.http.put(url, centro).subscribe((data) => res = data);
+    } catch (error: any) {
+      res = error.message;
+    }
+
+    return res;
+  }
 }

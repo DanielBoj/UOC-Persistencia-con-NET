@@ -7,4 +7,8 @@ import { Component } from '@angular/core';
 })
 export class FooterComponent {
 
+  // Texto del footer
+  licencia: string = 'CC Zero';
+  autor: string = 'Hyperion Development';
+  fecha: string = 'since 2023';
 }

@@ -111,7 +111,7 @@ namespace GenteFit.Controllers
                 // Obtenemos la lista de usuarios -- Tenemos que realizar la conversión de tipos
                 OkObjectResult? res = await ListAllUsuarios() as OkObjectResult;
 
-                if (res.Value is null || res.Value is not List<User> usuarios)
+                if (res?.Value is null || res?.Value is not List<User> usuarios)
                 {
                     return NotFound("List error");
                 }
@@ -219,7 +219,7 @@ namespace GenteFit.Controllers
                 centro.Id = srcCentro.Id;
 
                 // Actualizamos el centro
-                return await db.Edit(centro)? Created("Id", centro.Id) : StatusCode(400);
+                return await db.Edit(centro)? StatusCode(200) : StatusCode(400);
             } catch (Exception err)
             {
                 return StatusCode(400, err.Message);
@@ -336,6 +336,9 @@ namespace GenteFit.Controllers
                 // Obtenemos la lista de clientes
                 List<Cliente> clientes = await db.GetAllClientes();
 
+                // Asignamos el tipo de usuario
+                clientes.ForEach(cliente => cliente.Tipo = "cliente");
+
                 return clientes.Count > 0? Ok(await db.GetAllClientes()) : NotFound("No existen clientes");
             } catch (Exception err)
             {
@@ -392,9 +395,9 @@ namespace GenteFit.Controllers
                     return BadRequest("El cliente ya existe");
                 }
 
-                // Inicializamos las colecciones
+                /*// Inicializamos las colecciones
                 cliente.Reservas = new();
-                cliente.Esperas = new();
+                cliente.Esperas = new();*/
 
                 // Creamos el cliente
                 return await db.Create(cliente)? CreatedAtAction(nameof(GetClienteById), new { id = cliente.Id.ToString() }, cliente) 
@@ -434,32 +437,8 @@ namespace GenteFit.Controllers
                 // Nos aseguramos de que la id es correcta.
                 cliente.Id = srcCliente.Id;
 
-                // Modificamos los objetos de las colecciones relacionados con el cliente.
-                if (cliente.Reservas.Count > 0)
-                {
-                    cliente.Reservas.ForEach(async (res) =>
-                    {
-                        // Modificamos el cliente en la reserva.
-                        res.Cliente = cliente;
-
-                        // Actualizamos la reserva en la BD.
-                        await dbReserva.Edit(res);
-                    });
-                }
-
-                if (cliente.Esperas.Count > 0)
-                {
-                    cliente.Esperas.ForEach(async (esp) =>
-                    {
-                        // Modificamos el cliente en la espera.
-                        esp.Cliente = cliente;
-                        // Actualizamos la espera en la BD.
-                        await dbEspera.Edit(esp);
-                    });
-                }
-
                 // Actualizamos el cliente
-                return await db.Edit(cliente)? Created("Id", cliente.Id) : StatusCode(400);
+                return await db.Edit(cliente)? StatusCode(200) : StatusCode(400);
 
             } catch (Exception err)
             {
@@ -474,6 +453,8 @@ namespace GenteFit.Controllers
         {
             // Creamos el controlador de MongoDB
             ClienteController db = new();
+            ReservaController dbReserva = new();
+            EsperaController dbEspera = new();
 
             // Comprobamos que los datos sean correctos
             if(id is null)
@@ -486,18 +467,33 @@ namespace GenteFit.Controllers
                 // Capturamos el cliente para realizar las operaciones secundarias.
                 Cliente cliente = await db.Details(id);
 
-                // Primero tenemos que eliminar las reservas y esperas del cliente si existen.
-                if (cliente.Reservas.Count > 0)
+                // Obtenemos la lista de reservas del cliente
+                List<Reserva> reservas = await dbReserva.GetAllReservas();
+                reservas?.FindAll(res => res.Cliente.Id.Equals(cliente.Id)).ToList();
+
+                // Eliminamos las reservas del cliente de la bd
+                reservas?.ForEach(async (res) => await dbReserva.Delete(res.Id.ToString()));
+
+                // Obtenemos la lista de esperas del cliente
+                List<Espera> esperas = await dbEspera.GetAllEsperas();
+                esperas?.FindAll(es => es.Cliente.Id.Equals(cliente.Id)).ToList();
+
+                // Eliminamos las esperas del cliente de la bd
+                esperas?.ForEach(async (es) => await db.Delete(es.Id.ToString()));
+
+
+                /*// Primero tenemos que eliminar las reservas y esperas del cliente si existen.
+                if (cliente.Reservas?.Count > 0)
                 {
                     // Eliminamos las reservas de la BD..
                     cliente.Reservas.ForEach(async (res) => await DeleteReserva(res.Id.ToString()));
                 }
 
-                if (cliente.Esperas.Count > 0)
+                if (cliente.Esperas?.Count > 0)
                 {
                     //Eliminamos las esperas de la BD.
                     cliente.Esperas.ForEach(async (es) => await DeleteEspera(es.Id.ToString()));
-                }
+                }*/
                
                 // Eliminamos el cliente
                 return await db.Delete(id) ? StatusCode(200) : NotFound("El cliente no existe.");
@@ -641,7 +637,7 @@ namespace GenteFit.Controllers
                 });
 
                 // Actualizamos la clase
-                return await db.Edit(clase)? Created("Id", clase.Id) : StatusCode(400);
+                return await db.Edit(clase)? StatusCode(200) : StatusCode(400);
             } catch (Exception err)
             {
                 return StatusCode(400, err.Message);
@@ -913,20 +909,6 @@ namespace GenteFit.Controllers
                 // Nos aseguramos de que la id es correcta.
                 horario.Id = srcHorario.Id;
 
-                // Modificamos las reservas y esperas relacionadas con el horario.
-                /*if (horario.Reservas.Count > 0)
-                {
-                    // Obtenemos la lista de reservas y modificamos el horario de cada una en la BD.
-                    horario.Reservas.ForEach(async (res) =>
-                    {
-                        // Modificamos el horario de la reserva.
-                        res.Horario = horario;
-
-                        // Actualizamos la reserva en la BD.
-                        await dbReserva.Edit(res);
-                    });
-                }*/
-
                 // Buscamos las reservas que tengan el horario que vamos a modificar.
                 List<Reserva> reservas = await dbReserva.GetAllReservas();
 
@@ -964,21 +946,8 @@ namespace GenteFit.Controllers
                     });
                 }
 
-                /*if (horario.Esperas.Count > 0)
-                {
-                    // Obtenemos la lista de esperas y modificamos el horario de cada una en la BD.
-                    horario.Esperas.ForEach(async (esp) =>
-                    {
-                        // Modificamos el horario de la espera.
-                        esp.Horario = horario;
-
-                        // Actualizamos la espera en la BD.
-                        await dbEspera.Edit(esp);
-                    });
-                }*/
-
                 // Actualizamos el horario
-                return await db.Edit(horario)? Created("Id", horario.Id) : StatusCode(400);
+                return await db.Edit(horario)? StatusCode(200) : StatusCode(400);
             } catch (Exception err)
             {
                 return StatusCode(400, err.Message);
@@ -1022,12 +991,12 @@ namespace GenteFit.Controllers
                         //Eliminamos los horarios de las reservas
                         reservas.ForEach(async (res) =>
                         {
-                            // Obtenemos el cliente
+                            /*// Obtenemos el cliente
                             Cliente cliente = await dbCliente.Details(res.Cliente.Id.ToString());
                             // Modificamos la lista de reservas del cliente
-                            cliente.Reservas.Remove(res);
+                            cliente.Reservas?.Remove(res);
                             // Modificamos el cliente en la db
-                            await dbCliente.Edit(cliente);
+                            await dbCliente.Edit(cliente);*/
                             // Eliminamos la reserva de la BD.
                             await dbReserva.Delete(res.Id.ToString());
                         });
@@ -1044,12 +1013,12 @@ namespace GenteFit.Controllers
                         //Eliminamos los horarios de las esperas
                         esperas.ForEach(async (esp) =>
                         {
-                            // Obtenemos el cliente
+                            /*// Obtenemos el cliente
                             Cliente cliente = await dbCliente.Details(esp.Cliente.Id.ToString());
                             // Modificamos la lista de esperas del cliente
-                            cliente.Esperas.Remove(esp);
+                            cliente.Esperas?.Remove(esp);
                             // Modificamos el cliente en la db
-                            await dbCliente.Edit(cliente);
+                            await dbCliente.Edit(cliente);*/
                             // Eliminamos la espera de la BD.
                             await dbEspera.Delete(esp.Id.ToString());
                         });
@@ -1152,8 +1121,8 @@ namespace GenteFit.Controllers
         // Creamos una nueva reserva: Por parámetros de URL hemos de recibir el ID del usuario y el ID del horario. 
         // POST: api/reserva
         [HttpPost("reserva/{idCliente};{idHorario}")]
-        public async Task<IActionResult> CrearReserva([FromRoute] string id, 
-            [FromRoute] string horarioId,
+        public async Task<IActionResult> CrearReserva([FromRoute] string idCliente, 
+            [FromRoute] string idHorario,
             [FromBody] Reserva reserva)
         {
             // Creamos el controlador de MongoDB y los controladores auxiliares
@@ -1165,7 +1134,7 @@ namespace GenteFit.Controllers
             bool flag = false;
 
             // Comprobamos que los datos sean correctos
-            if (id is null || horarioId is null || reserva is null)
+            if (idCliente is null || idHorario is null /*|| reserva is null*/)
             {
                 return BadRequest(ModelState);
             }
@@ -1173,8 +1142,8 @@ namespace GenteFit.Controllers
             try
             {
                 // Obtenemos los datos de los objetos asociados a través de sus IDs.
-                Cliente cliente = await dbCliente.Details(id);
-                Horario horario = await dbHorario.Details(horarioId);
+                Cliente cliente = await dbCliente.Details(idCliente);
+                Horario horario = await dbHorario.Details(idHorario);
 
                 if (cliente != null || horario != null)
                 {
@@ -1182,51 +1151,74 @@ namespace GenteFit.Controllers
                     // Comprobamos las plazas ocupadas en la lista de reservas y las restamos al total de plazas de la clase.
                     // También debemos comprobar que el cliente no tiene ya una reserva en ese horario y que el máximo
                     // de reservas por cliente no se ha superado.
-                    
+
                     // Obtenemos las reservas ya creadas para ese horario.
                     List<Reserva> reservas = await dbReserva.GetAllReservas();
-                    reservas = reservas.Where(res => res.Horario.Id.Equals(horario.Id)).ToList();
 
-                    // Contamos los elementos de la lista de reservas.
-                    int plazasOcupadas = reservas.Count;
+                    // Contamos los elementos de la lista de reservas que coinciden con el horario.
+                    int plazasOcupadas = reservas.Count(res => res.Horario.Id.Equals(horario.Id));
 
-                    // Obtenemos el número de plazas de la clase, su se superan, retornamos un error.
+                    // Obtenemos el número de plazas de la clase, si se superan, retornamos un error.
                     if (plazasOcupadas >= horario.Clase.Plazas)
                     {
                         return StatusCode(400, "No hay plazas disponibles para ese horario.");
                     }
 
                     // Comprobamos que el cliente no tiene ya una reserva en ese horario.
-                    if (reservas.Any(res => res.Cliente.Id.Equals(cliente?.Id)))
+                    if (reservas.Any((res) =>
+                    {
+                        if (res.Cliente.Id.Equals(cliente?.Id) && res.Horario.Id.Equals(horario.Id))
+                        {
+                            return true;
+                        }
+
+                        return false;
+                    }))
                     {
                         return StatusCode(400, "El cliente ya tiene una reserva para ese horario.");
                     }
 
                     // Comprobamos que el cliente no ha superado el máximo de reservas.
-                    if (cliente?.Reservas != null && cliente.Reservas.Count >= Cliente.MaxReservas)
-                    {
+                    // Obtenemos el número de reservas del cliente.
+                    if (reservas.Count(res => res.Cliente.Id.Equals(cliente?.Id)) >= Cliente.MaxReservas) {
                         return StatusCode(400, "El cliente ha superado el máximo de reservas.");
                     }
+                   /* if (cliente?.Reservas != null && cliente.Reservas.Count >= Cliente.MaxReservas)
+                    {
+                        return StatusCode(400, "El cliente ha superado el máximo de reservas.");
+                    }*/
 
                     // Creamos la reserva que insertaremos en la BD.
+                    if (cliente is null || horario is null)
+                    {
+                        return NotFound("No existe el horario o el cliente.");
+                    }
+
                     Reserva toSave = new(horario, cliente)
                     {
                         Id = reserva.Id
                     };
 
                     // Seguimos la lógica de las asociaciones de nuestra lógica de negocio.
+
+                    // Añadimos la reserva a nuestro cliente.
+                    /*cliente.Reservas?.Add(toSave);
+
+
+                    // Modificamos el cliente en la BD.
+                    try
+                    {
+                        flag = await dbCliente.Edit(cliente);
+                    } catch (Exception err)
+                    {
+                        return StatusCode(400, err.Message);
+                    }*/
+
                     // Actualizamos la reserva en la base de datos.
                     flag = await dbReserva.Create(toSave);
 
-                    // Añadimos la reserva a nuestro cliente.
-                    cliente.Reservas?.Add(toSave);
-                    
-
-                    // Modificamos el cliente en la BD.
-                    flag = await dbCliente.Edit(cliente);
-
                     // Ahora ya podemos devolver el resultado.
-                    return flag ? CreatedAtAction("GetReservaById", new { id = reserva.Id }, reserva) :
+                    return flag ? Ok(true) :
                         StatusCode(400);
                 }
             } catch (Exception err)
@@ -1261,11 +1253,11 @@ namespace GenteFit.Controllers
                 // Comprobamos que la reserva exista.
                 if (reserva is not null)
                 {
-                    // Obtenemos los datos de los objetos asociados a través de sus IDs.
+                    /*// Obtenemos los datos de los objetos asociados a través de sus IDs.
                     Cliente cliente = await dbCliente.Details(reserva.Cliente.Id.ToString());
 
                     // Eliminamos la reserva de la lista de reservas del cliente y del horario.
-                    cliente.Reservas?.Remove(reserva);
+                    cliente.Reservas?.Remove(reserva);*/
 
                     // Obtenemos el horario asociado a la reserva.
                     Horario horario = reserva.Horario;
@@ -1277,7 +1269,7 @@ namespace GenteFit.Controllers
                     bool flag = false;
 
                     // Guardamos los cambios en el cliente.
-                    flag = await dbCliente.Edit(cliente);
+                    // flag = await dbCliente.Edit(cliente);
 
                     // Eliminamos la reserva de la base de datos.
                     flag = await dbReserva.Delete(id);
@@ -1344,7 +1336,7 @@ namespace GenteFit.Controllers
         // Creamos una nueva espera: Por argumento vamos a recibir el ID del cliente y el ID del horario.
         // Como cuerpo recibiremos la espera.
         // POST: api/espera
-        [HttpPost("espera/{idCliente}; {idHorario}")]
+        [HttpPost("espera/{idCliente};{idHorario}")]
         public async Task<IActionResult> CreateEspera([FromRoute] string idCliente,
             [FromRoute] string idHorario,
             [FromBody] Espera espera)
@@ -1377,22 +1369,28 @@ namespace GenteFit.Controllers
                     return NotFound("No existe el horario.");
                 }
 
-                // Añadimos la espera a la lista de esperas del cliente.
-                cliente.Esperas?.Add(espera);
-                // Modificamos el cliente en la base de datos.
-                bool flag = await dbCliente.Edit(cliente);
-
                 // Creamos la espera que añadiremos a la base de datos.
                 Espera toSave = new(cliente, horario)
                 {
                     Id = espera.Id
                 };
 
+                // Comprobamos que la espera no exista ya en la base de datos.
+                // Obtebenemos la lista de esperas de la BD.
+                List<Espera> esperas = await dbEspera.GetAllEsperas();
+
+
+                // Tenemos  que comprobar si alguna espera de la lista coincide con el id del
+                // cliente y el id del horario.
+                if (esperas.Any(res => res.Cliente.Id == idCliente && res.Horario.Id == idHorario)) {
+                    return BadRequest("La espera ya existe.");
+                }
+
                 // Añadimos la espera a la base de datos.
-                flag = await dbEspera.Create(toSave);
+                bool flag = await dbEspera.Create(toSave);
 
                 // Devolvemos el resultado.
-                return flag? CreatedAtAction(nameof(GetEsperaById), new { id = espera.Id }, espera) :
+                return flag? Ok(true) :
                     StatusCode(400);
             } catch (Exception err)
             {
@@ -1429,11 +1427,11 @@ namespace GenteFit.Controllers
                 }
 
                 // Eliminamos los datos relacionados con la espera.
-                espera.Cliente.Esperas?.Remove(espera);
-                bool flag = await dbCliente.Edit(espera.Cliente);
+                /*espera.Cliente.Esperas?.Remove(espera);
+                bool flag = await dbCliente.Edit(espera.Cliente);*/
 
                 // Eliminamos la espera de la base de datos.
-                flag = await db.Delete(id);
+                bool flag = await db.Delete(id);
 
                 // Devolvemos el resultado.
                 return flag? StatusCode(200) : StatusCode(400);
@@ -1466,9 +1464,9 @@ namespace GenteFit.Controllers
             try
             {
                 // Obtenemos la lista de esperas
-                List<Espera> esperas = await dbEspera.GetAllEsperas();
+                List<Espera> esperasSrc = await dbEspera.GetAllEsperas();
                 // Filtramos la lista de esperas para quedarnos con las que corresponden al horario.
-                esperas = esperas.Where(es => es.Horario.Id == horario.Id).ToList();
+                List<Espera> esperas = esperasSrc.Where(es => es.Horario.Id == horario.Id).ToList();
 
 
                 // Comprobamos que la lista de esperas no esté vacía y obtenemos el elemento inicial
@@ -1480,7 +1478,7 @@ namespace GenteFit.Controllers
                 {
                     // Iteramos la lista de esperas desde el inicio, para cumplir con la política FIFO y
                     // también con la restricción de máximo 2 reservas por cliente.
-                    esperas.ForEach(async es =>
+                    esperas.ForEach(async (es) =>
                     {
                         // Si no hemos asignado ningún valor a espera, seguimos con la iteración.
                         if (espera is null)
@@ -1488,30 +1486,26 @@ namespace GenteFit.Controllers
                             // Obtenemos el cliente asociado a la espera.
                             cliente = es.Cliente;
 
-                            // Comprobamos que el cliente tenga reservas libres.
-                            if (cliente.Reservas?.Count < Cliente.MaxReservas)
-                            {
-                                // Eliminamos la espera de la lista de esperas del cliente y del horario.
-                                cliente.Esperas?.Remove(es);
+                            // Comprobamos cuántas reservas tiene el cliente en la lista de esperasSrc.
+                            int reservas = esperasSrc.Where(e => e.Cliente.Id == cliente.Id).Count();
 
+                            // Comprobamos que el cliente tenga menos de 2 reservas.
+                            if (esperasSrc.Where(e => e.Cliente.Id == cliente.Id).Count() < Cliente.MaxReservas)
+                            {
                                 // Creamos la reserva.
                                 reserva = new(horario, cliente)
                                 {
                                     Id = ""
                                 };
 
-                                // Añadimos la reserva a la lista de reservas del cliente y del horario.
-                                cliente.Reservas?.Add(reserva);
-
                                 // Guardamos la espera en la variable auxiliar para borrarla de la base de datos.
                                 espera = es;
-                                // Espera funciona como un flag para indicar que hemos encontrado un cliente
+                                // Espera funciona como un flag para indicar que hemos encontrado un 
                             }
 
                             // Guardamos los cambios en la base de datos.
                             if (espera is not null)
                             {
-                                flag = await dbCliente.Edit(cliente);
 
                                 // Añadimos la nueva reserva a la base de datos.
                                 if (reserva != null)
@@ -1522,6 +1516,7 @@ namespace GenteFit.Controllers
                                 // Eliminamos la espera de la base de datos.
                                 flag = await dbEspera.Delete(espera.Id.ToString());
                             }
+
                         }
                     });
 

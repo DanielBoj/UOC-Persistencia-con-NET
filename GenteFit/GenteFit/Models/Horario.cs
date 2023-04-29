@@ -14,8 +14,11 @@ namespace GenteFit.Models
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
+        [BsonElement("Dia")]
         public Dia Dia { get; set; }
+        [BsonElement("Hora")]
         public string Hora { get; set; } = null!;
+        [BsonElement("Clase")]
         public Clase Clase { get; set; } = null!;
         // public List<Reserva> Reservas { get; set; } = null!;
         // public List<Espera> Esperas { get; set; } = null!;

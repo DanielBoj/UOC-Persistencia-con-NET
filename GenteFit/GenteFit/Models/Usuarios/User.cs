@@ -11,10 +11,11 @@ namespace GenteFit.Models.Usuarios
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
-        [Required(ErrorMessage = "Debe completar este campo.")]
+        [BsonElement("Email")]
         public string Email { get; set; } = null!;
-        [Required(ErrorMessage = "Debe completar este campo.")]
+        [BsonElement("Pass")]
         public string Pass { get; set; } = null!;
+        [BsonElement("Tipo"), BsonDefaultValue(null), BsonIgnoreIfNull, BsonIgnoreIfDefault]
         public string Tipo { get; set; } = null!;
 
         public User() { }

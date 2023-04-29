@@ -11,13 +11,15 @@ namespace GenteFit.Models
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
-        [Required(ErrorMessage = "Debe completar este campo.")]
         [BsonElement("Nombre")]
         public string Nombre { get; set; } = null!;
+        [BsonElement("Direccion"), BsonDefaultValue(null), BsonIgnoreIfDefault, BsonIgnoreIfNull]
         public Direccion Direccion { get; set; } = null!;
-        [Required(ErrorMessage = "Debe completar este campo.")]
+        [BsonElement("Descripcion")]
         public string Descripcion { get; set; } = null!;
+        [BsonElement("Telefono")]
         public string Telefono { get; set; } = null!;
+        [BsonElement("Email")]
         public string Email { get; set; } = null!;
 
         public Centro() {

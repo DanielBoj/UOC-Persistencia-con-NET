@@ -10,7 +10,9 @@ namespace GenteFit.Models
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
+        [BsonElement("Cliente")]
         public Cliente Cliente { get; set; } = null!;
+        [BsonElement("Horario")]
         public Horario Horario { get; set; } = null!;
 
         public Espera() {

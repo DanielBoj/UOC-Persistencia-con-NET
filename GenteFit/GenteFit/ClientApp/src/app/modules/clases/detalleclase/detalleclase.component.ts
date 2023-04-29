@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { Clase } from 'src/app/models/interfaces/clase.model';
 import { ClasesService } from 'src/app/services/clases.service';
 
@@ -9,13 +9,16 @@ import { ClasesService } from 'src/app/services/clases.service';
   templateUrl: './detalleclase.component.html',
   styleUrls: ['./detalleclase.component.css']
 })
-export class DetalleclaseComponent implements OnInit {
+export class DetalleclaseComponent implements OnInit, OnDestroy {
 
   // Id de la clase
   idClase!: string;
 
   // Contenedor para la clase
-  clase$: Observable<Clase> = new Observable<Clase>();
+  clase$: Subscription = new Subscription();
+  clase!: Clase;
+
+  subscrips: Array<Subscription> = [];
 
   // Modelo para la card
   claseCard: Clase = {
@@ -34,25 +37,26 @@ export class DetalleclaseComponent implements OnInit {
     // Obtenemos la id de la ruta
     this.getIdClase();
 
-    // Obtenemos la clase
-    this.getClase();
+    // Obtenemos la clase de la API
+    this.subscrips.push(this.clase$ = this.api.getClase(this.idClase).subscribe(
+      (clase) => {
+        // Cargamos los datos de la clase
+        this.clase = clase;
 
-    // Actualizamos la card
-    this.updateCard();
-
+        // Actualizamos la card
+        this.claseCard = clase;
+      }
+    ));
   }
 
-  getClase = async () => {
-    this.api.getClase(this.idClase).pipe(data => this.clase$ = data);
+  ngOnDestroy(): void {
+    // Nos desuscribimos de las subscripciones
+    this.subscrips.forEach(sub => sub.unsubscribe());
   }
 
   getIdClase = () => {
     this.route.params.subscribe(params => {
       this.idClase = params['id'];
     });
-  }
-
-  updateCard = () => {
-    this.clase$.subscribe(data => this.claseCard = data);
   }
 }

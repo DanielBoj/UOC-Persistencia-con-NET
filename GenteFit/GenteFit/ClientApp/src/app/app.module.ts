@@ -21,6 +21,11 @@ import { DetalleclaseComponent } from './modules/clases/detalleclase/detalleclas
 import { CreateclaseComponent } from './modules/clases/createclase/createclase.component';
 import { ReservasComponent } from './modules/horarios/reservas/reservas.component';
 import { EsperasComponent } from './modules/horarios/esperas/esperas.component';
+import { CreatehorarioComponent } from './modules/horarios/createhorario/createhorario.component';
+import { CreatereservaComponent } from './modules/horarios/reservas/createreserva/createreserva.component';
+import { CreateesperaComponent } from './modules/horarios/esperas/createespera/createespera.component';
+import { EditclienteComponent } from './modules/clientes/editcliente/editcliente.component';
+import { DetailclienteComponent } from './modules/clientes/detailcliente/detailcliente.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +43,11 @@ import { EsperasComponent } from './modules/horarios/esperas/esperas.component';
     CreateclaseComponent,
     ReservasComponent,
     EsperasComponent,
+    CreatehorarioComponent,
+    CreatereservaComponent,
+    CreateesperaComponent,
+    EditclienteComponent,
+    DetailclienteComponent,
   ],
   imports: [
     BrowserModule/*.withServerTransition({ appId: 'ng-cli-universal' })*/,

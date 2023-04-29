@@ -1,9 +1,11 @@
-﻿using System.Transactions;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System.Transactions;
 
 namespace GenteFit.Models.Usuarios
 {
     public class Administrador : User
     {
+        [BsonElement("IsAdmin")]
         public bool IsAdmin { get; set; } 
 
         public Administrador() : base()

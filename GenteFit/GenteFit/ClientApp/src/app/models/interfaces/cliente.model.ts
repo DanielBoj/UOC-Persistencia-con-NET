@@ -12,8 +12,8 @@ export interface Cliente extends User {
   nif: string,
   direccion: Direccion,
   telefono: string,
-  genero: Genero,
+  genero: string | number,
   iban: string,
-  reservas?: Array<Reserva>,
-  esperas?: Array<Espera>
+  reservas?: Array<Reserva> | null,
+  esperas?: Array<Espera> | null
 }
