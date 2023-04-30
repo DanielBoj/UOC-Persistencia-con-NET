@@ -59,6 +59,23 @@ export class UserService {
     }));
   }
 
+  // Creamos un cliente
+  createCliente = (cliente: Cliente): Observable<any> => {
+    // Generamos la URL para la petición
+    const url = `${this.url}/cliente`;
+
+    // Realizamos la petición
+    let res: any;
+
+    try {
+      this.http.post(url, cliente).subscribe((data) => res = data);
+    } catch (error: any) {
+      res = error.message;
+    }
+
+    return res;
+  }
+
   // Editamos un cliente
   editCliente = (id: string, cliente: Cliente): Observable<any> => {
     // Generamos la URL para la petición
@@ -77,16 +94,14 @@ export class UserService {
   }
 
   // Borramos un cliente
-  deleteCLiente = (id: string): Observable<any> => {
+  deleteCliente = (id: string): Observable<any> => {
     // Generamos la URL para la petición
     const url = `${this.url}/cliente/${id}`;
 
     // Realizamos la petición
-    let res: any;
-
     try {
-      this.http.delete(url).subscribe((data) => res = data);
-      return res;
+      this.http.delete<any>(url).subscribe((data) => data);
+      return of(true);
     } catch (error) {
       return of(false);
     }

@@ -1,5 +1,4 @@
 ﻿using GenteFit.Models.Repositories.Interfaces;
-using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
 

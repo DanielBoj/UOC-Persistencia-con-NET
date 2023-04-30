@@ -4,8 +4,8 @@
   </button>
 </header>
 <ng-container class="full-width">
-  <mat-card class="detail-box full-width">
-    <mat-card-header>
+  <mat-card class="detail-box" class="full-width">
+    <mat-card-header class="full-width">
       <mat-card-title>
         <h1>{{ title }}</h1>
       </mat-card-title>
@@ -14,7 +14,7 @@
       </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content *ngFor="let element of centroData">
-      <mat-grid-list cols="2" rowHeight="6rem">
+      <mat-grid-list cols="2" rowHeight="6rem" class="full-width">
         <mat-grid-tile
           ><h3>{{ element.name }}</h3></mat-grid-tile
         >

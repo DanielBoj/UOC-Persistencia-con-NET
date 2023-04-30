@@ -99,6 +99,7 @@ export class ClientesComponent implements OnInit, OnDestroy {
 
   // Flags para las acciones secundarias
   isClienteEdit: boolean = false;
+  isClienteCreate: boolean = false;
 
 
   constructor(private localStorage: ReduxService,
@@ -116,6 +117,8 @@ export class ClientesComponent implements OnInit, OnDestroy {
         this.idUsuario = this.cache.idUsuario;
         this.tipoUsuario = this.cache.tipoUsuario;
       }));
+
+    this.tipoUsuario = 'admin';
 
     // Obtenemos la lista de clientes y los guardamos en el contenedor
     this.subscripts.push(
@@ -237,20 +240,26 @@ export class ClientesComponent implements OnInit, OnDestroy {
 
     // Enviamos la petición a la API
     try {
-      this.apiUsuarios.editCliente(this.idUsuario, toSave);
+      if (this.isClienteEdit) this.apiUsuarios.editCliente(this.idUsuario, toSave);
+      else this.apiUsuarios.createCliente(toSave);
     } catch (error) {
       // Mostramos un snackbar indicando que ha habido un error
       this.snackBar.open('Ha habido un error al editar el cliente', 'Cerrar', {
         duration: 3000,
+        verticalPosition: 'top',
+        horizontalPosition: 'center'
       });
     }
 
     // Actualizamos el flag
     this.isClienteEdit = false;
+    this.isClienteCreate = false;
 
     // Mostramos el mensaje de éxito
     this.snackBar.open('Cliente editado correctamente', 'Cerrar', {
       duration: 3000,
+      verticalPosition: 'top',
+      horizontalPosition: 'center'
     });
   }
 
@@ -264,9 +273,12 @@ export class ClientesComponent implements OnInit, OnDestroy {
 
   // Eliminar el cliente
   eliminarCliente = (id: string): void => {
+    // Nos aseguramos de que el id se pase de forma correcta
+    let idToDelete: string = id.toString();
+
     // Enviamos la petición a la API
     try {
-      this.apiUsuarios.deleteCLiente(id);
+      this.apiUsuarios.deleteCliente(idToDelete);
     } catch (error) {
       // Mostramos un snackbar indicando que ha habido un error
       this.snackBar.open('Ha habido un error al eliminar el cliente', 'Cerrar', {

@@ -12,8 +12,6 @@ namespace GenteFit.Controllers.ControllersMongoDB
         // Instanciamos la interfaz del Modelo MongoDB
         private ICentro db = new CentroCollection();
 
-        //GET
-        //[HttpGet]
         public async Task<List<Centro>> GetAllCentros() => await db.GetAllCentros();
 
         public async Task<Centro> Details(string id) => await db.GetCentroById(id);

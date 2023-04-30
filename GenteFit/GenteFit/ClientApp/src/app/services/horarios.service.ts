@@ -104,7 +104,6 @@ export class HorariosService {
     // Realizamos la petición
     // Obtenemos los datos de la api.
     return this.http.get(url).pipe(catchError(error => {
-      console.log(error);
       return of([]);
     }));
   }

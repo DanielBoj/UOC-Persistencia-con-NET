@@ -71,10 +71,11 @@ export class HomeComponent implements OnInit {
     this.displayService.setShowHeader(false);
 
     // Obtenemos los usuarios de la API
-    this.subscripts.push(this.users$ = this.api.getClientes().subscribe(
+    this.subscripts.push(this.users$ = this.api.getUsers().subscribe(
       (users) => {
         // Cargamos los datos desde el observable recibido de la API
         this.users = users;
+        console.log(users);
       }
     ))
 

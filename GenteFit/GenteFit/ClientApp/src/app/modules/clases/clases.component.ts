@@ -36,7 +36,7 @@ export class ClasesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Tabla dinámica
   displayedColumns: string[] = ['nombre', 'descripcion', 'profesor', 'duracion', 'plazas', 'detalles']
-  displayedAdminColumns: string[] = ['nombre', 'descripcion', 'profesor', 'duracion', 'plazas', 'detalles', 'editar', 'eliminar']
+  displayedAdminColumns: string[] = ['nombre', 'descripcion', 'profesor', 'duracion', 'plazas', 'detalles', 'eliminar']
   dataSource: MatTableDataSource<Clase> = new MatTableDataSource<Clase>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;

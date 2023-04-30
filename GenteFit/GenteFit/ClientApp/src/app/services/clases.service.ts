@@ -83,7 +83,6 @@ export class ClasesService {
   deleteClase = (id: string): Observable<any> => {
     // Generamos la URL para la petición
     const url = `${this.url}/${id}`;
-    console.log(url.toString());
 
     try {
       // Realizamos la petición
