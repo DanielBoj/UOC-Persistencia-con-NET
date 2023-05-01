@@ -4,12 +4,17 @@ using Swashbuckle.AspNetCore.Swagger;
 
 namespace GenteFit
 {
+    /* Esta clase permite crear la configuración y los servicios que implementará nuestro backend. 
+     La usamso tambi;en para especificar la conexión a la BD y para crear la relación entre el frontend y 
+    el backend cuando generemos nuestra aplicación en producción. En un entorno de desarrollo creamos las dos
+    conexiones por separado, usamos dotnet run par ejecutar el backend y ng serve para ejecutar el frontende,
+    igualmente, la conexión entre ambar también se establece en esta clase. */
     public static class Startup
     {
         public static WebApplication InitApp(string[] args)
         {
             // Permite configurar los servicios
-            var builder = WebApplication.CreateBuilder(args); 
+            var builder = WebApplication.CreateBuilder(args);            
 
             // Llamamos al método para configurar los servicios
             ConfigureServices(builder);
@@ -28,7 +33,19 @@ namespace GenteFit
         public static void ConfigureServices(WebApplicationBuilder builder)
         {
             builder.Services.AddMvc();
-            // Añadimos swagger
+
+            // Conectamos con la app de Angular
+            builder.Services.AddCors(options =>
+            {
+                // Definimos una política de seguridad que permita cualquier origen, método y cabecera
+                options.AddPolicy("AllowAll", builder =>
+                builder.AllowAnyOrigin().
+                AllowAnyMethod().
+                AllowAnyHeader());
+            });
+
+
+            // Añadimos swagger que nos permitirá realizar peticiones a la API para testarla
             builder.Services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { 
@@ -44,8 +61,11 @@ namespace GenteFit
                 });
             });
 
-            // Add services to the container.
+            // Este servicio permite que los controladores de la app devuelvan vistas Razor, lo dejo
+            // porque lo usamos en la app de test del producto anterior.
             builder.Services.AddControllersWithViews();
+
+            // AddEndPoints sirve para que swagger o la app de frontend puedan encontrar los endpoints de la API
             builder.Services.AddEndpointsApiExplorer();
 
             // Inyección de los valores de configuración: Las clase DataConnectionSettings irá a buscar los valores
@@ -57,23 +77,50 @@ namespace GenteFit
         // Configuramos los Middlewares
         private static void Configure(WebApplication app)
         {
-            // Configure the HTTP request pipeline.
+            // Configuramos la APP para el entorno de producción
             if (!app.Environment.IsDevelopment())
             {
+                // Permitimos que el front-end pueda acceder a la API
+                app.UseDefaultFiles();
+                app.UseStaticFiles();
+                app.UseRouting();
+                // Preparamos la app para que pueda usar autenticación
+                app.UseAuthentication();
+                // Mediante CORS habilitamos el envío de las peticiones desde el front-end
+                app.UseCors(builder => builder.WithOrigins("*")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
+                // Configuramos los endpoints para que el frontend pueda acceder al backend
+                app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllers();
+                    // Declaramos el entry point de la app de Angular
+                    endpoints.MapFallbackToFile("ClientApp/dist/index.html");
+                });
+
+                // Si la excepción se produce en un entorno de producción, mostramos una página de error
+                app.UseExceptionHandler("/Home/Error");
+
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts(); 
+            } else {
+
+                // Si la excepción se produce en un entorno de producción, mostramos una página de error
+                app.UseExceptionHandler("/Home/Error");
+
+               // COnfiguramos las opciones para la ejecución del entorno de desarrollo
+                app.UseHttpsRedirection();
+                app.UseDefaultFiles();
+                app.UseStaticFiles();
+                app.UseRouting();
+
                 // Configuramos una trazabilidad total para las excepciones que se den en entornos de desarrollo
                 DeveloperExceptionPageOptions d = new()
                 {
                     SourceCodeLineCount = 1,
                 };
 
-                app.UseDeveloperExceptionPage(d);      
-            } else if (app.Environment.IsProduction()) {
-
-                // Si la excepción se produce en un entorno de producción, mostramos una página de error
-                app.UseExceptionHandler("/Home/Error");
-
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                app.UseDeveloperExceptionPage(d);
             }
 
             // Mapeamos los endpoint para swagger y añadimos swagger  a la app.
@@ -84,18 +131,10 @@ namespace GenteFit
                 c.SwaggerEndpoint("v1/swagger.json", "GenteFit V1");
             });
 
-            // Hasta que no tengamos un certificado SSL no podemos usar el protocolo HTTPS
-            // app.UseHttpsRedirection();
-            app.UseStaticFiles();
+            // Habilitamos cualquier tipo de petición a nuestra ApiRest
+            app.UseCors("AllowAll");
 
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.UseCors(builder => builder.WithOrigins("*")
-                               .AllowAnyMethod()
-                               .AllowAnyHeader());
-
+            // Plantilla de la ruta por defecto para los controladores
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");

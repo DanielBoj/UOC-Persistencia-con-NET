@@ -75,7 +75,6 @@ export class HomeComponent implements OnInit {
       (users) => {
         // Cargamos los datos desde el observable recibido de la API
         this.users = users;
-        console.log(users);
       }
     ))
 

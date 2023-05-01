@@ -118,8 +118,6 @@ export class ClientesComponent implements OnInit, OnDestroy {
         this.tipoUsuario = this.cache.tipoUsuario;
       }));
 
-    this.tipoUsuario = 'admin';
-
     // Obtenemos la lista de clientes y los guardamos en el contenedor
     this.subscripts.push(
       this.clientes$ = this.apiUsuarios.getClientes().subscribe((clientes) => {
