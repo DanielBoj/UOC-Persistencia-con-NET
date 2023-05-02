@@ -59,7 +59,7 @@
               <button
                 mat-icon-button
                 (click)="deleteHorario(row.id)"
-                routerLink="horarios"
+                routerLink="/horarios"
               >
                 <mat-icon>delete</mat-icon>
               </button>
@@ -156,7 +156,7 @@
       </div>
     </ng-container>
     <ng-container *ngIf="tipoUsuario === 'cliente'">
-      <button mat-fab class="mat-button" [routerLink]="['/reservacreate']">
+      <button mat-fab class="mat-button" routerLink="/reservacreate">
         Nueva Reserva
       </button>
     </ng-container>

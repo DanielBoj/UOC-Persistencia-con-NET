@@ -200,7 +200,7 @@
             >
               Cancelar
             </button>
-            <button mat-fab class="mat-button" (click)="onSubmit()">
+            <button mat-fab class="mat-button" (click)="onSubmit()" routerLink="/clientes">
               Guardar
             </button>
           </mat-card-actions>
@@ -227,47 +227,47 @@
         >
           <!-- Columna Dia -->
           <ng-container matColumnDef="dia">
-            <th mat-header-cell *matHeaderCellDef matSortHeader>Día</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Día</th>
             <td mat-cell *matCellDef="let reserva">
               {{ reserva.horario.dia }}
             </td>
           </ng-container>
 
           <!-- Columna Hora -->
-          <ng-container matColumnDef="hora" matSortHeader>
-            <th mat-header-cell *matHeaderCellDef>Hora</th>
+          <ng-container matColumnDef="hora">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Hora</th>
             <td mat-cell *matCellDef="let reserva">
               {{ reserva.horario.hora }}
             </td>
           </ng-container>
 
           <!-- Columna Clase -->
-          <ng-container matColumnDef="clase" matSortHeader>
-            <th mat-header-cell *matHeaderCellDef>Clase</th>
+          <ng-container matColumnDef="clase">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Clase</th>
             <td mat-cell *matCellDef="let reserva">
               {{ reserva.horario.clase.nombre }}
             </td>
           </ng-container>
 
           <!-- Columna Profesor -->
-          <ng-container matColumnDef="profesor" matSortHeader>
-            <th mat-header-cell *matHeaderCellDef>Profesor</th>
+          <ng-container matColumnDef="profesor">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Profesor</th>
             <td mat-cell *matCellDef="let reserva">
               {{ reserva.horario.clase.profesor }}
             </td>
           </ng-container>
 
           <!-- Columna  Duracion -->
-          <ng-container matColumnDef="duracion" matSortHeader>
-            <th mat-header-cell *matHeaderCellDef>Duración</th>
+          <ng-container matColumnDef="duracion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Duración</th>
             <td mat-cell *matCellDef="let reserva">
               {{ reserva.horario.clase.duracion }}
             </td>
           </ng-container>
 
           <!-- Columna Plazas -->
-          <ng-container matColumnDef="plazas" matSortHeader>
-            <th mat-header-cell *matHeaderCellDef>Plazas</th>
+          <ng-container matColumnDef="plazas">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Plazas</th>
             <td mat-cell *matCellDef="let reserva">
               {{ reserva.horario.clase.plazas }}
             </td>
@@ -281,6 +281,7 @@
                 mat-icon-button
                 color="warn"
                 (click)="eliminarReserva(reserva.id)"
+                routerLink="/clientes"
               >
                 <mat-icon>delete</mat-icon>
               </button>
@@ -327,7 +328,7 @@
         >
           <!-- Columna Dia -->
           <ng-container matColumnDef="dia">
-            <th mat-header-cell *matHeaderCellDef matSortHeader>Día</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Día</th>
             <td mat-cell *matCellDef="let espera">
               {{ espera.horario.dia }}
             </td>
@@ -335,7 +336,7 @@
 
           <!-- Columna Hora -->
           <ng-container matColumnDef="hora" matSortHeader>
-            <th mat-header-cell *matHeaderCellDef>Hora</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Hora</th>
             <td mat-cell *matCellDef="let espera">
               {{ espera.horario.hora }}
             </td>
@@ -343,7 +344,7 @@
 
           <!-- Columna Clase -->
           <ng-container matColumnDef="clase" matSortHeader>
-            <th mat-header-cell *matHeaderCellDef>Clase</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Clase</th>
             <td mat-cell *matCellDef="let espera">
               {{ espera.horario.clase.nombre }}
             </td>
@@ -351,7 +352,7 @@
 
           <!-- Columna Profesor -->
           <ng-container matColumnDef="profesor" matSortHeader>
-            <th mat-header-cell *matHeaderCellDef>Profesor</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Profesor</th>
             <td mat-cell *matCellDef="let espera">
               {{ espera.horario.clase.profesor }}
             </td>
@@ -359,7 +360,7 @@
 
           <!-- Columna  Duracion -->
           <ng-container matColumnDef="duracion" matSortHeader>
-            <th mat-header-cell *matHeaderCellDef>Duración</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Duración</th>
             <td mat-cell *matCellDef="let reserva">
               {{ reserva.horario.clase.duracion }}
             </td>
@@ -367,12 +368,13 @@
 
           <!-- Columna eliminar -->
           <ng-container matColumnDef="eliminar" matSortHeader>
-            <th mat-header-cell *matHeaderCellDef>Eliminar</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Eliminar</th>
             <td mat-cell *matCellDef="let espera">
               <button
                 mat-icon-button
                 color="warn"
                 (click)="eliminarEspera(espera.id)"
+                routerLink="/clientes"
               >
                 <mat-icon>delete</mat-icon>
               </button>
@@ -414,19 +416,19 @@
     <mat-table [dataSource]="dataSource" class="clientes-table" matSort>
       <!-- Columna Email -->
       <ng-container matColumnDef="email">
-        <th mat-header-cell *matHeaderCellDef matSortHeader>Email</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
         <td mat-cell *matCellDef="let cliente">{{ cliente.email }}</td>
       </ng-container>
 
       <!-- Columna Nombre -->
       <ng-container matColumnDef="nombre" matSortHeader>
-        <th mat-header-cell *matHeaderCellDef>Nombre</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
         <td mat-cell *matCellDef="let cliente">{{ cliente.nombre }}</td>
       </ng-container>
 
       <!-- Columna Nif -->
       <ng-container matColumnDef="nif" matSortHeader>
-        <th mat-header-cell *matHeaderCellDef>Nif</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nif</th>
         <td mat-cell *matCellDef="let cliente">{{ cliente.nif }}</td>
       </ng-container>
 
@@ -467,7 +469,7 @@
       <ng-container matColumnDef="eliminar">
         <th mat-header-cell *matHeaderCellDef>Eliminar</th>
         <td mat-cell *matCellDef="let cliente">
-          <button mat-icon-button (click)="eliminarCliente(cliente.id)">
+          <button mat-icon-button (click)="eliminarCliente(cliente.id)" routerLink="/clientes">
             <mat-icon>delete</mat-icon>
           </button>
         </td>
@@ -720,7 +722,7 @@
         >
           Cancelar
         </button>
-        <button mat-fab class="mat-button" (click)="onSubmit()">Guardar</button>
+        <button mat-fab class="mat-button" (click)="onSubmit()" routerLink="/clientes">Guardar</button>
       </mat-card-actions>
     </mat-card>
   </ng-container>

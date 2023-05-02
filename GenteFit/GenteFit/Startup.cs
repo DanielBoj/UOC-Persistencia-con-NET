@@ -8,13 +8,13 @@ namespace GenteFit
      La usamso tambi;en para especificar la conexión a la BD y para crear la relación entre el frontend y 
     el backend cuando generemos nuestra aplicación en producción. En un entorno de desarrollo creamos las dos
     conexiones por separado, usamos dotnet run par ejecutar el backend y ng serve para ejecutar el frontende,
-    igualmente, la conexión entre ambar también se establece en esta clase. */
-    public static class Startup
+    igualmente, la conexión entre ambar también se establece en esta clase. */  
+    public class Startup
     {
         public static WebApplication InitApp(string[] args)
         {
             // Permite configurar los servicios
-            var builder = WebApplication.CreateBuilder(args);            
+            var builder = WebApplication.CreateBuilder(args);
 
             // Llamamos al método para configurar los servicios
             ConfigureServices(builder);
@@ -28,8 +28,7 @@ namespace GenteFit
             // Retornamos la app configurada
             return app;
         }
-        
-        // Métodos de configuración de los servicios
+
         public static void ConfigureServices(WebApplicationBuilder builder)
         {
             builder.Services.AddMvc();
@@ -48,8 +47,9 @@ namespace GenteFit
             // Añadimos swagger que nos permitirá realizar peticiones a la API para testarla
             builder.Services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { 
-                    Title = "GenteFit", 
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "GenteFit",
                     Version = "v1",
                     Contact = new OpenApiContact
                     {
@@ -77,42 +77,28 @@ namespace GenteFit
         // Configuramos los Middlewares
         private static void Configure(WebApplication app)
         {
-            // Configuramos la APP para el entorno de producción
+            // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
-                // Permitimos que el front-end pueda acceder a la API
-                app.UseDefaultFiles();
-                app.UseStaticFiles();
-                app.UseRouting();
-                // Preparamos la app para que pueda usar autenticación
-                app.UseAuthentication();
                 // Mediante CORS habilitamos el envío de las peticiones desde el front-end
                 app.UseCors(builder => builder.WithOrigins("*")
                     .AllowAnyMethod()
                     .AllowAnyHeader());
-                // Configuramos los endpoints para que el frontend pueda acceder al backend
-                app.UseEndpoints(endpoints =>
-                {
-                    endpoints.MapControllers();
-                    // Declaramos el entry point de la app de Angular
-                    endpoints.MapFallbackToFile("ClientApp/dist/index.html");
-                });
 
                 // Si la excepción se produce en un entorno de producción, mostramos una página de error
                 app.UseExceptionHandler("/Home/Error");
 
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts(); 
-            } else {
+                app.UseHsts();
+            } else
+            {
+                // Mapeamos los endpoint para swagger y añadimos swagger  a la app.
+                app.UseSwagger();
 
-                // Si la excepción se produce en un entorno de producción, mostramos una página de error
-                app.UseExceptionHandler("/Home/Error");
-
-               // COnfiguramos las opciones para la ejecución del entorno de desarrollo
-                app.UseHttpsRedirection();
-                app.UseDefaultFiles();
-                app.UseStaticFiles();
-                app.UseRouting();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("v1/swagger.json", "GenteFit V1");
+                });
 
                 // Configuramos una trazabilidad total para las excepciones que se den en entornos de desarrollo
                 DeveloperExceptionPageOptions d = new()
@@ -123,21 +109,29 @@ namespace GenteFit
                 app.UseDeveloperExceptionPage(d);
             }
 
-            // Mapeamos los endpoint para swagger y añadimos swagger  a la app.
-            app.UseSwagger();
-
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("v1/swagger.json", "GenteFit V1");
-            });
-
+            // Permitimos que el front-end pueda acceder a la API
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+            app.UseRouting();
             // Habilitamos cualquier tipo de petición a nuestra ApiRest
             app.UseCors("AllowAll");
 
-            // Plantilla de la ruta por defecto para los controladores
+            // Configuramos los endpoints para que el frontend pueda acceder al backend
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                // Declaramos el entry point de la app de Angular
+                endpoints.MapFallbackToFile("ClientApp/dist/index.html");
+            });
+
+
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller}/{action=Index}/{id?}");
+
+            app.MapFallbackToFile("ClientApp/dist/index.html"); ;
         }
+
+
     }
 }

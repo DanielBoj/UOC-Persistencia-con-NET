@@ -65,8 +65,6 @@ export class ClientesComponent implements OnInit, OnDestroy {
     telefono: '',
     genero: 0,
     iban: '',
-    reservas: [],
-    esperas: [],
     tipo: 'cliente'
   };
 
@@ -228,7 +226,11 @@ export class ClientesComponent implements OnInit, OnDestroy {
   // Enviamos el formulario al servicio
   onSubmit = (): void => {
     // Nos aseguramos de que el id sea correcto
-    this.clienteModel.id = this.idUsuario;
+    if (this.isClienteCreate) {
+      this.clienteModel.id = this.idUsuario;
+    } else {
+      this.clienteModel.id = '';
+    }
 
     // Parseamos el género mediante el enum Genero
     this.clienteModel.genero = parseInt(this.clienteModel.genero.toString());
@@ -252,6 +254,12 @@ export class ClientesComponent implements OnInit, OnDestroy {
     // Actualizamos el flag
     this.isClienteEdit = false;
     this.isClienteCreate = false;
+
+    // Limpiamos el formulario
+    this.clienteData.forEach((data: any) => {
+      if (typeof data.value === 'string') data.value = '';
+      else if (typeof data.value === 'number') data.value = 0;
+    });
 
     // Mostramos el mensaje de éxito
     this.snackBar.open('Cliente editado correctamente', 'Cerrar', {

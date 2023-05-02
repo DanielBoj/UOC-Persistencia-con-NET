@@ -1121,14 +1121,14 @@ namespace GenteFit.Controllers
                     // Obtenemos el horario asociado a la reserva.
                     Horario horario = reserva.Horario;
 
-                    // Ejecutamos la función para comprobar la lista de esperas.
-                    await CheckEsperas(horario);
-
                     // Usaremos un flag para comprobar que todos los pasos se realizan correctamente.
                     bool flag = false;
 
                     // Eliminamos la reserva de la base de datos.
                     flag = await dbReserva.Delete(id);
+
+                    // Ejecutamos la función para comprobar la lista de esperas.
+                    flag = await CheckEsperas(horario);
 
                     // Ahora ya podemos devolver el resultado.
                     return flag? StatusCode(200) : StatusCode(400);

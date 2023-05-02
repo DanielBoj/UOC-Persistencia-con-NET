@@ -28,6 +28,7 @@
               required
               pattern="[-a-zA-Z0-9~!$%^&amp;*_=+}{'?]+(\.[-a-zA-Z0-9~!$%^&amp;*_=+}{'?]+)*@([a-zA-Z0-9_][-a-zA-Z0-9_]*(\.[-a-zA-Z0-9_]+)*\.([cC][oO][mM]))(:[0-9]{1,5})?"
               autocomplete="off"
+              (keyup.enter)="checkUser()"
             />
             <mat-icon matSuffix>email</mat-icon>
             <mat-hint>Introduce tu email</mat-hint>
@@ -52,6 +53,7 @@
               minLenght="6"
               ng-valid
               autocomplete="off"
+              (keyup.enter)="checkUser()"
             />
             <button
               mat-icon-button

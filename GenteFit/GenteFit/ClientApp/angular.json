@@ -18,19 +18,15 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "progress": false,
-            "outputPath": "ClientApp/dist",
+            "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "allowedCommonJsDependencies": [
-              "oidc-client"
-            ],
             "assets": [
               "src/assets"
             ],
             "styles": [
-              "@angular/material/prebuilt-themes/deeppurple-amber.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.css"
             ],
@@ -99,7 +95,6 @@
               "src/assets"
             ],
             "styles": [
-              "@angular/material/prebuilt-themes/deeppurple-amber.css",
               "src/styles.css"
             ],
             "scripts": []
@@ -108,7 +103,7 @@
         "server": {
           "builder": "@angular-devkit/build-angular:server",
           "options": {
-            "outputPath": "ClientApp/dist-server",
+            "outputPath": "dist-server",
             "main": "src/main.ts",
             "tsConfig": "tsconfig.server.json"
           },
@@ -136,6 +131,6 @@
   },
   "defaultProject": "GenteFit",
   "cli": {
-    "analytics": "c69d6bf2-1fb2-4e29-9f70-5f9d8163c42d"
+    "analytics": "d275920b-dd63-4ca9-922b-44509b512051"
   }
 }
