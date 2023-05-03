@@ -1,0 +1,94 @@
+<header>
+  <button mat-fab class="mat-button" color="primary" routerLink="/clases">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+</header>
+<ng-form class="cliente-form">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <h1>Crear Clase</h1>
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div>
+        <mat-form-field class="full-width">
+          <mat-label>Nombre</mat-label>
+          <input
+            matInput
+            placeholder="Nombre"
+            [(ngModel)]="claseModel.nombre"
+            name="nombre"
+            required
+            ng-valid
+            autocomplete="off"
+          /><mat-hint>Nombre</mat-hint>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="full-width">
+          <mat-label>Descripción</mat-label>
+          <input
+            matInput
+            placeholder="Descripción"
+            [(ngModel)]="claseModel.descripcion"
+            name="descripcion"
+            required
+            ng-valid
+            autocomplete="off"
+          /><mat-hint>Descripción</mat-hint>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="full-width">
+          <mat-label>Profesor</mat-label>
+          <input
+            matInput
+            placeholder="Profesor"
+            [(ngModel)]="claseModel.profesor"
+            name="profesor"
+            required
+            ng-valid
+            autocomplete="off"
+          /><mat-hint>Profesor</mat-hint>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="full-width">
+          <mat-label>Duración</mat-label>
+          <input
+            matInput
+            placeholder="Duración"
+            [(ngModel)]="claseModel.duracion"
+            name="duracion"
+            required
+            ng-valid
+            autocomplete="off"
+          /><mat-hint>Duración</mat-hint>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="full-width">
+          <mat-label>Plazas</mat-label>
+          <input
+            matInput
+            placeholder="Plazas"
+            [(ngModel)]="claseModel.plazas"
+            name="plazas"
+            required
+            ng-valid
+            autocomplete="off"
+          /><mat-hint>Plazas disponibles</mat-hint>
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" (click)="createClase()">
+        Crear
+      </button>
+      <button mat-raised-button color="warn" routerLink="/clases">
+        Cancelar
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</ng-form>

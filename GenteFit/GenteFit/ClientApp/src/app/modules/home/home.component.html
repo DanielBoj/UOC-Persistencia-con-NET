@@ -1,0 +1,83 @@
+<header>
+  <h1>{{ title }}</h1>
+  <h3>{{ description }}</h3>
+</header>
+
+<!-- Montamos el formulario para recibir los datos introducidos por el usuario -->
+<mat-card class="form-box" class="full-width">
+  <mat-card-header>
+    <mat-card-title><h1>Acceso</h1></mat-card-title>
+    <mat-card-subtitle
+      ><h2>{{ subtitle }}</h2></mat-card-subtitle
+    >
+  </mat-card-header>
+  <mat-card-content>
+    <ng-container>
+      <ng-form #loginForm="ngForm">
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>Email</mat-label>
+            <input
+              class="form-control"
+              id="email"
+              type="email"
+              matInput
+              placeholder="Email"
+              name="email"
+              [(ngModel)]="log.email"
+              required
+              pattern="[-a-zA-Z0-9~!$%^&amp;*_=+}{'?]+(\.[-a-zA-Z0-9~!$%^&amp;*_=+}{'?]+)*@([a-zA-Z0-9_][-a-zA-Z0-9_]*(\.[-a-zA-Z0-9_]+)*\.([cC][oO][mM]))(:[0-9]{1,5})?"
+              autocomplete="off"
+              (keyup.enter)="checkUser()"
+            />
+            <mat-icon matSuffix>email</mat-icon>
+            <mat-hint>Introduce tu email</mat-hint>
+            <mat-error *ngIf="loginForm.controls['email']">
+              El email no es válido.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>Password</mat-label>
+            <!-- Usamos directivas de Angular para mostrar u ocultar el pass -->
+            <input
+              class="form-control"
+              id="password"
+              [type]="hide ? 'password' : 'text'"
+              matInput
+              placeholder="Password"
+              [(ngModel)]="log.pass"
+              name="password"
+              required
+              minLenght="6"
+              ng-valid
+              autocomplete="off"
+              (keyup.enter)="checkUser()"
+            />
+            <button
+              mat-icon-button
+              matSuffix
+              (click)="hide = !hide"
+              [attr.aria-label]="'Hide password'"
+              [attr.aria-pressed]="hide"
+            >
+              <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+            </button>
+            <mat-hint>Introduce tu clave</mat-hint>
+            <mat-error *ngIf="loginForm.controls['password']">
+              El password no es válido.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <button
+          mat-button
+          [disabled]="!loginForm.form.valid"
+          (click)="checkUser()"
+        >
+          Enviar
+        </button>
+      </ng-form>
+    </ng-container>
+  </mat-card-content>
+</mat-card>
