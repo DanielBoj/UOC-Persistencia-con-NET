@@ -1,0 +1,26 @@
+<Lista>
+  <Vendedor>
+    <id_Vendedor>1</id_Vendedor>
+    <nombre>Julio</nombre>
+    <apellido>Rodriguez</apellido>
+    <producto>Barritas</producto>
+  </Vendedor>
+  <Vendedor>
+    <id_Vendedor>2</id_Vendedor>
+    <nombre>Maria</nombre>
+    <apellido>Gonzalez</apellido>
+    <producto>Bañadores</producto>
+  </Vendedor>
+  <Vendedor>
+    <id_Vendedor>3</id_Vendedor>
+    <nombre>Pedro</nombre>
+    <apellido>Sanchez</apellido>
+    <producto>Maquinas</producto>
+  </Vendedor>
+  <Vendedor>
+    <id_Vendedor>4</id_Vendedor>
+    <nombre>Carla</nombre>
+    <apellido>Rodriguez</apellido>
+    <producto>Productos Fit</producto>
+  </Vendedor>
+</Lista>

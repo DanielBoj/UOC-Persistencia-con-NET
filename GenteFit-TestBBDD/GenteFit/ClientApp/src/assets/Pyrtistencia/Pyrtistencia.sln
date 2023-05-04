@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33516.290
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Pyrtistencia", "Pyrtistencia.pyproj", "{EC071AE2-ECD2-4277-956B-1CD450F1227E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EC071AE2-ECD2-4277-956B-1CD450F1227E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC071AE2-ECD2-4277-956B-1CD450F1227E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F82F7F1D-CA8E-48B2-937C-74D7AD42B29E}
+	EndGlobalSection
+EndGlobal
