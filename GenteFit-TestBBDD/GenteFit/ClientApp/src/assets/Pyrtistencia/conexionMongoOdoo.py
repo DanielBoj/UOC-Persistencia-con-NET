@@ -12,7 +12,7 @@ mongo_url = 'mongodb+srv://gentefit:WlNUIgyIrJUCccUo@persistencia-gentefit.ehftw
 mongo_db = 'gentefit'
 mongo_collection = 'Cliente'
 
-# Conexiónservidor Odoo
+# Conexión servidor Odoo
 common = xmlrpc.client.ServerProxy('{}/xmlrpc/2/common'.format(url))
 uid = common.authenticate(db, username, password, {})
 
@@ -23,19 +23,25 @@ mongo_client = MongoClient(mongo_url)
 mongo_db = mongo_client[mongo_db]
 mongo_collection = mongo_db[mongo_collection]
 
-#Actualizando Odoo a partir de Mongo
+# Actualizando Odoo a partir de Mongo
 for doc in mongo_collection.find():
     partner_data = {
-        'id_Cliente': doc['id_Cliente'],
-        'nombre': doc['nombre'],
-        'apellido': doc['apellido'],
-        'direccion': doc['direccion'],
-        'edad': doc['edad']
+        'email': doc['Email'],
+        'password': doc['Pass'],
+        'tipo': doc['Tipo'],
+        'name': doc['Nombre'],
+        'vat': doc['Nif'],
+        'street': doc['Direccion']['calle'],
+        'city': doc['Direccion']['ciudad'],
+        'zip': doc['Direccion']['codigo_postal'],
+        'phone': doc['Telefono'],
+        'gender': doc['Genero'],
+        'iban': doc['Iban']
     }
     partner_id = models.execute_kw(
         db, uid, password,
         'res.partner', 'search',
-        [['id_Cliente', '=', doc['id_Cliente']]]
+        [['vat', '=', doc['Nif']]]
     )
     if partner_id:
         models.execute_kw(
@@ -52,18 +58,27 @@ for doc in mongo_collection.find():
         )
         print("Se ha creado correctamente el cliente de Odoo:", partner_id)
 
-# Actualizando Mongo a traves de Odoo
+# Actualizando Mongo a través de Odoo
 for doc in models.execute_kw(db, uid, password, 'res.partner', 'search_read', [[]]):
     customer_data = {
-        'id_Cliente': doc['id_Cliente'],
-        'nombre': doc['nombre'],
-        'apellido': doc['apellido'],
-        'direccion': doc['direccion'],
-        'edad': doc['edad']
+        'Email': doc['email'],
+        'Pass': doc['password'],
+        'Tipo': doc['tipo'],
+        'Nombre': doc['name'],
+        'Nif': doc['vat'],
+        'Direccion': {
+            'calle': doc['street'],
+            'ciudad': doc['city'],
+            'codigo_postal': doc['zip']
+        },
+        'Telefono': doc['phone'],
+        'Genero': doc['gender'],
+        'Iban': doc['iban']
     }
     mongo_collection.update_one(
-        {'id_Cliente': doc['id_Cliente']},
+        {'Nif': doc['vat']},
         {'$set': customer_data},
         upsert=True
     )
-    print("Se ha actualizado correctamente el cliente de MongoDB:", doc['id_Cliente'])
+    print("Se ha actualizado correctamente el cliente de MongoDB:", doc['id'])
+
