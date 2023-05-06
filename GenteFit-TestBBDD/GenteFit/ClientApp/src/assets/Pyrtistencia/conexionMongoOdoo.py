@@ -1,22 +1,21 @@
 import xmlrpc.client
 from pymongo import MongoClient
 
-# Datos de la conexión a Odoo
+# Datos Odoo
 url = 'http://20.126.4.248:086'
 db = 'gentefit'
 username = 'admin'
 password = 'claptrap'
 
-# Datos de la conexión a MongoDB
+# Datos Mongodb
 mongo_url = 'mongodb+srv://gentefit:WlNUIgyIrJUCccUo@persistencia-gentefit.ehftwrr.mongodb.net/admin'
 mongo_db = 'gentefit'
 mongo_collection = 'Cliente'
 
-# Conexión al servidor Odoo
+# Conexiónservidor Odoo
 common = xmlrpc.client.ServerProxy('{}/xmlrpc/2/common'.format(url))
 uid = common.authenticate(db, username, password, {})
 
-# Objeto de la API
 models = xmlrpc.client.ServerProxy('{}/xmlrpc/2/object'.format(url))
 
 # Conexión a MongoDB
@@ -24,7 +23,7 @@ mongo_client = MongoClient(mongo_url)
 mongo_db = mongo_client[mongo_db]
 mongo_collection = mongo_db[mongo_collection]
 
-# Actualizar clientes de Odoo con los de MongoDB
+#Actualizando Odoo a partir de Mongo
 for doc in mongo_collection.find():
     partner_data = {
         'id_Cliente': doc['id_Cliente'],
@@ -53,7 +52,7 @@ for doc in mongo_collection.find():
         )
         print("Se ha creado correctamente el cliente de Odoo:", partner_id)
 
-# Actualizar clientes de MongoDB con los de Odoo
+# Actualizando Mongo a traves de Odoo
 for doc in models.execute_kw(db, uid, password, 'res.partner', 'search_read', [[]]):
     customer_data = {
         'id_Cliente': doc['id_Cliente'],
