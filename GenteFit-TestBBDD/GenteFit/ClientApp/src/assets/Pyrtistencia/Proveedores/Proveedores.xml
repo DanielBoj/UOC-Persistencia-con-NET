@@ -1,0 +1,26 @@
+<Lista>
+  <Proveedor>
+    <id_Proveedor>1</id_Proveedor>
+    <empresa>MasFit</empresa>
+    <cif>B-76345879</cif>
+    <producto>Barritas</producto>
+  </Proveedor>
+  <Proveedor>
+    <id_Proveedor>2</id_Proveedor>
+    <empresa>AdonIs</empresa>
+    <cif>H-63334549</cif>
+    <producto>Bañadores</producto>
+  </Proveedor>
+  <Proveedor>
+    <id_Proveedor>3</id_Proveedor>
+    <empresa>IronMachine</empresa>
+    <cif>M-34548675</cif>
+    <producto>Maquinas</producto>
+  </Proveedor>
+  <Proveedor>
+    <id_Proveedor>4</id_Proveedor>
+    <empresa>TodoGym</empresa>
+    <cif>R-23456766</cif>
+    <producto>Productos Fit</producto>
+  </Proveedor>
+</Lista>

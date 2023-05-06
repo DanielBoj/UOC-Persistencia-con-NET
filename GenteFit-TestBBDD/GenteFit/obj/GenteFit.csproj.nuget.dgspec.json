@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "F:\\Odooo\\UOC-Persistencia-con-NET\\GenteFit-TestBBDD\\GenteFit\\GenteFit.csproj": {}
+    "C:\\Users\\marcp\\Documents\\GitHub\\PersistenciaOdoo\\UOC-Persistencia-con-NET\\GenteFit-TestBBDD\\GenteFit\\GenteFit.csproj": {}
   },
   "projects": {
-    "F:\\Odooo\\UOC-Persistencia-con-NET\\GenteFit-TestBBDD\\GenteFit\\GenteFit.csproj": {
+    "C:\\Users\\marcp\\Documents\\GitHub\\PersistenciaOdoo\\UOC-Persistencia-con-NET\\GenteFit-TestBBDD\\GenteFit\\GenteFit.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\Odooo\\UOC-Persistencia-con-NET\\GenteFit-TestBBDD\\GenteFit\\GenteFit.csproj",
+        "projectUniqueName": "C:\\Users\\marcp\\Documents\\GitHub\\PersistenciaOdoo\\UOC-Persistencia-con-NET\\GenteFit-TestBBDD\\GenteFit\\GenteFit.csproj",
         "projectName": "GenteFit",
-        "projectPath": "F:\\Odooo\\UOC-Persistencia-con-NET\\GenteFit-TestBBDD\\GenteFit\\GenteFit.csproj",
-        "packagesPath": "C:\\Users\\dani_\\.nuget\\packages\\",
-        "outputPath": "F:\\Odooo\\UOC-Persistencia-con-NET\\GenteFit-TestBBDD\\GenteFit\\obj\\",
+        "projectPath": "C:\\Users\\marcp\\Documents\\GitHub\\PersistenciaOdoo\\UOC-Persistencia-con-NET\\GenteFit-TestBBDD\\GenteFit\\GenteFit.csproj",
+        "packagesPath": "C:\\Users\\marcp\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\marcp\\Documents\\GitHub\\PersistenciaOdoo\\UOC-Persistencia-con-NET\\GenteFit-TestBBDD\\GenteFit\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\dani_\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\marcp\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,7 +26,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -81,7 +80,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
         }
       }
     }
