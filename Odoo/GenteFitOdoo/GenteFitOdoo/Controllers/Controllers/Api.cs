@@ -1502,7 +1502,8 @@ namespace GenteFit.Controllers
 
                     // Devolvemos el resultado.
                     return id > -1 ? Ok(id) : BadRequest();
-                } catch (Exception err)
+                }
+                catch (Exception err)
                 {
                     return StatusCode(400, err.Message);
                 }
@@ -1548,9 +1549,9 @@ namespace GenteFit.Controllers
                     // TODO -> Decidir un campo único para comprobar si el producto existe en Odoo.
                     // Obtenemos una lista de los productos de Odoo paar conseguir el último código de producto.
                     List<Producto> productos = await python.GetAllProductos();
-                    
+
                     // Generamos el código del producto.
-                    string defaultCode = productos.Last().DefaultCode != null? productos.Last().DefaultCode : "SKU000";
+                    string defaultCode = productos.Last().DefaultCode != null ? productos.Last().DefaultCode : "SKU000";
 
                     defaultCode = NewCodigoProducto(defaultCode);
 
@@ -1564,7 +1565,8 @@ namespace GenteFit.Controllers
 
                     // Devolvemos el resultado.
                     return id > -1 ? Ok(id) : BadRequest();
-                } catch (Exception err)
+                }
+                catch (Exception err)
                 {
                     return StatusCode(400, err.Message);
                 }
@@ -1586,7 +1588,8 @@ namespace GenteFit.Controllers
 
                 // Devolvemos el resultado.
                 return Ok(proveedores);
-            } catch (Exception err)
+            }
+            catch (Exception err)
             {
                 return StatusCode(400, err.Message);
             }
@@ -1607,7 +1610,7 @@ namespace GenteFit.Controllers
                 {
                     // Comprobamos si el proveedor existe en Odoo.
                     List<Proveedor> proveedores = await python.GetAllProveedores();
-                    
+
                     if (!proveedores.Any(proveedorOdoo => proveedorOdoo.Nif.Equals(proveedor.Nif)))
                     {
                         // Si no existe, lo añadimos a la base de datos.
@@ -1641,6 +1644,6 @@ namespace GenteFit.Controllers
 
             // Devolvemos el código de producto.
             return "SKU" + numCodigo;
-        } 
+        }
     }
 }

@@ -74,7 +74,7 @@ namespace GenteFitOdoo.Models.Repositories
                                 Cp = (int)item["zip"]?.ToObject<int>()
                             },
                             Genero = Genero.No_Definido,
-                            Iban = "",
+                            Iban = "ES3600112233445566778899",
                             Tipo = "cliente"
 
                         };
@@ -85,7 +85,8 @@ namespace GenteFitOdoo.Models.Repositories
                     // Devolvemos la lista de clientes
                     return clientes;
                 }
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
@@ -260,7 +261,7 @@ namespace GenteFitOdoo.Models.Repositories
 
                     // Recorremos el array de objetos
                     foreach (JObject item in data.Cast<JObject>())
-                    {                       
+                    {
                         // Creamos un nuevo proveedor
                         Proveedor proveedor = new Proveedor
                         {
@@ -288,7 +289,8 @@ namespace GenteFitOdoo.Models.Repositories
                     // Devolvemos la lista de proveedores
                     return proveedores.Count > 0 ? proveedores : new List<Proveedor>();
                 }
-            } catch (Exception err)
+            }
+            catch (Exception err)
             {
                 Console.WriteLine(err.Message);
             }
@@ -329,8 +331,9 @@ namespace GenteFitOdoo.Models.Repositories
                 // Convertimos los datos en un objeto JSON
                 JObject dataResponse = JObject.Parse(responseBody);
 
-               return dataResponse["proveedor_id"]?.ToObject<int>() ?? -1;
-            } catch (Exception err)
+                return dataResponse["proveedor_id"]?.ToObject<int>() ?? -1;
+            }
+            catch (Exception err)
             {
                 Console.WriteLine(err.Message);
             }

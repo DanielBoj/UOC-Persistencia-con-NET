@@ -14,13 +14,6 @@ namespace GenteFitOdoo
     igualmente, la conexión entre ambar también se establece en esta clase. */
     public class Startup
     {
-        /*public IConfiguration Configuration { get; }
-
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }*/
-
         public static WebApplication InitApp(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -64,7 +57,7 @@ namespace GenteFitOdoo
             });
 
             // Configuración de la API de Python
-            services.AddScoped<HttpClient>( s =>
+            services.AddScoped<HttpClient>(s =>
             {
                 var client = new HttpClient();
                 client.BaseAddress = new Uri("http://localhost:5005");
@@ -101,19 +94,6 @@ namespace GenteFitOdoo
             {
                 endpoints.MapControllers();
             });
-
-            // Lanzamos la API de Python al iniciar el servidor.
-            /*var processInfo = new ProcessStartInfo
-            {
-                FileName = "python",
-                Arguments = "./Resources/OddoRepositories/API.py",
-                UseShellExecute = false,
-                RedirectStandardOutput = true
-            };
-
-            var pythonApi = new Process { StartInfo = processInfo };
-            pythonApi.Start();
-            pythonApi.WaitForExit();*/
         }
     }
 }
