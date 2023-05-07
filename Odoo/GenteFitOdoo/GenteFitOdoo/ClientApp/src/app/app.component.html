@@ -1,6 +1,13 @@
-<body>
-  <app-nav-menu></app-nav-menu>
-  <div class="container">
+<body id="root-body">
+  <header [hidden]="!showHeader">
+    <app-nav></app-nav>
+  </header>
+
+  <main class="main-box">
     <router-outlet></router-outlet>
-  </div>
+  </main>
+
+  <footer id="footer">
+    <app-footer></app-footer>
+  </footer>
 </body>

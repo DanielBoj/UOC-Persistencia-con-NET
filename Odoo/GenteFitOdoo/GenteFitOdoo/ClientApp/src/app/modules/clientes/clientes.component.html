@@ -1,0 +1,797 @@
+<header>
+  <h1>{{ title }}</h1>
+  <h2>{{ subtitle }}</h2>
+  <button mat-fab class="mat-button" color="primary" routerLink="/menu">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+</header>
+
+<!-- Vista cliente -->
+<ng-container *ngIf="tipoUsuario === 'cliente'">
+  <mat-tab-group class="cliente-tab" backgroundColor="accent">
+    <mat-tab label="Cuenta" color="warn">
+      <mat-card class="cliente-card">
+        <mat-card-header>
+          <mat-card-title>
+            <h2>{{ cuentaTitle }}</h2>
+          </mat-card-title>
+          <mat-card-subtitle>
+            <h2>{{ cuentaSubtitle }}</h2>
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content *ngFor="let element of clienteData">
+          <mat-grid-list cols="2" rowHeight="6rem">
+            <mat-grid-tile
+              ><h3>{{ element.name }}</h3></mat-grid-tile
+            >
+            <mat-grid-tile
+              ><p>{{ element.value }}</p></mat-grid-tile
+            >
+          </mat-grid-list>
+        </mat-card-content>
+        <mat-card-actions>
+          <button
+            mat-fab
+            class="mat-button"
+            (click)="isClienteEdit = !isClienteEdit"
+          >
+            Editar
+          </button>
+          <button mat-fab class="mat-button">Solicitar Baja</button>
+        </mat-card-actions>
+      </mat-card>
+
+      <ng-container *ngIf="isClienteEdit">
+        <mat-card class="form-box">
+          <mat-card-header>
+            <mat-card-title>
+              <h1>Editar Cuenta</h1>
+            </mat-card-title>
+            <mat-card-subtitle>
+              <h2>Introduce los nuevos datos</h2>
+            </mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <ng-form #clienteForm="ngForm">
+              <div>
+                <mat-form-field class="full-width">
+                  <mat-label>Email</mat-label>
+                  <input
+                    class="form-control"
+                    type="email"
+                    matInput
+                    placeholder="Email"
+                    name="email"
+                    [(ngModel)]="clienteModel.email"
+                    required
+                    ng-valid
+                    autocomplete="off"
+                  />
+                  <mat-hint>Introduce tu email</mat-hint>
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field class="full-width">
+                  <mat-label>Contraseña</mat-label>
+                  <input
+                    class="form-control"
+                    type="password"
+                    matInput
+                    placeholder="Password"
+                    name="password"
+                    [(ngModel)]="clienteModel.pass"
+                    required
+                    ng-valid
+                    autocomplete="off"
+                  />
+                  <mat-hint>Introduce tu contraseña</mat-hint>
+                </mat-form-field>
+              </div>
+              <h3>Dirección</h3>
+              <div>
+                <mat-form-field class="full-width">
+                  <mat-label>Domicilio</mat-label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    matInput
+                    placeholder="Domicilio"
+                    name="domicilio"
+                    [(ngModel)]="clienteModel.direccion.domicilio"
+                    required
+                    ng-valid
+                    autocomplete="off"
+                  />
+                  <mat-hint>Introduce tu domicilio</mat-hint>
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field class="full-width">
+                  <mat-label>Población</mat-label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    matInput
+                    placeholder="Población"
+                    name="poblacion"
+                    [(ngModel)]="clienteModel.direccion.poblacion"
+                    required
+                    ng-valid
+                    autocomplete="off"
+                  />
+                  <mat-hint>Introduce tu población</mat-hint>
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field class="full-width">
+                  <mat-label>Código Postal</mat-label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    matInput
+                    placeholder="Código Postal"
+                    name="codigoPostal"
+                    [(ngModel)]="clienteModel.direccion.cp"
+                    required
+                    ng-valid
+                    autocomplete="off"
+                  />
+                  <mat-hint>Introduce tu código postal</mat-hint>
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field class="full-width">
+                  <mat-label>País</mat-label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    matInput
+                    placeholder="Pais"
+                    name="pais"
+                    [(ngModel)]="clienteModel.direccion.pais"
+                    required
+                    ng-valid
+                    autocomplete="off"
+                  />
+                  <mat-hint>Introduce tu país</mat-hint>
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field class="full-width">
+                  <mat-label>Teléfono</mat-label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    matInput
+                    placeholder="Telefono"
+                    name="telefono"
+                    [(ngModel)]="clienteModel.telefono"
+                    required
+                    ng-valid
+                    autocomplete="off"
+                  />
+                  <mat-hint>Introduce tu teléfono</mat-hint>
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field class="full-width">
+                  <mat-label>IBAN</mat-label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    matInput
+                    placeholder="Iban"
+                    name="iban"
+                    [(ngModel)]="clienteModel.iban"
+                    required
+                    ng-valid
+                    autocomplete="off"
+                  />
+                  <mat-hint>Introduce tu IBAN</mat-hint>
+                </mat-form-field>
+              </div>
+            </ng-form>
+          </mat-card-content>
+          <mat-card-actions>
+            <button
+              mat-fab
+              class="mat-button"
+              (click)="isClienteEdit = !isClienteEdit"
+            >
+              Cancelar
+            </button>
+            <button mat-fab class="mat-button" (click)="onSubmit()" routerLink="/clientes">
+              Guardar
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </ng-container>
+    </mat-tab>
+    <mat-tab label="Horarios">
+      <!-- Creamos una tabla dinámica para mostrar la información de los horarios -->
+      <div class="mat-elevation-z8">
+        <mat-form-field>
+          <mat-label>Filtro</mat-label>
+          <input
+            matInput
+            (keyup)="applyFilter($event)"
+            placeholder="Clase"
+            #input
+          />
+        </mat-form-field>
+
+        <mat-table
+          [dataSource]="dataSourceReservas"
+          class="horarios-table"
+          matSort
+        >
+          <!-- Columna Dia -->
+          <ng-container matColumnDef="dia">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Día</th>
+            <td mat-cell *matCellDef="let reserva">
+              {{ reserva.horario.dia }}
+            </td>
+          </ng-container>
+
+          <!-- Columna Hora -->
+          <ng-container matColumnDef="hora">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Hora</th>
+            <td mat-cell *matCellDef="let reserva">
+              {{ reserva.horario.hora }}
+            </td>
+          </ng-container>
+
+          <!-- Columna Clase -->
+          <ng-container matColumnDef="clase">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Clase</th>
+            <td mat-cell *matCellDef="let reserva">
+              {{ reserva.horario.clase.nombre }}
+            </td>
+          </ng-container>
+
+          <!-- Columna Profesor -->
+          <ng-container matColumnDef="profesor">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Profesor</th>
+            <td mat-cell *matCellDef="let reserva">
+              {{ reserva.horario.clase.profesor }}
+            </td>
+          </ng-container>
+
+          <!-- Columna  Duracion -->
+          <ng-container matColumnDef="duracion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Duración</th>
+            <td mat-cell *matCellDef="let reserva">
+              {{ reserva.horario.clase.duracion }}
+            </td>
+          </ng-container>
+
+          <!-- Columna Plazas -->
+          <ng-container matColumnDef="plazas">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Plazas</th>
+            <td mat-cell *matCellDef="let reserva">
+              {{ reserva.horario.clase.plazas }}
+            </td>
+          </ng-container>
+
+          <!-- Columna Eliminar -->
+          <ng-container matColumnDef="eliminar">
+            <th mat-header-cell *matHeaderCellDef>Eliminar</th>
+            <td mat-cell *matCellDef="let reserva">
+              <button
+                mat-icon-button
+                color="warn"
+                (click)="eliminarReserva(reserva.id)"
+                routerLink="/clientes"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedReservaColumns"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedReservaColumns"
+          ></tr>
+        </mat-table>
+
+        <mat-paginator
+          [pageSizeOptions]="[5, 10, 20]"
+          showFirstLastButtons
+          aria-label="Select page clientes"
+        >
+        </mat-paginator>
+      </div>
+      <ng-container>
+        <button mat-fab class="mat-button" [routerLink]="['/reservacreate']">
+          Nueva Reserva
+        </button>
+      </ng-container>
+    </mat-tab>
+    <mat-tab label="Esperas">
+      <!-- Creamos una tabla dinámica para mostrar la información de los reservas -->
+      <div class="mat-elevation-z8">
+        <mat-form-field>
+          <mat-label>Filtro</mat-label>
+          <input
+            matInput
+            (keyup)="applyFilter($event)"
+            placeholder="Clase"
+            #input
+          />
+        </mat-form-field>
+
+        <mat-table
+          [dataSource]="dataSourceEsperas"
+          class="horarios-table"
+          matSort
+        >
+          <!-- Columna Dia -->
+          <ng-container matColumnDef="dia">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Día</th>
+            <td mat-cell *matCellDef="let espera">
+              {{ espera.horario.dia }}
+            </td>
+          </ng-container>
+
+          <!-- Columna Hora -->
+          <ng-container matColumnDef="hora" matSortHeader>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Hora</th>
+            <td mat-cell *matCellDef="let espera">
+              {{ espera.horario.hora }}
+            </td>
+          </ng-container>
+
+          <!-- Columna Clase -->
+          <ng-container matColumnDef="clase" matSortHeader>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Clase</th>
+            <td mat-cell *matCellDef="let espera">
+              {{ espera.horario.clase.nombre }}
+            </td>
+          </ng-container>
+
+          <!-- Columna Profesor -->
+          <ng-container matColumnDef="profesor" matSortHeader>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Profesor</th>
+            <td mat-cell *matCellDef="let espera">
+              {{ espera.horario.clase.profesor }}
+            </td>
+          </ng-container>
+
+          <!-- Columna  Duracion -->
+          <ng-container matColumnDef="duracion" matSortHeader>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Duración</th>
+            <td mat-cell *matCellDef="let reserva">
+              {{ reserva.horario.clase.duracion }}
+            </td>
+          </ng-container>
+
+          <!-- Columna eliminar -->
+          <ng-container matColumnDef="eliminar" matSortHeader>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Eliminar</th>
+            <td mat-cell *matCellDef="let espera">
+              <button
+                mat-icon-button
+                color="warn"
+                (click)="eliminarEspera(espera.id)"
+                routerLink="/clientes"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedEsperaColumns"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedEsperaColumns"
+          ></tr>
+        </mat-table>
+
+        <mat-paginator
+          [pageSizeOptions]="[5, 10, 20]"
+          showFirstLastButtons
+          aria-label="Select page clientes"
+        >
+        </mat-paginator>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</ng-container>
+
+<!-- Vista administrador  -->
+<ng-container *ngIf="tipoUsuario === 'admin'">
+  <mat-form-field appearance="fill">
+    <mat-label>Filtro</mat-label>
+    <input
+      matInput
+      type="text"
+      (keyup)="applyFilter($event)"
+      placeholder="Filtro"
+      #input
+    />
+  </mat-form-field>
+
+  <div class="mat-elevation-z8">
+    <mat-table [dataSource]="dataSource" class="clientes-table" matSort>
+      <!-- Columna Email -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+        <td mat-cell *matCellDef="let cliente">{{ cliente.email }}</td>
+      </ng-container>
+
+      <!-- Columna Nombre -->
+      <ng-container matColumnDef="nombre" matSortHeader>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
+        <td mat-cell *matCellDef="let cliente">{{ cliente.nombre }}</td>
+      </ng-container>
+
+      <!-- Columna Nif -->
+      <ng-container matColumnDef="nif" matSortHeader>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nif</th>
+        <td mat-cell *matCellDef="let cliente">{{ cliente.nif }}</td>
+      </ng-container>
+
+      <!-- Columna Teléfono -->
+      <ng-container matColumnDef="telefono">
+        <th mat-header-cell *matHeaderCellDef>Teléfono</th>
+        <td mat-cell *matCellDef="let cliente">{{ cliente.telefono }}</td>
+      </ng-container>
+
+      <!-- Columna Iban -->
+      <ng-container matColumnDef="iban">
+        <th mat-header-cell *matHeaderCellDef>Iban</th>
+        <td mat-cell *matCellDef="let cliente">{{ cliente.iban }}</td>
+      </ng-container>
+
+      <!-- Columna Detalle -->
+      <ng-container matColumnDef="detalle">
+        <th mat-header-cell *matHeaderCellDef>Detalle</th>
+        <td mat-cell *matCellDef="let cliente">
+          <button mat-icon-button routerLink="/clientedetalle/{{ cliente.id }}">
+            <mat-icon>visibility</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- Columna Editar -->
+      <ng-container matColumnDef="editar">
+        <th mat-header-cell *matHeaderCellDef>Editar</th>
+        <td mat-cell *matCellDef="let cliente">
+          <!-- Enlazamos con la página clientesedit y enviamos el id. -->
+          <button mat-icon-button routerLink="/clienteedit/{{ cliente.id }}">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- Columna Eliminar -->
+      <ng-container matColumnDef="eliminar">
+        <th mat-header-cell *matHeaderCellDef>Eliminar</th>
+        <td mat-cell *matCellDef="let cliente">
+          <button mat-icon-button (click)="eliminarCliente(cliente.id)" routerLink="/clientes">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </mat-table>
+
+    <mat-paginator
+      [pageSizeOptions]="[5, 10, 20]"
+      showFirstLastButtons
+      aria-label="Select page clientes"
+    >
+    </mat-paginator>
+  </div>
+
+  <button
+    mat-fab
+    class="mat-button"
+    color="accent"
+    (click)="isClienteCreate = !isClienteCreate"
+  >
+    Nuevo
+  </button>
+
+  <!-- Formulario Creación -->
+  <ng-container *ngIf="isClienteCreate">
+    <mat-card class="form-box">
+      <mat-card-header>
+        <mat-card-title>
+          <h1>Crear Cuenta</h1>
+        </mat-card-title>
+        <mat-card-subtitle>
+          <h2>Introduce los nuevos datos</h2>
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <ng-form #clienteForm="ngForm">
+          <!-- Email -->
+          <div>
+            <mat-form-field class="full-width">
+              <mat-label>Email</mat-label>
+              <input
+                class="form-control"
+                type="email"
+                matInput
+                placeholder="Email"
+                name="email"
+                [(ngModel)]="clienteModel.email"
+                required
+                ng-valid
+                autocomplete="off"
+              />
+              <mat-hint>Introduce tu email</mat-hint>
+            </mat-form-field>
+          </div>
+
+          <!-- Pass -->
+          <div>
+            <mat-form-field class="full-width">
+              <mat-label>Contraseña</mat-label>
+              <input
+                class="form-control"
+                type="password"
+                matInput
+                placeholder="Password"
+                name="password"
+                [(ngModel)]="clienteModel.pass"
+                required
+                ng-valid
+                autocomplete="off"
+              />
+              <mat-hint>Introduce tu contraseña</mat-hint>
+            </mat-form-field>
+          </div>
+
+          <!-- Nombre -->
+          <div>
+            <mat-form-field class="full-width">
+              <mat-label>Nombre</mat-label>
+              <input
+                class="form-control"
+                type="text"
+                matInput
+                placeholder="Nombre"
+                name="nombre"
+                [(ngModel)]="clienteModel.nombre"
+                required
+                ng-valid
+                autocomplete="off"
+              />
+              <mat-hint>Introduce tu nombre</mat-hint>
+            </mat-form-field>
+          </div>
+
+          <!-- NIF -->
+          <div>
+            <mat-form-field class="full-width">
+              <mat-label>NIF</mat-label>
+              <input
+                class="form-control"
+                type="text"
+                matInput
+                placeholder="NIF"
+                name="nif"
+                [(ngModel)]="clienteModel.nif"
+                required
+                ng-valid
+                autocomplete="off"
+              />
+              <mat-hint>Introduce tu NIF</mat-hint>
+            </mat-form-field>
+          </div>
+
+          <!-- Género -->
+          <div>
+            <mat-form-field class="full-width">
+              <mat-label>Género</mat-label>
+              <mat-select
+                placeholder="Género"
+                name="genero"
+                [(ngModel)]="clienteModel.genero"
+                required
+                ng-valid
+                autocomplete="off"
+              >
+                <mat-option value="0">Intersexual</mat-option>
+                <mat-option value="1">Femenino</mat-option>
+                <mat-option value="2">Fluido</mat-option>
+                <mat-option value="3">Masculino</mat-option>
+                <mat-option value="4">No Binario</mat-option>
+                <mat-option value="5">Trans Femenino</mat-option>
+                <mat-option value="6">Trans Masculino</mat-option>
+              </mat-select>
+              <mat-hint>Selecciona tu género</mat-hint>
+            </mat-form-field>
+          </div>
+
+          <h3>Dirección</h3>
+          <div>
+            <mat-form-field class="full-width">
+              <mat-label>Domicilio</mat-label>
+              <input
+                class="form-control"
+                type="text"
+                matInput
+                placeholder="Domicilio"
+                name="domicilio"
+                [(ngModel)]="clienteModel.direccion.domicilio"
+                required
+                ng-valid
+                autocomplete="off"
+              />
+              <mat-hint>Introduce tu domicilio</mat-hint>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field class="full-width">
+              <mat-label>Población</mat-label>
+              <input
+                class="form-control"
+                type="text"
+                matInput
+                placeholder="Población"
+                name="poblacion"
+                [(ngModel)]="clienteModel.direccion.poblacion"
+                required
+                ng-valid
+                autocomplete="off"
+              />
+              <mat-hint>Introduce tu población</mat-hint>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field class="full-width">
+              <mat-label>Código Postal</mat-label>
+              <input
+                class="form-control"
+                type="text"
+                matInput
+                placeholder="Código Postal"
+                name="codigoPostal"
+                [(ngModel)]="clienteModel.direccion.cp"
+                required
+                ng-valid
+                autocomplete="off"
+              />
+              <mat-hint>Introduce tu código postal</mat-hint>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field class="full-width">
+              <mat-label>País</mat-label>
+              <input
+                class="form-control"
+                type="text"
+                matInput
+                placeholder="Pais"
+                name="pais"
+                [(ngModel)]="clienteModel.direccion.pais"
+                required
+                ng-valid
+                autocomplete="off"
+              />
+              <mat-hint>Introduce tu país</mat-hint>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field class="full-width">
+              <mat-label>Teléfono</mat-label>
+              <input
+                class="form-control"
+                type="text"
+                matInput
+                placeholder="Telefono"
+                name="telefono"
+                [(ngModel)]="clienteModel.telefono"
+                required
+                ng-valid
+                autocomplete="off"
+              />
+              <mat-hint>Introduce tu teléfono</mat-hint>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field class="full-width">
+              <mat-label>IBAN</mat-label>
+              <input
+                class="form-control"
+                type="text"
+                matInput
+                placeholder="Iban"
+                name="iban"
+                [(ngModel)]="clienteModel.iban"
+                required
+                ng-valid
+                autocomplete="off"
+              />
+              <mat-hint>Introduce tu IBAN</mat-hint>
+            </mat-form-field>
+          </div>
+        </ng-form>
+      </mat-card-content>
+      <mat-card-actions>
+        <button
+          mat-fab
+          class="mat-button"
+          (click)="isClienteEdit = !isClienteEdit"
+        >
+          Cancelar
+        </button>
+        <button mat-fab class="mat-button" (click)="onSubmit()" routerLink="/clientes">Guardar</button>
+      </mat-card-actions>
+    </mat-card>
+  </ng-container>
+</ng-container>
+
+<!-- Vista Empleado -->
+<ng-container *ngIf="tipoUsuario === 'empleado'">
+  <mat-form-field appearance="fill">
+    <mat-label>Filtro</mat-label>
+    <input
+      matInput
+      type="text"
+      (keyup)="applyFilter($event)"
+      placeholder="Filtro"
+      #input
+    />
+  </mat-form-field>
+
+  <div class="mat-elevation-z8">
+    <mat-table [dataSource]="dataSource" class="clientes-table" matSort>
+      <!-- Columna Email -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef matSortHeader>Email</th>
+        <td mat-cell *matCellDef="let cliente">{{ cliente.email }}</td>
+      </ng-container>
+
+      <!-- Columna Nombre -->
+      <ng-container matColumnDef="nombre" matSortHeader>
+        <th mat-header-cell *matHeaderCellDef>Nombre</th>
+        <td mat-cell *matCellDef="let cliente">{{ cliente.nombre }}</td>
+      </ng-container>
+
+      <!-- Columna Nif -->
+      <ng-container matColumnDef="nif" matSortHeader>
+        <th mat-header-cell *matHeaderCellDef>Nif</th>
+        <td mat-cell *matCellDef="let cliente">{{ cliente.nif }}</td>
+      </ng-container>
+
+      <!-- Columna Teléfono -->
+      <ng-container matColumnDef="telefono">
+        <th mat-header-cell *matHeaderCellDef>Teléfono</th>
+        <td mat-cell *matCellDef="let cliente">{{ cliente.telefono }}</td>
+      </ng-container>
+
+      <!-- Columna Iban -->
+      <ng-container matColumnDef="iban">
+        <th mat-header-cell *matHeaderCellDef>Iban</th>
+        <td mat-cell *matCellDef="let cliente">{{ cliente.iban }}</td>
+      </ng-container>
+
+      <!-- Columna Detalle -->
+      <ng-container matColumnDef="detalle">
+        <th mat-header-cell *matHeaderCellDef>Detalle</th>
+        <td mat-cell *matCellDef="let cliente">
+          <button mat-icon-button routerLink="/clientedetalle/{{ cliente.id }}">
+            <mat-icon>visibility</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedEmpleadoColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedEmpleadoColumns"></tr>
+    </mat-table>
+
+    <mat-paginator
+      [pageSizeOptions]="[5, 10, 20]"
+      showFirstLastButtons
+      aria-label="Select page clientes"
+    >
+    </mat-paginator>
+  </div>
+</ng-container>

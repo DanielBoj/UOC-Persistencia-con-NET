@@ -1,0 +1,127 @@
+<!-- Vista Admin -->
+<ng-container class="reservas-table" *ngIf="tipoUsuario === 'admin'">
+  <mat-form-field appearance="fill">
+    <mat-label>Filtro</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Clase" #input />
+  </mat-form-field>
+
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort>
+      <!-- Clase -->
+      <ng-container matColumnDef="clase">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Clase</th>
+        <td mat-cell *matCellDef="let row">{{ row.horario.clase.nombre }}</td>
+      </ng-container>
+
+      <!-- Dia Column -->
+      <ng-container matColumnDef="dia">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Día</th>
+        <td mat-cell *matCellDef="let row">{{ row.horario.dia }}</td>
+      </ng-container>
+
+      <!-- Hora Column -->
+      <ng-container matColumnDef="hora">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Hora</th>
+        <td mat-cell *matCellDef="let row">{{ row.horario.hora }}</td>
+      </ng-container>
+
+      <!-- Nombre Cliente Column -->
+      <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Cliente</th>
+        <td mat-cell *matCellDef="let row">{{ row.cliente.nombre }}</td>
+      </ng-container>
+
+      <!-- Nif Cliente Column -->
+      <ng-container matColumnDef="nif">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>NIF</th>
+        <td mat-cell *matCellDef="let row">{{ row.cliente.nif }}</td>
+      </ng-container>
+
+      <!-- Borrar Column -->
+      <ng-container matColumnDef="borrar">
+        <th mat-header-cell *matHeaderCellDef>Eliminar</th>
+        <td mat-cell *matCellDef="let row">
+          <button
+            mat-icon-button
+            (click)="deleteReserva(row.id)"
+            routerLink="/horarios"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedAdminColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedAdminColumns"></tr>
+
+      <!-- Row shown when there is no matching data. -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">
+          No existen datos para el filtro "{{ input.value }}"
+        </td>
+      </tr>
+    </table>
+
+    <mat-paginator
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      aria-label="Clases"
+    ></mat-paginator>
+  </div>
+</ng-container>
+
+<!-- Vista Empleado -->
+<ng-container class="reservas-table" *ngIf="tipoUsuario === 'empleado'">
+  <mat-form-field appearance="fill">
+    <mat-label>Filtro</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Clase" #input />
+  </mat-form-field>
+
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort>
+      <!-- Clase -->
+      <ng-container matColumnDef="clase">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Clase</th>
+        <td mat-cell *matCellDef="let row">{{ row.horario.clase.nombre }}</td>
+      </ng-container>
+
+      <!-- Dia Column -->
+      <ng-container matColumnDef="dia">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Día</th>
+        <td mat-cell *matCellDef="let row">{{ row.horario.dia }}</td>
+      </ng-container>
+
+      <!-- Hora Column -->
+      <ng-container matColumnDef="hora">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Hora</th>
+        <td mat-cell *matCellDef="let row">{{ row.horario.hora }}</td>
+      </ng-container>
+
+      <!-- Nombre Cliente Column -->
+      <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Cliente</th>
+        <td mat-cell *matCellDef="let row">{{ row.cliente.nombre }}</td>
+      </ng-container>
+
+      <!-- Nif Cliente Column -->
+      <ng-container matColumnDef="nif">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>NIF</th>
+        <td mat-cell *matCellDef="let row">{{ row.cliente.nif }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+      <!-- Row shown when there is no matching data. -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">
+          No existen datos para el filtro "{{ input.value }}"
+        </td>
+      </tr>
+    </table>
+
+    <mat-paginator
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      aria-label="Clases"
+    ></mat-paginator>
+  </div>
+</ng-container>

@@ -1,0 +1,80 @@
+<header>
+  <button mat-fab class="mat-button" color="primary" routerLink="/horarios">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+</header>
+<ng-container class="form-box">
+  <ng-form class="horario-form">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          <h1>Crear Horario</h1>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div>
+          <mat-form-field class="search" color="accent">
+            <mat-label>Búsqueda de clases</mat-label>
+            <input
+              type="text"
+              matInput
+              placeholder="clases"
+              name="clase"
+              [matAutocomplete]="auto"
+              (input)="onSearch($event)"
+            />
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option
+                *ngFor="let nombre of nombresClases"
+                [value]="nombre"
+                (click)="onSelect(nombre)"
+                >{{ nombre }}</mat-option
+              >
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+
+        <!-- Formulario -->
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Día</mat-label>
+            <!-- Usamos un 2 way binding -->
+            <mat-select
+              [(value)]="selectedDia"
+              (selectionChange)="onDiaSelect(selectedDia)"
+              required
+            >
+              <mat-option
+                *ngFor="let dia of dias; index as i"
+                value="{{ i }}"
+                >{{ dia }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Hora</mat-label>
+            <input
+              matInput
+              type="time"
+              name="hora"
+              [(ngModel)]="horarioModel.hora"
+              required
+            />
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="createHorario()"
+          routerLink="/horarios"
+        >
+          Crear
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </ng-form>
+</ng-container>
