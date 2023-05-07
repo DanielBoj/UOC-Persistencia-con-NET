@@ -1,4 +1,4 @@
-''' Este script se encarga de importar los datos de los clientes de Odoo a la base de datos de GenteFit '''
+''' Este script se encarga de importar los datos de las entidades de Odoo a la app de GenteFit '''
 # Importamos la librería para pasar los resultados a JSON
 import json
 # Importamos la clase de conexión que hemos creado
@@ -55,7 +55,7 @@ def getProductos():
     for producto in productos:
         # Creamos un producto filtrado
         producto = ProductoData(producto['id'], producto['name'], producto['default_code'],
-                                producto['list_price'], producto['standard_price'], producto['seller_ids'], producto['categ_id'])
+                                producto['list_price'], producto['standard_price'], producto['categ_id'])
         # Añadimos el producto a la lista
         productos_list.append(producto)
 
@@ -85,7 +85,7 @@ def getProveedores():
         if not proveedor['customer_rank'] and proveedor['supplier_rank']:
             # Creamos un proveedor filtrado
             proveedor = ProveedorData(proveedor['id'], proveedor['name'], proveedor['email'], proveedor['phone'], proveedor['website'],
-                                      proveedor['street'], proveedor['city'], proveedor['zip'], proveedor['state_id'], proveedor['country_id'], proveedor['company_id'])
+                                      proveedor['street'], proveedor['city'], proveedor['zip'], proveedor['state_id'], proveedor['country_id'], proveedor['company_id'], proveedor['vat'])
 
             # Añadimos el proveedor a la lista
             proveedores_list.append(proveedor)

@@ -3,6 +3,7 @@ using GenteFitOdoo.Models.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
+using System.Diagnostics;
 
 namespace GenteFitOdoo
 {
@@ -100,6 +101,19 @@ namespace GenteFitOdoo
             {
                 endpoints.MapControllers();
             });
+
+            // Lanzamos la API de Python al iniciar el servidor.
+            /*var processInfo = new ProcessStartInfo
+            {
+                FileName = "python",
+                Arguments = "./Resources/OddoRepositories/API.py",
+                UseShellExecute = false,
+                RedirectStandardOutput = true
+            };
+
+            var pythonApi = new Process { StartInfo = processInfo };
+            pythonApi.Start();
+            pythonApi.WaitForExit();*/
         }
     }
 }

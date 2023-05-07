@@ -8,7 +8,6 @@
         public string? Categ { get; set; }
         public decimal? ListPrice { get; set; }
         public decimal? StandardPrice { get; set; }
-        public string? Seller { get; set; }
 
         // Constructor vacío
         public Producto()

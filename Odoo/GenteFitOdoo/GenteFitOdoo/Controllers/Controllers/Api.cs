@@ -390,7 +390,7 @@ namespace GenteFit.Controllers
                 }
 
                 // Creamos el cliente
-                return await db.Create(cliente) ? CreatedAtAction(nameof(GetClienteById), new { id = cliente.Id.ToString() }, cliente)
+                return await db.Create(cliente) ? Ok(true)
                     : StatusCode(400);
             }
             catch (Exception err)
@@ -1467,6 +1467,50 @@ namespace GenteFit.Controllers
             }
         }
 
+        // Creamos un cliente en Odoo.
+        [HttpPost("odoo/clientes")]
+        public async Task<IActionResult> CreateClienteOdoo([FromBody] Cliente cliente)
+        {
+            // Creamos el controlador de la api de python y el de Mongo para añádir los clientes en ambos ya que
+            // todos los clientes de la plataforma de compras serán clientes de la empresa.
+            PythonApiController python = new();
+            ClienteController dbCliente = new();
+
+            // Comprobamos que haya datos en el cuerpo de la petición.
+            if (cliente != null)
+            {
+                // Creamos el cliente en Odoo.
+                try
+                {
+                    // Comprobamos si el cliente existe en Odoo.
+                    if (python.GetAllClientes().Result.Any(c => c.Nif.Equals(cliente.Nif)))
+                    {
+                        return BadRequest("El cliente ya existe");
+                    }
+
+                    // Comprobamos que el cliente no existe
+                    if (!dbCliente.GetAllClientes().Result.Any(c => c.Nif.Equals(cliente.Nif)))
+                    {
+                        // Seteamos una clave por defecto y creamos el liente
+                        cliente.Pass = "claptrap";
+                        await dbCliente.Create(cliente);
+                    }
+
+                    // Si no existe, lo añadimos a la base de datos.
+                    int id = -1;
+                    id = await python.CreateCliente(cliente);
+
+                    // Devolvemos el resultado.
+                    return id > -1 ? Ok(id) : BadRequest();
+                } catch (Exception err)
+                {
+                    return StatusCode(400, err.Message);
+                }
+            }
+
+            return BadRequest("No puede crearse el cliente.");
+        }
+
         [HttpGet("odoo/productos")]
         // Obtenemos los productos de Odoo.
         public async Task<IActionResult> ListAllProductosOdoo()
@@ -1488,6 +1532,46 @@ namespace GenteFit.Controllers
             }
         }
 
+        // Creamos un nuevo producto en Odoo.
+        [HttpPost("odoo/productos")]
+        public async Task<IActionResult> CreateProductoOdoo([FromBody] Producto producto)
+        {
+            // Creamos el controlador de la api de python
+            PythonApiController python = new();
+
+            // Comprobamos que haya datos en el cuerpo de la petición.
+            if (producto != null)
+            {
+                // Creamos el producto en Odoo.
+                try
+                {
+                    // TODO -> Decidir un campo único para comprobar si el producto existe en Odoo.
+                    // Obtenemos una lista de los productos de Odoo paar conseguir el último código de producto.
+                    List<Producto> productos = await python.GetAllProductos();
+                    
+                    // Generamos el código del producto.
+                    string defaultCode = productos.Last().DefaultCode != null? productos.Last().DefaultCode : "SKU000";
+
+                    defaultCode = NewCodigoProducto(defaultCode);
+
+                    // Por seguridad creamos un producto temporal y le asignamos el código.
+                    Producto toSave = producto;
+                    toSave.DefaultCode = defaultCode;
+
+                    // Creamos el producto en Odoo.
+                    int id = -1;
+                    id = await python.CreateProducto(toSave);
+
+                    // Devolvemos el resultado.
+                    return id > -1 ? Ok(id) : BadRequest();
+                } catch (Exception err)
+                {
+                    return StatusCode(400, err.Message);
+                }
+            }
+            return BadRequest("No puede crearse el producto.");
+        }
+
         // Obtenemos los proveedores de Odoo.
         [HttpGet("odoo/proveedores")]
         public async Task<IActionResult> ListAllProveedoresOdoo()
@@ -1507,5 +1591,56 @@ namespace GenteFit.Controllers
                 return StatusCode(400, err.Message);
             }
         }
+
+        // Creamos un nuevo proveedor en Odoo.
+        [HttpPost("odoo/proveedores")]
+        public async Task<IActionResult> CreateProveedorOdoo([FromBody] Proveedor proveedor)
+        {
+            // Creamos el controlador de la api de python
+            PythonApiController python = new();
+
+            // Comprobamos que haya datos en el cuerpo de la petición.
+            if (proveedor != null)
+            {
+                // Creamos el proveedor en Odoo.
+                try
+                {
+                    // Comprobamos si el proveedor existe en Odoo.
+                    List<Proveedor> proveedores = await python.GetAllProveedores();
+                    
+                    if (!proveedores.Any(proveedorOdoo => proveedorOdoo.Nif.Equals(proveedor.Nif)))
+                    {
+                        // Si no existe, lo añadimos a la base de datos.
+                        int id = -1;
+                        id = await python.CreateProveedor(proveedor);
+
+                        // Devolvemos el resultado.
+                        return id > -1 ? Ok(id) : BadRequest();
+                    }
+                    // Si el proveedor ya existe en Odoo, devolvemos un error.
+                    return BadRequest("El proveedor ya existe en Odoo.");
+                }
+                catch (Exception err)
+                {
+                    return StatusCode(400, err.Message);
+                }
+            }
+
+            return BadRequest("No puede crearse el proveedor.");
+        }
+
+        // Método para conseguir el siguiente código de producto.
+        public static string NewCodigoProducto(string codigoSrc)
+        {
+            // Obtenemos el número del código de producto.
+            string numCodigo = codigoSrc.Substring(3);
+            int num = int.Parse(numCodigo) + 1;
+
+            // Creamos la parte numérica del código de producto, siempre tiene que seguir la plantilla SKU000.
+            numCodigo = num.ToString("D3");
+
+            // Devolvemos el código de producto.
+            return "SKU" + numCodigo;
+        } 
     }
 }

@@ -4,7 +4,7 @@
 class ProveedorData:
 
     # Constructor
-    def __init__(self, id, name, email, phone, website, street, city, _zip, state_id, country_id, company_id):
+    def __init__(self, id, name, email, phone, website, street, city, _zip, state_id, country_id, company_id, vat):
         self.id = id
         self.name = name
         self.email = email
@@ -16,6 +16,7 @@ class ProveedorData:
         self.state = None
         self.country = None
         self.company = None
+        self.vat = vat
 
         # Odoo devuelve una tupla con el id y el nombre del país pero con un objeto del tipo bool, así
         # que primero hemos de comprobar que no sea un objeto bool y luego asignar el nombre de la
