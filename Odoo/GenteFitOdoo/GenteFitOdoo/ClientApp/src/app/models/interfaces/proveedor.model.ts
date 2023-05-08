@@ -1,7 +1,7 @@
 import { Direccion } from './direccion.model';
 
 export interface Proveedor {
-  id?: string,
+  id?: number,
   name: string,
   nif: string,
   direccion: Direccion,

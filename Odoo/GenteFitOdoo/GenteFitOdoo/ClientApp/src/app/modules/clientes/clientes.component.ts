@@ -213,7 +213,7 @@ export class ClientesComponent implements OnInit, OnDestroy {
       { name: 'Nombre', value: cliente.nombre },
       { name: 'Dirección', value: cliente.direccion.domicilio },
       { name: 'Población', value: cliente.direccion.poblacion },
-      { name: 'Código postal', value: cliente.direccion.cp },
+      { name: 'Código postal', value: cliente.direccion.cp as Number },
       { name: 'País', value: cliente.direccion.pais },
       { name: 'Teléfono', value: cliente.telefono },
       { name: 'Genero', value: Genero[cliente.genero as keyof typeof Genero] },

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, of, tap, throwError } from 'rxjs';
 import { environment as env } from 'src/environments/environment';
@@ -63,11 +63,19 @@ export class OdooService {
     // Construimos la url
     const url = `${this.urlProveedores}`;
 
+    // Creamos las cabeceras, es necesario para que la petición funcione
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+
     // Realizamos la petición
-    return this.http.post(url, proveedor).pipe(catchError(error => {
-      console.log(error.message);
-      return throwError(() => { return { ok: false, error: error.error }; });
-    }));
+    const res = this.http.request('POST', url, { body: proveedor, headers: headers }).subscribe({
+      next: data => { return data },
+      error: error => {
+        console.error('There was an error!', error),
+          throwError(() => { return { ok: false, error: error.error }; })
+      }
+    });
+
+    return of(res);
   }
 
   // Obtenemos los datos de los productos
@@ -88,10 +96,18 @@ export class OdooService {
     // Construimos la url
     const url = `${this.urlProductos}`;
 
+    // Creamos las cabeceras, es necesario para que la petición funcione
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+
     // Realizamos la petición
-    return this.http.post(url, producto).pipe(catchError(error => {
-      console.log(error.message);
-      return throwError(() => { return { ok: false, error: error.error }; });
-    }));
+    const res = this.http.request('POST', url, { body: producto, headers: headers }).subscribe({
+      next: data => { return data },
+      error: error => {
+        console.error('There was an error!', error),
+          throwError(() => { return { ok: false, error: error.error }; })
+      }
+    });
+
+    return of(res);
   }
 }

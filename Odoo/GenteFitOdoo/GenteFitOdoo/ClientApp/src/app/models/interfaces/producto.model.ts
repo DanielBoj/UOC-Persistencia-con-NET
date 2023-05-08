@@ -1,5 +1,5 @@
 export interface Producto {
-  id?: string,
+  id?: number,
   defaultCode: string,
   name: string,
   categ: string,

@@ -1,3 +1,8 @@
+<header>
+  <h1>{{ title }}</h1>
+  <h2>{{ subtitle }}</h2>
+</header>
+
 <ng-container class="spinner-box" *ngIf="isLoading">
   <mat-spinner class="spinner" diameter="50"></mat-spinner>
   <div style="position: relative; top: -2.2rem; left: 4rem">
@@ -5,7 +10,7 @@
   </div>
 </ng-container>
 
-<ng-container *ngIf="cache.tipoUsuario == 'admin'">
+<ng-container *ngIf="cache.tipoUsuario == 'admin' && !isLoading">
   <mat-tab-group>
     <mat-tab label="Clientes Odoo">
       <ng-container class="odoo-table">
@@ -25,12 +30,6 @@
             <ng-container matColumnDef="nombre">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
               <td mat-cell *matCellDef="let row">{{ row.nombre }}</td>
-            </ng-container>
-
-            <!-- NIF Column -->
-            <ng-container matColumnDef="nif">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>NIF</th>
-              <td mat-cell *matCellDef="let row">{{ row.nif }}</td>
             </ng-container>
 
             <!-- Email Column -->
@@ -285,7 +284,7 @@
               color="primary"
               (click)="crearCliente()"
               [disabled]="!clienteForm.form.valid"
-              routerLink="/"
+              routerLink="/odoo"
             >
               Guardar
             </button>
@@ -587,7 +586,7 @@
               color="primary"
               (click)="crearProveedor()"
               [disabled]="!proveedorForm.form.valid"
-              routerLink="/"
+              routerLink="/odoo"
             >
               Guardar
             </button>
@@ -667,7 +666,7 @@
             color="primary"
             (click)="flagCrearProducto = !flagCrearProducto"
           >
-            Nuevo Proveedor
+            Nuevo Producto
           </button>
         </div>
       </ng-container>
@@ -757,9 +756,9 @@
               mat-fab
               class="mat-button fab-button"
               color="primary"
-              (click)="crearProveedor()"
+              (click)="crearProducto()"
               [disabled]="!productoForm.form.valid"
-              routerLink="/"
+              routerLink="/odoo"
             >
               Guardar
             </button>

@@ -50,7 +50,7 @@ namespace GenteFitOdoo
             {
                 options.AddDefaultPolicy(builder =>
                 {
-                    builder.WithOrigins("http://localhost:4200")
+                    builder.WithOrigins("http://localhost:44470")
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
@@ -63,12 +63,6 @@ namespace GenteFitOdoo
                 client.BaseAddress = new Uri("http://localhost:5005");
                 return client;
             });
-            /*services.Configure<PythonApiConnection>(configuration.GetSection("PythonApi"));
-            services.AddControllers();
-            services.AddSingleton<PythonApiConnection>();*/
-
-            // Configuración de la capa de negocio
-            // services.AddScoped<IMyService, MyService>();
         }
 
         public void Configure(WebApplication app)

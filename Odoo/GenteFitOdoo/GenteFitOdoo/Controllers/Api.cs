@@ -7,6 +7,7 @@ using GenteFitOdoo.Models;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Numerics;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -1446,26 +1447,31 @@ namespace GenteFitOdoo.Controllers
                 // Obtenemos los clientes de MongoDB.
                 List<Cliente> clientesMongo = await dbCliente.GetAllClientes();
 
-                // Actualizamos las listas de clientes de Odoo y MongoDB.
+                // Actualizamos las listas de clientes de Odoo y MongoDB. Debido a la diferencia de formato de lso NIF
+                // entre Odoo y MongoDB, tenemos que hacerlo por email.
                 // Iteramos la lista de clientes de Odoo.
                 clientesOdoo.ForEach(async (cliente) =>
                 {
                     // Comprobamos si el cliente existe en MongoDB.
-                    if (!clientesMongo.Where(clienteMongo => clienteMongo.Nif.Equals(cliente.Nif)).Any())
+                    if(!clientesMongo.Any(clienteM => cliente.Email.Equals(clienteM.Email)))
                     {
                         // Si no existe, lo añadimos a la base de datos.
                         await dbCliente.Create(cliente);
                     }
-
-                    // TODO -> Añadir a clientes de MongoDB a Odoo
                 });
 
                 // Iteramos la lista de clientes de MongoDB.
                 clientesMongo.ForEach(async (cliente) =>
                 {
                     // Comprobamos si el cliente existe en Odoo.
-                    if (!clientesOdoo.Where(clienteOdoo => clienteOdoo.Nif.Equals(cliente.Nif)).Any())
+                    if (!clientesOdoo.Any(clienteO => clienteO.Email.Equals(cliente.Email)))
                     {
+                        // Modificamos el CP para que sea un entero, es decir, tenemos que eliminar cualquier 0 a la izquierda.
+                        string cpClean = cliente.Direccion.Cp.ToString().TrimStart('0');
+
+                        cliente.Direccion.Cp = int.Parse(cpClean);
+
+
                         // Si no existe, lo añadimos a Odoo.
                         await python.CreateCliente(cliente);
                     }
@@ -1499,22 +1505,22 @@ namespace GenteFitOdoo.Controllers
                 try
                 {
                     // Comprobamos si el cliente existe en Odoo.
-                    if (python.GetAllClientes().Result.Any(c => c.Nif.Equals(cliente.Nif)))
+                    if (python.GetAllClientes().Result.Any(c => c.Email.Equals(cliente.Email)))
                     {
                         return BadRequest("El cliente ya existe");
-                    }
-
-                    // Comprobamos que el cliente no existe
-                    if (!dbCliente.GetAllClientes().Result.Any(c => c.Nif.Equals(cliente.Nif)))
-                    {
-                        // Seteamos una clave por defecto y creamos el liente
-                        cliente.Pass = "claptrap";
-                        await dbCliente.Create(cliente);
                     }
 
                     // Si no existe, lo añadimos a la base de datos.
                     int id = -1;
                     id = await python.CreateCliente(cliente);
+
+                    // Comprobamos que el cliente no existe
+                    if (!dbCliente.GetAllClientes().Result.Any(c => c.Email.Equals(cliente.Email)))
+                    {
+                        // Seteamos una clave por defecto y creamos elcliente en MongoDB
+                        cliente.Pass = "claptrap";
+                        await dbCliente.Create(cliente);
+                    }
 
                     // Devolvemos el resultado.
                     return id > -1 ? Ok(id) : BadRequest();
@@ -1629,15 +1635,16 @@ namespace GenteFitOdoo.Controllers
 
                     if (!proveedores.Any(proveedorOdoo => proveedorOdoo.Nif.Equals(proveedor.Nif)))
                     {
-                        // Si no existe, lo añadimos a la base de datos.
-                        int id = -1;
-                        id = await python.CreateProveedor(proveedor);
-
-                        // Devolvemos el resultado.
-                        return id > -1 ? Ok(id) : BadRequest();
+                        
                     }
+                    // Si no existe, lo añadimos a la base de datos.
+                    int id = -1;
+                    id = await python.CreateProveedor(proveedor);
+
+                    // Devolvemos el resultado.
+                    return id > -1 ? Ok(id) : BadRequest();
                     // Si el proveedor ya existe en Odoo, devolvemos un error.
-                    return BadRequest("El proveedor ya existe en Odoo.");
+                    //return BadRequest("El proveedor ya existe en Odoo.");
                 }
                 catch (Exception err)
                 {

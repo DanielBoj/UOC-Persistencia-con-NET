@@ -3,6 +3,14 @@
   <h3>{{ description }}</h3>
 </header>
 
+<!-- Spinner de carga de datos -->
+<ng-container class="spinner-box" *ngIf="isLoading">
+  <mat-spinner class="spinner" diameter="50"></mat-spinner>
+  <div style="position: relative; top: -2.2rem; left: 4rem">
+    <h3>Cargando datos...</h3>
+  </div>
+</ng-container>
+
 <!-- Montamos el formulario para recibir los datos introducidos por el usuario -->
 <mat-card class="form-box" class="full-width">
   <mat-card-header>
@@ -26,7 +34,7 @@
               name="email"
               [(ngModel)]="log.email"
               required
-              pattern="[-a-zA-Z0-9~!$%^&amp;*_=+}{'?]+(\.[-a-zA-Z0-9~!$%^&amp;*_=+}{'?]+)*@([a-zA-Z0-9_][-a-zA-Z0-9_]*(\.[-a-zA-Z0-9_]+)*\.([cC][oO][mM]))(:[0-9]{1,5})?"
+              pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$"
               autocomplete="off"
               (keyup.enter)="checkUser()"
             />

@@ -20,6 +20,14 @@
     <button mat-menu-item routerLinkActive="active" routerLink="horarios">
       Horarios
     </button>
+    <button
+      mat-menu-item
+      routerLinkActive="active"
+      routerLink="odoo"
+      *ngIf="cache.tipoUsuario == 'admin'"
+    >
+      Intranet
+    </button>
   </mat-menu>
 
   <button mat-icon-button [matMenuTriggerFor]="appMenu" id="menu-icon">

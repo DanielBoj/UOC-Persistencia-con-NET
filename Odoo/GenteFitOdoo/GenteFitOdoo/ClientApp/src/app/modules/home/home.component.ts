@@ -52,6 +52,9 @@ export class HomeComponent implements OnInit {
   // Flag para controlar la barra de navegación
   showHeader: boolean = false;
 
+  // Flag para el control de carga de datos
+  isLoading: boolean = false;
+
   // Controles del formulario
   @ViewChild('loginForm') loginForm: NgForm = new NgForm([], []);
 
@@ -70,13 +73,19 @@ export class HomeComponent implements OnInit {
     // Ocultamos la navegación
     this.displayService.setShowHeader(false);
 
+    // Mostramos un spinner mientras cargan los datos
+    this.isLoading = true;
+
     // Obtenemos los usuarios de la API
     this.subscripts.push(this.users$ = this.api.getUsers().subscribe(
       (users) => {
         // Cargamos los datos desde el observable recibido de la API
         this.users = users;
+
+        // Ocultamos el spinner
+        this.isLoading = false;
       }
-    ))
+    ));
 
   }
 

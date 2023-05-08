@@ -142,9 +142,4 @@ export class EditclienteComponent implements OnInit, OnDestroy {
 
   // Creamos una acción para el snackbar de confirmación que vuelva al componente clientes
   volver = () => this.router.navigate(['/clientes']);
-
-  // Obtenemos el estado
-  // getLocalStore = (): void => {
-  //   this.tipoUsuario = this.redux.getTipoUsuario().toString();
-  // }
 }

@@ -40,6 +40,10 @@ export class OdooComponent implements OnInit, OnDestroy {
   // Lista de categorías de productos
   categorias: string[] = ProductoCategorias;
 
+  // Título y subtítulo del componente
+  title: string = 'Pasarela Comercial Odoo'
+  subtitle: string = 'Información sobre los clientes, proveedores y productos en venta en los gimnasios Gente Fit'
+
   // Modelo para el formulario de edición y creación de clientes
   clienteModel: Cliente = {
     id: '',
@@ -61,7 +65,7 @@ export class OdooComponent implements OnInit, OnDestroy {
 
   // Modelo para el formulario de edición y creación de proveedores
   proveedorModel: Proveedor = {
-    id: '',
+    id: 0,
     name: '',
     nif: '',
     direccion: {
@@ -77,7 +81,7 @@ export class OdooComponent implements OnInit, OnDestroy {
 
   // Modelo para el formulario de edición y creación de productos
   productoModel: Producto = {
-    id: '',
+    id: 0,
     defaultCode: '',
     name: '',
     categ: '',
@@ -87,7 +91,7 @@ export class OdooComponent implements OnInit, OnDestroy {
 
   // Manejamos los datos para las tablas de clientes, proveedores y productos
   clientesDataSource: MatTableDataSource<Cliente> = new MatTableDataSource<Cliente>();
-  displayedClientesColumns: string[] = ['nombre', 'nif', 'email', 'telefono', 'direccion', 'detalle'];
+  displayedClientesColumns: string[] = ['nombre', 'email', 'telefono', 'direccion', 'detalle'];
   proveedoresDataSource: MatTableDataSource<Proveedor> = new MatTableDataSource<Proveedor>();
   displayedProveedoresColumns: string[] = ['name', 'nif', 'email', 'phone', 'website', 'direccion'];
   productosDataSource: MatTableDataSource<Producto> = new MatTableDataSource<Producto>();
@@ -201,9 +205,12 @@ export class OdooComponent implements OnInit, OnDestroy {
   crearCliente = () => {
     // Nos aseguramos de que el id sea correcto
     this.clienteModel.id = '';
+    // Nos aseguramos de que no haya 0 a la izquierda en el CP
+    this.clienteModel.direccion.cp = parseInt(this.clienteModel.direccion.cp.toString().replace(/^0+/, ''));
 
     // Seteamos un género por defecto
     this.clienteModel.genero = 4;
+    this.clienteModel.tipo = 'cliente';
 
     // Creamos el cliente que vamos a enviar
     const toSave: Cliente = this.clienteModel
@@ -238,7 +245,9 @@ export class OdooComponent implements OnInit, OnDestroy {
   // Acción para crear un proveedor
   crearProveedor = () => {
     // Nos aseguramos de que el id sea correcto
-    this.proveedorModel.id = '';
+    this.proveedorModel.id = 0;
+
+    this.proveedorModel.direccion.cp = parseInt(this.proveedorModel.direccion.cp.toString().replace(/^0+/, ''));
 
     // Creamos el proveedor que vamos a enviar
     const toSave: Proveedor = this.proveedorModel
@@ -272,7 +281,9 @@ export class OdooComponent implements OnInit, OnDestroy {
   // Acción para crear un producto
   crearProducto = () => {
     // Nos aseguramos de que el id sea correcto
-    this.productoModel.id = '';
+    this.productoModel.id = 0;
+    this.productoModel.listPrice = this.productoModel.standardPrice;
+    this.productoModel.id = 0;
 
     // Creamos el producto que vamos a enviar
     const toSave: Producto = this.productoModel
@@ -325,7 +336,7 @@ export class OdooComponent implements OnInit, OnDestroy {
 
     // Limpiamos el formulario de proveedores
     this.proveedorModel = {
-      id: '',
+      id: 0,
       name: '',
       nif: '',
       direccion: {
@@ -341,7 +352,7 @@ export class OdooComponent implements OnInit, OnDestroy {
 
     // Limpiamos el formulario de productos
     this.productoModel = {
-      id: '',
+      id: 0,
       defaultCode: '',
       name: '',
       categ: '',

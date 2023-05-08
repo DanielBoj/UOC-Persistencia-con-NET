@@ -135,7 +135,7 @@ export class CentroComponent implements OnInit, OnDestroy {
       { name: 'Descripción', value: centro.descripcion },
       { name: 'Dirección', value: centro.direccion.domicilio },
       { name: 'Población', value: centro.direccion.poblacion },
-      { name: 'Código postal', value: centro.direccion.cp },
+      { name: 'Código postal', value: centro.direccion.cp as number },
       { name: 'País', value: centro.direccion.pais },
       { name: 'Teléfono', value: centro.telefono },
       { name: 'Email', value: centro.email }
