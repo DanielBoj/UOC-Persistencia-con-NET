@@ -2,7 +2,8 @@
 # Importamos la librería para crear la API y enviar objetos JSON
 from flask import Flask, request
 import json
-# Importamos nuestro módulos read_odoo_controller
+# Importamos nuestras clases de conexión y controladores
+from odoo_connector import OdooConnector
 from read_odoo_controller import getClientes, getProductos, getProveedores
 from write_odoo_controller import createCliente, createProducto, createProveedor
 
@@ -96,4 +97,11 @@ def create_proveedor():
 
 # Ejecutamos la aplicación
 if __name__ == '__main__':
-    app.run(port=5005, debug=True)
+    app.run(port=5005, debug=False)
+
+    # Abrimos la conexión con Odoo
+    connector = OdooConnector()
+    connector.start()
+
+    # Cerramos la conexión con Odoo
+    connector.stop()

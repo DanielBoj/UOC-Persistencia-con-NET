@@ -14,11 +14,18 @@ export class MenuComponent implements OnInit {
   cache$: Subscription = new Subscription();
   cache!: Cache;
 
+  // Obtenmos el tipo de usuario
+  tipoUsuario!: string;
+
   constructor(private redux: ReduxService) { }
 
   ngOnInit(): void {
+    // Obtenemos los datos dela memoria caché
     this.cache$ = this.redux.getCache().subscribe((data: any) => {
-      this.cache = data;
+      this.cache = data
+
+      // Obtenemos el tipo de usuario
+      this.tipoUsuario = data.tipoUsuario;
     });
   }
 }

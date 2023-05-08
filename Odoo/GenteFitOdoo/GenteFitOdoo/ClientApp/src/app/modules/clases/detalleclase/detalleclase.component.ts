@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Clase } from 'src/app/models/interfaces/clase.model';
 import { ClasesService } from 'src/app/services/clases.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-detalleclase',
@@ -30,8 +31,18 @@ export class DetalleclaseComponent implements OnInit, OnDestroy {
     plazas: 0,
   };
 
+  // URL anterior
+  previousUrl!: string;
+
   constructor(private route: ActivatedRoute,
-    private api: ClasesService) { }
+    private api: ClasesService,
+    private location: Location) {
+    // Almacena la URL anterior en la variable previousUrl
+    this.location.onUrlChange(
+      (url: string) => {
+        this.previousUrl = url;
+      });
+  }
 
   ngOnInit(): void {
     // Obtenemos la id de la ruta
@@ -58,5 +69,9 @@ export class DetalleclaseComponent implements OnInit, OnDestroy {
     this.route.params.subscribe(params => {
       this.idClase = params['id'];
     });
+  }
+
+  goBack = () => {
+    this.location.back();
   }
 }

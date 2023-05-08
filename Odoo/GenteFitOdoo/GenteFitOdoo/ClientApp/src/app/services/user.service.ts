@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, map, catchError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-
 import { User, UserBody } from '../models/interfaces/user.model';
-
-import { environment } from '../../environments/environment';
+import { environment as env } from '../../environments/environment';
 import { Cliente } from '../models/interfaces/cliente.model';
 
 @Injectable({
@@ -12,14 +10,14 @@ import { Cliente } from '../models/interfaces/cliente.model';
 })
 export class UserService {
 
-  private url: string = 'http://localhost:5000/api';
+  private url: string = `${env.api}` //'http://localhost:5000/api';
 
   constructor(private http: HttpClient) { }
 
   // Obtenemos todos los usuarios
   getUsers = (): Observable<any> => {
     // Generamos la URL para la petición
-    const url = `${this.url}/users`;
+    const url = `${this.url}users`;
 
     // Realizamos la petición
     // Obtenemos los datos de la api, nos devuelve un array de usuarios

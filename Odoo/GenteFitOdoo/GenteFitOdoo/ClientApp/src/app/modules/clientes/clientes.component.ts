@@ -193,6 +193,10 @@ export class ClientesComponent implements OnInit, OnDestroy {
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.dataSourceReservas.paginator = this.paginator;
+    this.dataSourceReservas.sort = this.sort;
+    this.dataSourceEsperas.paginator = this.paginator;
+    this.dataSourceEsperas.sort = this.sort;
   }
 
   // Todos los usuario

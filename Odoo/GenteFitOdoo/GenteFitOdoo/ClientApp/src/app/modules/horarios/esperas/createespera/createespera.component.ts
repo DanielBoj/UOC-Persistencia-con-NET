@@ -83,8 +83,6 @@ export class CreateesperaComponent {
       genero: 0,
       iban: '',
       tipo: 'cliente',
-      reservas: undefined,
-      esperas: undefined
     }
   }
 

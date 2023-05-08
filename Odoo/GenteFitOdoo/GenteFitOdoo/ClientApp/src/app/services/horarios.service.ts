@@ -4,15 +4,16 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Horario } from '../models/interfaces/horario.model';
 import { Espera } from '../models/interfaces/espera.model';
 import { Reserva } from '../models/interfaces/reserva.model';
+import { environment as env } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HorariosService {
 
-  private urlHorario: string = 'http://localhost:5000/api/horario';
-  private urlReserva: string = 'http://localhost:5000/api/reserva';
-  private urlEspera: string = 'http://localhost:5000/api/espera';
+  private urlHorario: string = `${env.api}horario` //'http://localhost:5000/api/horario';
+  private urlReserva: string = `${env.api}reserva` //'http://localhost:5000/api/reserva';
+  private urlEspera: string = `${env.api}espera` //'http://localhost:5000/api/espera';
 
   res$: Subscription = new Subscription();
   res: any;

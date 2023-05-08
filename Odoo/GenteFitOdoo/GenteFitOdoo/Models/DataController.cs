@@ -1,4 +1,4 @@
-﻿using GenteFit.Controllers;
+﻿using GenteFitOdoo.Controllers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GenteFit.Models

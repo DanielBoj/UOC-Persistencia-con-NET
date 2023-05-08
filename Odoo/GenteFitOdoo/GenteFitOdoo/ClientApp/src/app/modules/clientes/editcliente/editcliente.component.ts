@@ -51,8 +51,6 @@ export class EditclienteComponent implements OnInit, OnDestroy {
     telefono: '',
     genero: 0,
     iban: '',
-    reservas: [],
-    esperas: [],
     tipo: 'cliente'
   };
 

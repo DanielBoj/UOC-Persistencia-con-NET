@@ -25,5 +25,17 @@
         Horario
       </button>
     </mat-grid-tile>
+    <!-- Personalizamos este botón para que ocupe los dos espacios y solo lo
+    mostramos si el usuario es admin -->
+    <mat-grid-tile
+      class="tile"
+      colspan="2"
+      rowspan="1"
+      *ngIf="tipoUsuario == 'admin'"
+    >
+      <button mat-fab class="fab-button mat-button" routerLink="/odoo">
+        Intranet
+      </button>
+    </mat-grid-tile>
   </mat-grid-list>
 </ng-container>

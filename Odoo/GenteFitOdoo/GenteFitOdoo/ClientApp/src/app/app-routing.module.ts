@@ -16,6 +16,7 @@ import { EditclienteComponent } from './modules/clientes/editcliente/editcliente
 import { DetailclienteComponent } from './modules/clientes/detailcliente/detailcliente.component';
 import { ReservasComponent } from './modules/horarios/reservas/reservas.component';
 import { EsperasComponent } from './modules/horarios/esperas/esperas.component';
+import { OdooComponent } from './modules/odoo/odoo.component';
 
 const routes: Routes = [
   {
@@ -68,6 +69,9 @@ const routes: Routes = [
   },
   {
     path: 'esperas', component: EsperasComponent, pathMatch: 'full'
+  },
+  {
+    path: 'odoo', component: OdooComponent, pathMatch: 'full'
   },
   {
     path: '**', redirectTo: 'home', pathMatch: 'full'

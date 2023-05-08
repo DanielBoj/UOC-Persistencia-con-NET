@@ -1,8 +1,8 @@
-﻿using GenteFit.Controllers.ControllersMongoDB;
-using GenteFit.Models;
-using GenteFit.Models.Collections;
+﻿using GenteFit.Models;
 using GenteFit.Models.Usuarios;
+using GenteFitOdoo.Controllers.Controllers.ControllersMongoDB;
 using GenteFitOdoo.Controllers.Controllers.ControllersPython;
+//using GenteFitOdoo.Controllers.ControllersPython;
 using GenteFitOdoo.Models;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
@@ -23,7 +23,7 @@ using MongoDB.Driver;
  que manejará endpoints y, finalmente, hemos d eespecificar los verbos de cada acción antes de cada uno
  de los métodos y las rutas concretas para estos, por ejemplo, [HttpGet("/centro/{id}")], mediante {id}
  indicamos que recibiremos la id del objeto por parámetro en la URL. */
-namespace GenteFit.Controllers
+namespace GenteFitOdoo.Controllers
 {
     [Route("api")]
     [ApiController]
@@ -56,7 +56,7 @@ namespace GenteFit.Controllers
                 if (!await dbEmpleado.IsEmpty())
                 {
                     // Cargamos una lista temporal con los empleados
-                    List<Empleado> empleados = (await dbEmpleado.GetAllEmpleados());
+                    List<Empleado> empleados = await dbEmpleado.GetAllEmpleados();
 
                     // Seteamos el tipo de usuario
                     empleados.ForEach(usr => usr.Tipo = "empleado");
@@ -69,7 +69,7 @@ namespace GenteFit.Controllers
                 if (!await dbAdmin.IsEmpty())
                 {
                     // Cargamos una lista temporal con los administradores
-                    List<Administrador> admins = (await dbAdmin.GetAllAdministradores());
+                    List<Administrador> admins = await dbAdmin.GetAllAdministradores();
 
                     // Seteamos el tipo de usuario
                     admins.ForEach(usr => usr.Tipo = "admin");
@@ -374,6 +374,7 @@ namespace GenteFit.Controllers
         {
             // Creamos el controlador de MongoDB
             ClienteController db = new();
+            PythonApiController pythonApi = new();
 
             // Comprobamos que los datos sean correctos
             if (cliente is null)
@@ -388,6 +389,9 @@ namespace GenteFit.Controllers
                 {
                     return BadRequest("El cliente ya existe");
                 }
+
+                // Producto 4: Añadimos una función para crear el cliente en Odoo
+                await pythonApi.CreateCliente(cliente);
 
                 // Creamos el cliente
                 return await db.Create(cliente) ? Ok(true)
@@ -1442,6 +1446,7 @@ namespace GenteFit.Controllers
                 // Obtenemos los clientes de MongoDB.
                 List<Cliente> clientesMongo = await dbCliente.GetAllClientes();
 
+                // Actualizamos las listas de clientes de Odoo y MongoDB.
                 // Iteramos la lista de clientes de Odoo.
                 clientesOdoo.ForEach(async (cliente) =>
                 {
@@ -1455,7 +1460,18 @@ namespace GenteFit.Controllers
                     // TODO -> Añadir a clientes de MongoDB a Odoo
                 });
 
-                // Actualizamos la lista de clientes de Odoo.
+                // Iteramos la lista de clientes de MongoDB.
+                clientesMongo.ForEach(async (cliente) =>
+                {
+                    // Comprobamos si el cliente existe en Odoo.
+                    if (!clientesOdoo.Where(clienteOdoo => clienteOdoo.Nif.Equals(cliente.Nif)).Any())
+                    {
+                        // Si no existe, lo añadimos a Odoo.
+                        await python.CreateCliente(cliente);
+                    }
+                });
+
+                // Actualizamos la lista de clientes de Odoo antes de mostrarla.
                 clientesOdoo = await python.GetAllClientes();
 
                 // Devolvemos el resultado.

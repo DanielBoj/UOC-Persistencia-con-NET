@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { Observable, of, map, catchError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Centro } from '../models/interfaces/centro.model';
+import { environment as env } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CentroService {
 
-  private url: string = 'http://localhost:5000/api/centro';
+  private url: string = `${env.api}centro` //'http://localhost:5000/api/centro';
 
   constructor(private http: HttpClient) { }
 

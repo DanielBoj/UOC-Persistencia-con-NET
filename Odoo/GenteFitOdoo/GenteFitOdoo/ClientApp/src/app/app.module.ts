@@ -26,6 +26,7 @@ import { CreatereservaComponent } from './modules/horarios/reservas/createreserv
 import { CreateesperaComponent } from './modules/horarios/esperas/createespera/createespera.component';
 import { EditclienteComponent } from './modules/clientes/editcliente/editcliente.component';
 import { DetailclienteComponent } from './modules/clientes/detailcliente/detailcliente.component';
+import { OdooComponent } from './modules/odoo/odoo.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { DetailclienteComponent } from './modules/clientes/detailcliente/detailc
     CreateesperaComponent,
     EditclienteComponent,
     DetailclienteComponent,
+    OdooComponent,
   ],
   imports: [
     BrowserModule/*.withServerTransition({ appId: 'ng-cli-universal' })*/,

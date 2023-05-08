@@ -2,7 +2,7 @@
 using GenteFit.Models.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GenteFit.Controllers.ControllersMongoDB
+namespace GenteFitOdoo.Controllers.Controllers.ControllersMongoDB
 {
     [Route("api/[controller]")]
     [ApiController]

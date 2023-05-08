@@ -1,7 +1,5 @@
-﻿using Amazon.Runtime.Internal;
-using GenteFit.Models.Prototypes;
+﻿using GenteFit.Models.Prototypes;
 using GenteFit.Models.Usuarios;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using GenteFit.Models.Enums;

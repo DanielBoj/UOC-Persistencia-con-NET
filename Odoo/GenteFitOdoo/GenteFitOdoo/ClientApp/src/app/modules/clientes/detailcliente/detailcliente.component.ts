@@ -5,6 +5,7 @@ import { Genero } from 'src/app/models/genero';
 import { ReduxService } from 'src/app/services/redux.service';
 import { UserService } from 'src/app/services/user.service';
 import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-detailcliente',
@@ -47,7 +48,18 @@ export class DetailclienteComponent {
     { name: 'IBAN', value: '' },
   ]
 
-  constructor(private reduxService: ReduxService, private userService: UserService, private route: ActivatedRoute) { }
+  // URL anterior
+  previousUrl!: string;
+
+  constructor(private reduxService: ReduxService,
+    private userService: UserService,
+    private route: ActivatedRoute,
+    private location: Location) {
+    // Almacena la URL anterior en la variable previousUrl
+    this.location.onUrlChange((url: string) => {
+      this.previousUrl = url;
+    });
+  }
 
   ngOnInit(): void {
     // Primero obtenemos la ID de la url para poder buscar el cliente en la BD.
@@ -97,5 +109,10 @@ export class DetailclienteComponent {
       { name: 'Género', value: cliente.genero },
       { name: 'IBAN', value: cliente.iban },
     ]
+  }
+
+  // Función para volver a la página anterior
+  goBack = () => {
+    this.location.back();
   }
 }
