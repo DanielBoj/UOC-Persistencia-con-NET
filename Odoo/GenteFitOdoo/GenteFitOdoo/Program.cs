@@ -16,8 +16,8 @@ static void StartPythonApi()
     {
         StartInfo = new ProcessStartInfo
         {
-            FileName = "python",
-            Arguments = "API.py",
+            FileName = "pipenv",
+            Arguments = "run python API.py",
             WorkingDirectory = "./Resources/OddoRepositories/",
             UseShellExecute = false,
             RedirectStandardOutput = true,

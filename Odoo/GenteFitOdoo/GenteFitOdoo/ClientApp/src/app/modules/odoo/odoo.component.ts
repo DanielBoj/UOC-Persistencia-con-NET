@@ -238,6 +238,22 @@ export class OdooComponent implements OnInit, OnDestroy {
     this.limpiarFormularios();
 
     // Actualizamos
+    this.subscrips.push(this.clientes$ = this.odoo.getClientes().subscribe(
+      (clientes) => {
+        // Cargamos la lista de clientes
+        this.clientes = clientes;
+
+        // Cargamos los datos de la tabla dinámica
+        this.clientesDataSource = new MatTableDataSource<Cliente>(this.clientes);
+        this.clientesDataSource.paginator = this.paginator;
+        this.clientesDataSource.sort = this.sort;
+
+        // Filtramos los datos de la tabla
+        this.clientesDataSource.filterPredicate = (data, filter) => {
+          const dataStr = JSON.stringify(data).toLowerCase();
+          return dataStr.indexOf(filter) != -1;
+        }
+      }));
     this.clientesTabla?.renderRows();
 
     // Mostramos el mensaje de éxito
@@ -278,6 +294,28 @@ export class OdooComponent implements OnInit, OnDestroy {
     this.limpiarFormularios();
 
     // Actualizamos
+    this.subscrips.push(this.proveedores$ = this.odoo.getProveedores().subscribe(
+      (proveedores) => {
+        // Cargamos la lista de nombres de proveedores
+        proveedores.forEach((proveedor: any) => {
+          // Añadimos el nombre del proveedor a la lista
+          this.nombresProveedores.push(proveedor.name);
+          // Añadimos el proveedor a la lista
+          this.proveedores.push(proveedor);
+
+          // Cargamos los datos de la tabla dinámica
+          this.proveedoresDataSource = new MatTableDataSource<Proveedor>(this.proveedores);
+          this.proveedoresDataSource.paginator = this.paginator;
+          this.proveedoresDataSource.sort = this.sort;
+
+          // Filtramos los datos de la tabla
+          this.proveedoresDataSource.filterPredicate = (data, filter) => {
+            const dataStr = JSON.stringify(data).toLowerCase();
+            return dataStr.indexOf(filter) != -1;
+          }
+        });
+      }
+    ));
     this.proveedoresTabla?.renderRows();
 
     // Mostramos el mensaje de éxito
@@ -317,6 +355,45 @@ export class OdooComponent implements OnInit, OnDestroy {
     this.limpiarFormularios();
 
     // Actualizamos
+    this.subscrips.push(this.proveedores$ = this.odoo.getProveedores().subscribe(
+      (proveedores) => {
+        // Cargamos la lista de nombres de proveedores
+        proveedores.forEach((proveedor: any) => {
+          // Añadimos el nombre del proveedor a la lista
+          this.nombresProveedores.push(proveedor.name);
+          // Añadimos el proveedor a la lista
+          this.proveedores.push(proveedor);
+
+          // Cargamos los datos de la tabla dinámica
+          this.proveedoresDataSource = new MatTableDataSource<Proveedor>(this.proveedores);
+          this.proveedoresDataSource.paginator = this.paginator;
+          this.proveedoresDataSource.sort = this.sort;
+
+          // Filtramos los datos de la tabla
+          this.proveedoresDataSource.filterPredicate = (data, filter) => {
+            const dataStr = JSON.stringify(data).toLowerCase();
+            return dataStr.indexOf(filter) != -1;
+          }
+        });
+      }
+    ));
+
+    this.subscrips.push(this.productos$ = this.odoo.getProductos().subscribe(
+      (productos) => {
+        // Cargamos la lista de productos
+        this.productos = productos;
+
+        // Cargamos los datos de la tabla dinámica
+        this.productosDataSource = new MatTableDataSource<Producto>(this.productos);
+        this.productosDataSource.paginator = this.paginator;
+        this.productosDataSource.sort = this.sort;
+
+        // Filtramos los datos de la tabla
+        this.productosDataSource.filterPredicate = (data, filter) => {
+          const dataStr = JSON.stringify(data).toLowerCase();
+          return dataStr.indexOf(filter) != -1;
+        }
+      }));
     this.productosTabla?.renderRows();
 
     // Mostramos el mensaje de éxito

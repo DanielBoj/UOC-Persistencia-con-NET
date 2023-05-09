@@ -1,6 +1,7 @@
 ﻿using GenteFit.Models.Repositories;
 using GenteFitOdoo.Models.Repositories;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Diagnostics;
@@ -34,6 +35,8 @@ namespace GenteFitOdoo
 
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
+            services.AddSpaStaticFiles(configuration => configuration.RootPath = "wwwroot/dist");
+
             // Configuración de MongoDB
             services.Configure<DataConnectionSettings>(configuration.GetSection("GenteFitDataBase"));
             services.AddSingleton<DataConnection>();
@@ -81,6 +84,20 @@ namespace GenteFitOdoo
 
             // app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseSpaStaticFiles();
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "ClientApp"; // Ruta de la aplicación de Angular
+
+                if (app.Environment.IsDevelopment())
+                {
+                    spa.UseAngularCliServer(npmScript: "start"); // Inicia el servidor de Angular cuando la aplicación está en modo de desarrollo
+                }
+                else
+                {
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:44470"); // Configura la ruta del servidor de Angular en producción
+                }
+            });
 
             app.UseRouting();
 
