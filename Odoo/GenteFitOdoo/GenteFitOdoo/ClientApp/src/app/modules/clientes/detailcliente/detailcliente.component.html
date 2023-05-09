@@ -1,0 +1,35 @@
+<!-- Vista detalles del cliente mediante Material Card -->
+<header>
+  <button mat-fab class="mat-button" color="primary" (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+</header>
+<ng-container class="card-box">
+  <!-- Card para mostrar los detalles del cliente -->
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <h2>Detalle del cliente</h2>
+      </mat-card-title>
+      <mat-card-subtitle>
+        <h3>{{ nombreCliente }}</h3>
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content *ngFor="let element of clienteData">
+      <mat-grid-list cols="2" rowHeight="6rem">
+        <mat-grid-tile
+          ><h3>{{ element.name }}</h3></mat-grid-tile
+        >
+        <mat-grid-tile
+          ><p>{{ element.value }}</p></mat-grid-tile
+        >
+      </mat-grid-list>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-fab class="mat-button" color="primary" routerLink="/clientes">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</ng-container>

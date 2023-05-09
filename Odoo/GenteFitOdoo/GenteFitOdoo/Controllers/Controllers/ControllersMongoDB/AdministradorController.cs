@@ -5,7 +5,7 @@ using GenteFit.Models.Usuarios;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
-namespace GenteFit.Controllers.ControllersMongoDB
+namespace GenteFitOdoo.Controllers.Controllers.ControllersMongoDB
 {
     /* Controlador DTO para la clase Administrador y el DAO AdministradorCollection. 
       Simplificamos al máximo la clase ya que la lógica irá en la API central. */
@@ -21,7 +21,7 @@ namespace GenteFit.Controllers.ControllersMongoDB
         public async Task<bool> Create(Administrador administrador) => await db.InsertAdministrador(administrador);
 
         public async Task<bool> Edit(Administrador administrador) => await db.UpdateAdministrador(administrador);
-        
+
         public async Task<bool> Delete(string id) => await db.DeleteAdministrador(id);
 
         // Comprobamos si existen documentos

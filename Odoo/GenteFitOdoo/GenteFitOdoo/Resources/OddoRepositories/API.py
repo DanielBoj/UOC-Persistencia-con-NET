@@ -2,7 +2,8 @@
 # Importamos la librería para crear la API y enviar objetos JSON
 from flask import Flask, request
 import json
-# Importamos nuestro módulos read_odoo_controller
+# Importamos nuestras clases de conexión y controladores
+from odoo_connector import OdooConnector
 from read_odoo_controller import getClientes, getProductos, getProveedores
 from write_odoo_controller import createCliente, createProducto, createProveedor
 
@@ -28,12 +29,6 @@ def get_clientes():
 def create_cliente():
     # Obtenemos los datos del cliente desde el body del request
     cliente = request.json
-
-    # Configuramos el NIF para que Odoo lo acepte
-    # Nos quedamos solo con los números del NIF
-    cliente['vat'] = cliente['vat'][0:9]
-    # Añadimos el prefijo del país
-    cliente['vat'] = f'ES{cliente["vat"]}'
 
     # Llamamos a la función de nuestro controlador
     cliente_id = createCliente(cliente)
@@ -97,3 +92,10 @@ def create_proveedor():
 # Ejecutamos la aplicación
 if __name__ == '__main__':
     app.run(port=5005, debug=True)
+
+    # Abrimos la conexión con Odoo
+    connector = OdooConnector()
+    connector.connect()
+
+    # Cerramos la conexión con Odoo
+    connector.disconnect()

@@ -3,7 +3,7 @@ using GenteFit.Models.Repositories.Collections;
 using GenteFit.Models.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GenteFit.Controllers.ControllersMongoDB
+namespace GenteFitOdoo.Controllers.Controllers.ControllersMongoDB
 {
     /* Controlador DTO para la clase Centro y el DAO CentroCollection. 
       Simplificamos al máximo la clase ya que la lógica irá en la API central. */
@@ -19,7 +19,7 @@ namespace GenteFit.Controllers.ControllersMongoDB
         public async Task<bool> Create(Centro centro) => await db.InsertCentro(centro);
 
         public async Task<bool> Edit(Centro centro) => await db.UpdateCentro(centro);
-        
+
         public async Task<bool> Delete(string id) => await db.DeleteCentro(id);
     }
 }

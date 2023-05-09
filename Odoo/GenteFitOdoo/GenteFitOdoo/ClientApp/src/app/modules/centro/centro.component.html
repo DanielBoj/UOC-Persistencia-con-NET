@@ -1,0 +1,199 @@
+<header>
+  <button mat-fab class="mat-button" color="primary" routerLink="/menu">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+</header>
+<ng-container class="full-width">
+  <mat-card class="detail-box" class="full-width">
+    <mat-card-header class="full-width">
+      <mat-card-title>
+        <h1>{{ title }}</h1>
+      </mat-card-title>
+      <mat-card-subtitle>
+        <h2>{{ subtitle }}</h2>
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content *ngFor="let element of centroData">
+      <mat-grid-list cols="2" rowHeight="6rem" class="full-width">
+        <mat-grid-tile
+          ><h3>{{ element.name }}</h3></mat-grid-tile
+        >
+        <mat-grid-tile
+          ><p>{{ element.value }}</p></mat-grid-tile
+        >
+      </mat-grid-list>
+    </mat-card-content>
+    <mat-card-actions *ngIf="tipoUsuario == 'admin'">
+      <button
+        mat-fab
+        class="mat-button"
+        [hidden]="showEdit"
+        (click)="showEdit = !showEdit"
+      >
+        Editar
+      </button>
+      <!-- <button mat-button (click)="goBack()">Volver</button> -->
+    </mat-card-actions>
+  </mat-card>
+
+  <ng-container *ngIf="showEdit" class="full-width">
+    <mat-card class="form-box">
+      <mat-card-header>
+        <mat-card-title>
+          <h1>Editar Centro</h1>
+        </mat-card-title>
+        <mat-card-subtitle>
+          <h2>Introduce los nuevos datos</h2>
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <ng-form #centroForm="ngForm">
+          <div>
+            <mat-form-field class="full-width">
+              <mat-label>Nombre</mat-label>
+              <input
+                class="form-control"
+                type="text"
+                matInput
+                placeholder="Nombre"
+                name="nombre"
+                [(ngModel)]="centroModel.nombre"
+                required
+                ng-valid
+              />
+              <mat-hint>Introduce el nombre del centro</mat-hint>
+            </mat-form-field>
+          </div>
+        </ng-form>
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>Descripción</mat-label>
+            <input
+              class="form-control"
+              type="text"
+              matInput
+              placeholder="Descripcion"
+              name="descripcion"
+              [(ngModel)]="centroModel.descripcion"
+              required
+              ng-valid
+            />
+            <mat-hint>Introduce la descripción del centro</mat-hint>
+          </mat-form-field>
+        </div>
+        <div><h4>Dirección</h4></div>
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>Domicilio</mat-label>
+            <input
+              class="form-control"
+              type="text"
+              matInput
+              placeholder="Domicilio"
+              name="domicilio"
+              [(ngModel)]="centroModel.direccion.domicilio"
+              required
+              ng-valid
+            />
+            <mat-hint>Introduce el domicilio del centro</mat-hint>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>Población</mat-label>
+            <input
+              class="form-control"
+              type="text"
+              matInput
+              placeholder="Poblacion"
+              name="poblacion"
+              [(ngModel)]="centroModel.direccion.poblacion"
+              required
+              ng-valid
+            />
+            <mat-hint>Introduce la población del centro</mat-hint>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>Código Postal</mat-label>
+            <input
+              class="form-control"
+              type="text"
+              matInput
+              placeholder="CP"
+              name="cp"
+              [(ngModel)]="centroModel.direccion.cp"
+              required
+              ng-valid
+            />
+            <mat-hint>Introduce el código postal del centro</mat-hint>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>País</mat-label>
+            <input
+              class="form-control"
+              type="text"
+              matInput
+              placeholder="Pais"
+              name="pais"
+              [(ngModel)]="centroModel.direccion.pais"
+              required
+              ng-valid
+            />
+            <mat-hint>Introduce el país del centro</mat-hint>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>Teléfono</mat-label>
+            <input
+              class="form-control"
+              type="text"
+              matInput
+              placeholder="Telefono"
+              name="telefono"
+              [(ngModel)]="centroModel.telefono"
+              required
+              ng-valid
+            />
+            <mat-hint>Introduce el teléfono del centro</mat-hint>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field class="full-width">
+            <mat-label>Email</mat-label>
+            <input
+              class="form-control"
+              type="text"
+              matInput
+              placeholder="Email"
+              name="email"
+              [(ngModel)]="centroModel.email"
+              required
+              ng-valid
+            />
+            <mat-hint>Introduce el email del centro</mat-hint>
+            <mat-error *ngIf="!validateEmail()">{{
+              getErrorMessage()
+            }}</mat-error>
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-fab class="mat-button" (click)="editCentro()">
+          Aceptar
+        </button>
+        <button
+          mat-fab
+          class="mat-button"
+          (click)="showEdit = !showEdit; resetCentro()"
+        >
+          Cancelar
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </ng-container>
+</ng-container>

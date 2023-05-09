@@ -27,6 +27,7 @@
               "src/assets"
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/deeppurple-amber.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.css"
             ],
@@ -95,6 +96,7 @@
               "src/assets"
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/deeppurple-amber.css",
               "src/styles.css"
             ],
             "scripts": []
@@ -129,7 +131,6 @@
       }
     }
   },
-  "defaultProject": "GenteFitOdoo",
   "cli": {
     "analytics": "13546ee1-0fad-4be7-9fc1-9fe89da94da6"
   }

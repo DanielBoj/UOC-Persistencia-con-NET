@@ -1,0 +1,36 @@
+<section id="navigation" class="menu">
+  <img
+    src="../../../../assets/img/logo-gente-fit.gif"
+    alt="logo GenteFit"
+    id="banner"
+  />
+  <mat-menu #appMenu="matMenu">
+    <button mat-menu-item routerLinkActive="active" routerLink="menu">
+      Menu
+    </button>
+    <button mat-menu-item routerLinkActive="active" routerLink="centro">
+      Centro
+    </button>
+    <button mat-menu-item routerLinkActive="active" routerLink="clientes">
+      Cuenta
+    </button>
+    <button mat-menu-item routerLinkActive="active" routerLink="clases">
+      Clases
+    </button>
+    <button mat-menu-item routerLinkActive="active" routerLink="horarios">
+      Horarios
+    </button>
+    <button
+      mat-menu-item
+      routerLinkActive="active"
+      routerLink="odoo"
+      *ngIf="cache.tipoUsuario == 'admin'"
+    >
+      Intranet
+    </button>
+  </mat-menu>
+
+  <button mat-icon-button [matMenuTriggerFor]="appMenu" id="menu-icon">
+    <mat-icon>menu</mat-icon>
+  </button>
+</section>

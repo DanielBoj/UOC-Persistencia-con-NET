@@ -7,6 +7,8 @@ from odoo_connector import OdooConnector
 from DTO.cliente import ClienteData
 from DTO.producto import ProductoData
 from DTO.proveedor import ProveedorData
+# Importamos una librería para facilitar la conversión de los NIF
+import vatnumber
 
 # Creamos una instacia de la clase OdooConnector
 connector = OdooConnector()
@@ -17,6 +19,12 @@ connector.connect()
 
 
 def createCliente(cliente):
+    # Configuramos el NIF para que Odoo lo acepte
+    # Obtenemos el número del NIF
+    cliente['vat'] = cliente['vat'][:8]
+    # Añadimos el prefijo del país
+    cliente['vat'] = f'ESA{cliente["vat"]}'
+
     # Buscamos el id del país
     country_id = connector.search_read("res.country", [
         ("name", "=", cliente['country'])])[0]['id'] if connector.search_read("res.country", [("name", "=", cliente['country'])]) else 1
@@ -31,7 +39,7 @@ def createCliente(cliente):
         'zip': cliente['zip'],
         'city': cliente['city'],
         'country_id': country_id,
-        'vat': cliente['vat'],
+        # 'vat': cliente['vat'],
     })
 
     # Devolvemos el id del cliente creado
