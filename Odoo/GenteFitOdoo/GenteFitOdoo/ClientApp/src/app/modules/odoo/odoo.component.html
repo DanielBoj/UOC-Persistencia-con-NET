@@ -25,7 +25,7 @@
         </mat-form-field>
 
         <div class="mat-elevation-z8">
-          <table mat-table [dataSource]="clientesDataSource" matSort>
+          <table mat-table #clientes [dataSource]="clientesDataSource" matSort>
             <!-- Name Column -->
             <ng-container matColumnDef="nombre">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
@@ -307,7 +307,7 @@
         </mat-form-field>
 
         <div class="mat-elevation-z8">
-          <table mat-table [dataSource]="proveedoresDataSource" matSort>
+          <table mat-table #proveedores [dataSource]="proveedoresDataSource" matSort>
             <!-- Name Column -->
             <ng-container matColumnDef="name">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
@@ -607,7 +607,7 @@
         </mat-form-field>
 
         <div class="mat-elevation-z8">
-          <table mat-table [dataSource]="productosDataSource" matSort>
+          <table mat-table #productos [dataSource]="productosDataSource" matSort>
             <!-- Default Code Column -->
             <ng-container matColumnDef="defaultCode">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Código</th>

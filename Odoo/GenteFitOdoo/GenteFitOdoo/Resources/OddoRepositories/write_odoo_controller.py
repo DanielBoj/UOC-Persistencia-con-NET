@@ -7,8 +7,6 @@ from odoo_connector import OdooConnector
 from DTO.cliente import ClienteData
 from DTO.producto import ProductoData
 from DTO.proveedor import ProveedorData
-# Importamos una librería para facilitar la conversión de los NIF
-import vatnumber
 
 # Creamos una instacia de la clase OdooConnector
 connector = OdooConnector()

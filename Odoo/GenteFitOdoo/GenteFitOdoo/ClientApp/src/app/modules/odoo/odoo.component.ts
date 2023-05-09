@@ -100,6 +100,11 @@ export class OdooComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
+  // Actualizadores
+  @ViewChild('clientesTabla') clientesTabla: MatTable<any> | undefined;
+  @ViewChild('proveedoresTabla') proveedoresTabla: MatTable<any> | undefined;
+  @ViewChild('productosTabla') productosTabla: MatTable<any> | undefined;
+
   // Flags para las acciones secundarias
   flagCrearCliente: boolean = false;
   flagCrearProveedor: boolean = false;
@@ -232,6 +237,9 @@ export class OdooComponent implements OnInit, OnDestroy {
     // Limpiamos el formulario
     this.limpiarFormularios();
 
+    // Actualizamos
+    this.clientesTabla?.renderRows();
+
     // Mostramos el mensaje de éxito
     this.snackbar.open('Cliente editado correctamente', 'Cerrar', {
       duration: 3000,
@@ -269,6 +277,9 @@ export class OdooComponent implements OnInit, OnDestroy {
     // Limpiamos el formulario
     this.limpiarFormularios();
 
+    // Actualizamos
+    this.proveedoresTabla?.renderRows();
+
     // Mostramos el mensaje de éxito
     this.snackbar.open('Proveedor creado correctamente', 'Cerrar', {
       duration: 3000,
@@ -304,6 +315,9 @@ export class OdooComponent implements OnInit, OnDestroy {
 
     // Limpiamos el formulario
     this.limpiarFormularios();
+
+    // Actualizamos
+    this.productosTabla?.renderRows();
 
     // Mostramos el mensaje de éxito
     this.snackbar.open('Producto creado correctamente', 'Cerrar', {

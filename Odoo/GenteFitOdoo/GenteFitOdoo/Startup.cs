@@ -56,6 +56,8 @@ namespace GenteFitOdoo
                 });
             });
 
+            services.AddControllers();
+
             // Configuración de la API de Python
             services.AddScoped<HttpClient>(s =>
             {
@@ -83,6 +85,7 @@ namespace GenteFitOdoo
             app.UseRouting();
 
             app.UseCors();
+            app.UseCors(builder => builder.WithOrigins("http://localhost:44470"));
 
             app.UseEndpoints(endpoints =>
             {
