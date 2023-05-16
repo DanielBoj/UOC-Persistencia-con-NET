@@ -1,0 +1,192 @@
+<ng-container class="spinner-box" *ngIf="isLoading">
+    <mat-spinner class="spinner" diameter="50"></mat-spinner>
+    <div style="position: relative; top: -2.2rem; left: 4rem">
+        <h3>Cargando datos...</h3>
+    </div>
+</ng-container>
+
+<ng-container
+    class="productos-odoo-table"
+    *ngIf="cache.tipoUsuario == 'admin' && !isLoading"
+>
+    <mat-form-field appearance="fill">
+        <mat-label>Filtro</mat-label>
+        <input
+            matInput
+            (keyup)="applyFilter($event)"
+            placeholder="Producto"
+            #input
+        />
+    </mat-form-field>
+
+    <div class="mat-elevation-z8">
+        <table mat-table #productos [dataSource]="productosDataSource" matSort>
+            <!-- Default Code Column -->
+            <ng-container matColumnDef="defaultCode">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Código
+                </th>
+                <td mat-cell *matCellDef="let row">
+                    {{ row.defaultCode }}
+                </td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Nombre
+                </th>
+                <td mat-cell *matCellDef="let row">
+                    {{ row.name }}
+                </td>
+            </ng-container>
+
+            <!-- Categ Column -->
+            <ng-container matColumnDef="categ">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Categoría
+                </th>
+                <td mat-cell *matCellDef="let row">
+                    {{ row.categ }}
+                </td>
+            </ng-container>
+
+            <!-- Precio Column -->
+            <ng-container matColumnDef="standardPrice">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Precio
+                </th>
+                <td mat-cell *matCellDef="let row">{{ row.standardPrice }}€</td>
+            </ng-container>
+
+            <tr
+                mat-header-row
+                *matHeaderRowDef="displayedProductosColumns"
+            ></tr>
+            <tr
+                mat-row
+                *matRowDef="let row; columns: displayedProductosColumns"
+            ></tr>
+
+            <!-- Row shown when there is no matching data. -->
+            <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="4">
+                    No existen datos para el filtro "{{ input.value }}"
+                </td>
+            </tr>
+        </table>
+
+        <mat-paginator
+            [pageSizeOptions]="[5, 10, 20]"
+            showFirstLastButtons
+            aria-label="Select page productos"
+        >
+        </mat-paginator>
+    </div>
+
+    <div class="action-buttons">
+        <button
+            mat-fab
+            class="mat-button fab-button"
+            color="primary"
+            (click)="flagCrearProducto = !flagCrearProducto"
+        >
+            Nuevo Producto
+        </button>
+    </div>
+</ng-container>
+
+<!-- Formulario de creación de producto -->
+<ng-container *ngIf="flagCrearProducto">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Crear Producto</mat-card-title>
+            <mat-card-subtitle>Introduce los nuevos datos</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <ng-form #productoForm="ngForm">
+                <!-- Nombre -->
+                <div>
+                    <mat-form-field class="full-width">
+                        <mat-label>Nombre</mat-label>
+                        <input
+                            class="form-control"
+                            type="text"
+                            matInput
+                            placeholder="Nombre"
+                            name="nombre"
+                            [(ngModel)]="productoModel.name"
+                            required
+                            ng-valid
+                            autocomplete="off"
+                        />
+                        <mat-hint>Introduce tu nombre</mat-hint>
+                    </mat-form-field>
+                </div>
+
+                <!--  Categoría: Select -->
+                <div>
+                    <mat-form-field class="full-width">
+                        <mat-label>Categoría</mat-label>
+                        <mat-select
+                            placeholder="Categoría"
+                            name="categ"
+                            [(ngModel)]="productoModel.categ"
+                            required
+                            ng-valid
+                        >
+                            <mat-option
+                                *ngFor="let categ of categorias"
+                                [value]="categ"
+                            >
+                                {{ categ }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-hint>Introduce la categoría del producto</mat-hint>
+                    </mat-form-field>
+                </div>
+
+                <!-- Precio -->
+                <div>
+                    <mat-form-field class="full-width">
+                        <mat-label>Precio</mat-label>
+                        <input
+                            class="form-control"
+                            type="number"
+                            matInput
+                            placeholder="Precio"
+                            name="precio"
+                            [(ngModel)]="productoModel.standardPrice"
+                            required
+                            ng-valid
+                            autocomplete="off"
+                        />
+                        <mat-hint>Introduce tu precio</mat-hint>
+                    </mat-form-field>
+                </div>
+            </ng-form>
+        </mat-card-content>
+        <mat-card-actions>
+            <button
+                mat-fab
+                class="mat-button fab-button"
+                color="primary"
+                (click)="
+                    flagCrearProducto = !flagCrearProducto; limpiarFormularios()
+                "
+            >
+                Cancelar
+            </button>
+            <button
+                mat-fab
+                class="mat-button fab-button"
+                color="primary"
+                (click)="crearProducto()"
+                [disabled]="!productoForm.form.valid"
+                routerLink="/odoo"
+            >
+                Guardar
+            </button>
+        </mat-card-actions>
+    </mat-card>
+</ng-container>

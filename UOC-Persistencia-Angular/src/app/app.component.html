@@ -1,0 +1,13 @@
+<body id="root-body">
+  <header [hidden]="!showHeader">
+    <app-nav></app-nav>
+  </header>
+
+  <main class="main-box">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer id="footer">
+    <app-footer></app-footer>
+  </footer>
+</body>

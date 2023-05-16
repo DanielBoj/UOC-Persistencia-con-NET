@@ -1,0 +1,32 @@
+<header>
+    <h1>{{ title }}</h1>
+    <h2>{{ subtitle }}</h2>
+</header>
+
+<ng-container *ngIf="cache.tipoUsuario == 'admin'">
+    <mat-tab-group>
+        <!-- Tab Clientes -->
+        <mat-tab label="Clientes Odoo">
+            <app-clientesodoo></app-clientesodoo>
+        </mat-tab>
+
+        <!-- Tab Proveedores -->
+        <mat-tab label="Proveedores Odoo">
+            <app-proveedoresodoo></app-proveedoresodoo>
+        </mat-tab>
+        <!-- Tab Productos -->
+        <mat-tab label="Productos Odoo">
+            <app-productosodoo></app-productosodoo>
+        </mat-tab>
+
+        <!-- Tab Empleados -->
+        <mat-tab label="Empleados Odoo">
+            <app-empleadosodoo></app-empleadosodoo>
+        </mat-tab>
+
+        <!-- Tab Pedidos -->
+        <mat-tab label="Pedidos Odoo">
+            <app-pedidosodoo></app-pedidosodoo>
+        </mat-tab>
+    </mat-tab-group>
+</ng-container>

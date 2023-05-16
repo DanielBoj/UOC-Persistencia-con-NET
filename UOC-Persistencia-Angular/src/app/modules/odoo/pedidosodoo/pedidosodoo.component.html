@@ -1,0 +1,97 @@
+<ng-container class="spinner-box" *ngIf="isLoading">
+    <mat-spinner class="spinner" diameter="50"></mat-spinner>
+    <div style="position: relative; top: -2.2rem; left: 4rem">
+        <h3>Cargando datos...</h3>
+    </div>
+</ng-container>
+
+<!-- Tabla dinámica -->
+<ng-container *ngIf="!isLoading && cache.tipoUsuario == 'admin'">
+    <mat-form-field appearance="fill">
+        <mat-label>Filtro</mat-label>
+        <input
+            matInput
+            type="text"
+            (keyup)="applyFilter($event)"
+            placeholder="Pedido"
+            #input
+        />
+    </mat-form-field>
+
+    <div class="mat-elevation-z8">
+        <mat-table
+            [dataSource]="pedidosDataSource"
+            matSort
+            class="pedidos-table"
+        >
+            <!-- DisplayName Column -->
+            <ng-container matColumnDef="displayName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Pedido
+                </th>
+                <td mat-cell *matCellDef="let row">{{ row.displayName }}</td>
+            </ng-container>
+
+            <!-- DateOrder Column -->
+            <ng-container matColumnDef="dateOrder">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</th>
+                <td mat-cell *matCellDef="let row">{{ row.dateOrder }}</td>
+            </ng-container>
+
+            <!-- Company Column -->
+            <ng-container matColumnDef="company">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Por</th>
+                <td mat-cell *matCellDef="let row">{{ row.company }}</td>
+            </ng-container>
+
+            <!-- Partner Column -->
+            <ng-container matColumnDef="partner">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Cliente
+                </th>
+                <td mat-cell *matCellDef="let row">{{ row.partner }}</td>
+            </ng-container>
+
+            <!-- AmountUntaxerd Column -->
+            <ng-container matColumnDef="amountUntaxed">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Total sin IVA
+                </th>
+                <td mat-cell *matCellDef="let row">{{ row.amountUntaxed }}€</td>
+            </ng-container>
+
+            <!-- AmountTotal Column -->
+            <ng-container matColumnDef="amountTotal">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Total</th>
+                <td mat-cell *matCellDef="let row">{{ row.amountTotal }}€</td>
+            </ng-container>
+
+            <!-- TaxGroupName Column -->
+            <ng-container matColumnDef="taxGroupName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>IVA</th>
+                <td mat-cell *matCellDef="let row">{{ row.taxGroupName }}</td>
+            </ng-container>
+
+            <!-- State -->
+            <ng-container matColumnDef="state">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Estado
+                </th>
+                <td mat-cell *matCellDef="let row">{{ row.state }}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedPedidosColumns"></tr>
+            <tr
+                mat-row
+                *matRowDef="let row; columns: displayedPedidosColumns"
+            ></tr>
+        </mat-table>
+
+        <mat-paginator
+            [pageSizeOptions]="[5, 10, 20]"
+            showFirstLastButtons
+            aria-label="Select page clientes"
+        >
+        </mat-paginator>
+    </div>
+</ng-container>

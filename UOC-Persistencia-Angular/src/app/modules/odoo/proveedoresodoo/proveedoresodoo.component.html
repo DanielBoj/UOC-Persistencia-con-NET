@@ -1,0 +1,328 @@
+<ng-container class="spinner-box" *ngIf="isLoading">
+    <mat-spinner class="spinner" diameter="50"></mat-spinner>
+    <div style="position: relative; top: -2.2rem; left: 4rem">
+        <h3>Cargando datos...</h3>
+    </div>
+</ng-container>
+
+<ng-container
+    class="odoo-table"
+    *ngIf="cache.tipoUsuario == 'admin' && !isLoading"
+>
+    <mat-form-field appearance="fill">
+        <mat-label>Filtro</mat-label>
+        <input
+            matInput
+            (keyup)="applyFilter($event)"
+            placeholder="Proveedor"
+            #input
+        />
+    </mat-form-field>
+
+    <div class="mat-elevation-z8">
+        <table
+            mat-table
+            #proveedores
+            [dataSource]="proveedoresDataSource"
+            matSort
+        >
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Nombre
+                </th>
+                <td mat-cell *matCellDef="let row">
+                    {{ row.name }}
+                </td>
+            </ng-container>
+
+            <!-- NIF Column -->
+            <ng-container matColumnDef="nif">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>NIF</th>
+                <td mat-cell *matCellDef="let row">
+                    {{ row.nif }}
+                </td>
+            </ng-container>
+
+            <!-- Email Column -->
+            <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+                <td mat-cell *matCellDef="let row">
+                    {{ row.email }}
+                </td>
+            </ng-container>
+
+            <!-- Telefono Column -->
+            <ng-container matColumnDef="phone">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Teléfono
+                </th>
+                <td mat-cell *matCellDef="let row">
+                    {{ row.phone }}
+                </td>
+            </ng-container>
+
+            <!-- Website Column -->
+            <ng-container matColumnDef="website">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Website
+                </th>
+                <td mat-cell *matCellDef="let row">
+                    {{ row.website }}
+                </td>
+            </ng-container>
+
+            <!-- Dirección Column -->
+            <ng-container matColumnDef="direccion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Dirección
+                </th>
+                <td mat-cell *matCellDef="let row">
+                    {{ row.direccion.domicilio }}
+                    <br />
+                    {{ row.direccion.poblacion }}
+                    <br />
+                    {{ row.direccion.cp }}
+                    <br />
+                    {{ row.direccion.pais }}
+                </td>
+            </ng-container>
+
+            <tr
+                mat-header-row
+                *matHeaderRowDef="displayedProveedoresColumns"
+            ></tr>
+            <tr
+                mat-row
+                *matRowDef="let row; columns: displayedProveedoresColumns"
+            ></tr>
+
+            <!-- Row shown when there is no matching data. -->
+            <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="4">
+                    No existen datos para el filtro "{{ input.value }}"
+                </td>
+            </tr>
+        </table>
+
+        <mat-paginator
+            [pageSizeOptions]="[5, 10, 20]"
+            showFirstLastButtons
+            aria-label="Select page proveedores"
+        >
+        </mat-paginator>
+    </div>
+
+    <div class="action-buttons">
+        <button
+            mat-fab
+            class="mat-button fab-button"
+            color="primary"
+            (click)="flagCrearProveedor = !flagCrearProveedor"
+        >
+            Nuevo Proveedor
+        </button>
+    </div>
+</ng-container>
+
+<!-- Formulario creación proveedor -->
+<ng-container *ngIf="flagCrearProveedor">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Crear Proveedor</mat-card-title>
+            <mat-card-subtitle>Introduce los nuevos datos</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <ng-form #proveedorForm="ngForm">
+                <!-- Nombre -->
+                <div>
+                    <mat-form-field class="full-width">
+                        <mat-label>Nombre</mat-label>
+                        <input
+                            class="form-control"
+                            type="text"
+                            matInput
+                            placeholder="Nombre"
+                            name="nombre"
+                            [(ngModel)]="proveedorModel.name"
+                            required
+                            ng-valid
+                            autocomplete="off"
+                        />
+                        <mat-hint>Introduce tu nombre</mat-hint>
+                    </mat-form-field>
+                </div>
+
+                <!-- NIF -->
+                <div>
+                    <mat-form-field class="full-width">
+                        <mat-label>NIF</mat-label>
+                        <input
+                            class="form-control"
+                            type="text"
+                            matInput
+                            placeholder="NIF"
+                            name="nif"
+                            [(ngModel)]="proveedorModel.nif"
+                            required
+                            ng-valid
+                            autocomplete="off"
+                        />
+                        <mat-hint>Introduce tu NIF</mat-hint>
+                    </mat-form-field>
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <mat-form-field class="full-width">
+                        <mat-label>Email</mat-label>
+                        <input
+                            class="form-control"
+                            type="email"
+                            matInput
+                            placeholder="Email"
+                            name="email"
+                            [(ngModel)]="proveedorModel.email"
+                            required
+                            ng-valid
+                            autocomplete="off"
+                        />
+                        <mat-hint>Introduce tu email</mat-hint>
+                    </mat-form-field>
+                </div>
+
+                <!-- Dirección -->
+                <h3>Dirección</h3>
+                <div>
+                    <mat-form-field class="full-width">
+                        <mat-label>Domicilio</mat-label>
+                        <input
+                            class="form-control"
+                            type="text"
+                            matInput
+                            placeholder="Domicilio"
+                            name="domicilio"
+                            [(ngModel)]="proveedorModel.direccion.domicilio"
+                            required
+                            ng-valid
+                            autocomplete="off"
+                        />
+                        <mat-hint>Introduce tu domicilio</mat-hint>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field class="full-width">
+                        <mat-label>Población</mat-label>
+                        <input
+                            class="form-control"
+                            type="text"
+                            matInput
+                            placeholder="Población"
+                            name="poblacion"
+                            [(ngModel)]="proveedorModel.direccion.poblacion"
+                            required
+                            ng-valid
+                            autocomplete="off"
+                        />
+                        <mat-hint>Introduce tu población</mat-hint>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field class="full-width">
+                        <mat-label>Código Postal</mat-label>
+                        <input
+                            class="form-control"
+                            type="text"
+                            matInput
+                            placeholder="Código Postal"
+                            name="codigoPostal"
+                            [(ngModel)]="proveedorModel.direccion.cp"
+                            required
+                            ng-valid
+                            autocomplete="off"
+                        />
+                        <mat-hint>Introduce tu código postal</mat-hint>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field class="full-width">
+                        <mat-label>País</mat-label>
+                        <input
+                            class="form-control"
+                            type="text"
+                            matInput
+                            placeholder="Pais"
+                            name="pais"
+                            [(ngModel)]="proveedorModel.direccion.pais"
+                            required
+                            ng-valid
+                            autocomplete="off"
+                        />
+                        <mat-hint>Introduce tu país</mat-hint>
+                    </mat-form-field>
+                </div>
+
+                <!-- Teléfono -->
+                <div>
+                    <mat-form-field class="full-width">
+                        <mat-label>Teléfono</mat-label>
+                        <input
+                            class="form-control"
+                            type="text"
+                            matInput
+                            placeholder="Telefono"
+                            name="telefono"
+                            [(ngModel)]="proveedorModel.phone"
+                            required
+                            ng-valid
+                            autocomplete="off"
+                        />
+                        <mat-hint>Introduce tu teléfono</mat-hint>
+                    </mat-form-field>
+                </div>
+
+                <!-- Website -->
+                <div>
+                    <mat-form-field class="full-width">
+                        <mat-label>Website</mat-label>
+                        <input
+                            class="form-control"
+                            type="text"
+                            matInput
+                            placeholder="Website"
+                            name="website"
+                            [(ngModel)]="proveedorModel.website"
+                            required
+                            ng-valid
+                            autocomplete="off"
+                        />
+                        <mat-hint>Introduce tu website</mat-hint>
+                    </mat-form-field>
+                </div>
+            </ng-form>
+        </mat-card-content>
+        <mat-card-actions>
+            <button
+                mat-fab
+                class="mat-button fab-button"
+                color="primary"
+                (click)="
+                    flagCrearProveedor = !flagCrearProveedor;
+                    limpiarFormularios()
+                "
+            >
+                Cancelar
+            </button>
+            <button
+                mat-fab
+                class="mat-button fab-button"
+                color="primary"
+                (click)="crearProveedor()"
+                [disabled]="!proveedorForm.form.valid"
+                routerLink="/odoo"
+            >
+                Guardar
+            </button>
+        </mat-card-actions>
+    </mat-card>
+</ng-container>
